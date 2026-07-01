@@ -69,7 +69,8 @@ function Shell() {
     <div className="container-page grid gap-8 py-10 md:grid-cols-[220px_1fr]">
       <aside className="space-y-1">
         {items.map(({ to, label, Icon, exact }) => {
-          const active = exact ? pathname === to : pathname.startsWith(to);
+          const isExact = "exact" in { exact } && exact === true;
+          const active = isExact ? pathname === to : pathname.startsWith(to);
           return (
             <Link
               key={to}
