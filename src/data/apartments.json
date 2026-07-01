@@ -1,0 +1,113 @@
+[
+  {
+    "id": "apt-01",
+    "slug": "chalet-arolle",
+    "title": {
+      "fr": "Chalet Arolle — Vue Plaine du Rhône",
+      "en": "Chalet Arolle — Rhône Valley View",
+      "nl": "Chalet Arolle — Uitzicht op Rhônedal"
+    },
+    "summary": {
+      "fr": "Un cocon boisé pour 6 personnes, au calme, à 5 min des pistes.",
+      "en": "A warm wooden nest for 6, quiet setting, 5 min from the slopes.",
+      "nl": "Een warm houten nest voor 6, rustig gelegen, 5 min van de pistes."
+    },
+    "description": {
+      "fr": "Chalet indépendant entièrement rénové en 2023, matériaux locaux, cheminée à bois, terrasse plein sud avec vue imprenable sur les Alpes valaisannes.",
+      "en": "Standalone chalet fully renovated in 2023, local materials, wood-burning fireplace, south-facing terrace with sweeping views over the Valais Alps.",
+      "nl": "Vrijstaand chalet volledig gerenoveerd in 2023, lokale materialen, houtkachel, zuidgericht terras met weids uitzicht over de Walliser Alpen."
+    },
+    "images": ["apt-1", "apt-2", "apt-3", "apt-4"],
+    "maxGuests": 6,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "surfaceM2": 120,
+    "floor": "R+1",
+    "amenities": ["wifi", "fireplace", "parking", "washer", "dishwasher", "balcony", "mountainView", "skiStorage"],
+    "pricePerNight": 320,
+    "location": { "lat": 46.1783, "lng": 7.3097, "address": "Route de Nendaz 100, 1997 Haute-Nendaz" },
+    "practical": {
+      "checkIn": "16:00",
+      "checkOut": "10:00",
+      "rules": {
+        "fr": "Non-fumeur. Animaux sur demande. Fêtes interdites.",
+        "en": "Non-smoking. Pets on request. No parties.",
+        "nl": "Niet-roken. Huisdieren op aanvraag. Geen feesten."
+      }
+    }
+  },
+  {
+    "id": "apt-02",
+    "slug": "appartement-mont-fort",
+    "title": {
+      "fr": "Appartement Mont-Fort — Skis aux pieds",
+      "en": "Mont-Fort Apartment — Ski-in ski-out",
+      "nl": "Appartement Mont-Fort — Ski-in ski-out"
+    },
+    "summary": {
+      "fr": "Appartement 4 personnes au pied de la télécabine de Tracouet.",
+      "en": "4-person apartment at the foot of the Tracouet gondola.",
+      "nl": "4-persoons appartement aan de voet van de Tracouet-gondel."
+    },
+    "description": {
+      "fr": "Idéal pour un couple ou une petite famille. Cuisine équipée, salon avec balcon, chambre parents et coin nuit enfants.",
+      "en": "Ideal for a couple or small family. Fitted kitchen, living room with balcony, master bedroom and children's alcove.",
+      "nl": "Ideaal voor een koppel of klein gezin. Volledig uitgeruste keuken, woonkamer met balkon, ouderslaapkamer en kinderalkoof."
+    },
+    "images": ["apt-2", "apt-3", "apt-1"],
+    "maxGuests": 4,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "surfaceM2": 65,
+    "floor": "3",
+    "amenities": ["wifi", "parking", "washer", "balcony", "mountainView", "skiStorage", "elevator"],
+    "pricePerNight": 195,
+    "location": { "lat": 46.1795, "lng": 7.3105, "address": "Chemin des Ecluses 12, 1997 Haute-Nendaz" },
+    "practical": {
+      "checkIn": "16:00",
+      "checkOut": "10:00",
+      "rules": {
+        "fr": "Non-fumeur. Pas d'animaux.",
+        "en": "Non-smoking. No pets.",
+        "nl": "Niet-roken. Geen huisdieren."
+      }
+    }
+  },
+  {
+    "id": "apt-03",
+    "slug": "studio-tracouet",
+    "title": {
+      "fr": "Studio Tracouet — Escapade cosy",
+      "en": "Tracouet Studio — Cosy escape",
+      "nl": "Studio Tracouet — Knus verblijf"
+    },
+    "summary": {
+      "fr": "Studio 2 personnes lumineux, parfait pour un weekend en amoureux.",
+      "en": "Bright 2-person studio, perfect for a romantic weekend.",
+      "nl": "Lichte studio voor 2 personen, perfect voor een romantisch weekend."
+    },
+    "description": {
+      "fr": "Studio récemment rénové au centre de Haute-Nendaz, à 2 minutes à pied des commerces et restaurants.",
+      "en": "Recently renovated studio in the heart of Haute-Nendaz, 2 min walk from shops and restaurants.",
+      "nl": "Recent gerenoveerde studio in het hart van Haute-Nendaz, op 2 min lopen van winkels en restaurants."
+    },
+    "images": ["apt-3", "apt-4", "apt-1"],
+    "maxGuests": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "surfaceM2": 32,
+    "floor": "2",
+    "amenities": ["wifi", "washer", "elevator", "mountainView"],
+    "pricePerNight": 115,
+    "location": { "lat": 46.1770, "lng": 7.3090, "address": "Rue du Village 5, 1997 Haute-Nendaz" },
+    "practical": {
+      "checkIn": "16:00",
+      "checkOut": "10:00",
+      "rules": {
+        "fr": "Non-fumeur. Silence après 22h.",
+        "en": "Non-smoking. Quiet after 10pm.",
+        "nl": "Niet-roken. Rust na 22u."
+      }
+    }
+  }
+]
