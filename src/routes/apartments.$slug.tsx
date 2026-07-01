@@ -50,7 +50,7 @@ function Detail() {
           <img src={resolveImage(apartment.images[current])} alt={tx(apartment.title)} className="h-full w-full object-cover" width={1280} height={800} />
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-          {apartment.images.slice(0, 4).map((img, i) => (
+          {apartment.images.slice(0, 4).map((img: string, i: number) => (
             <button key={i} onClick={() => setCurrent(i)} className={`aspect-[4/3] overflow-hidden rounded-2xl bg-secondary ${i === current ? "ring-2 ring-accent" : ""}`}>
               <img src={resolveImage(img)} alt="" className="h-full w-full object-cover" loading="lazy" />
             </button>
@@ -75,7 +75,7 @@ function Detail() {
           <section className="mt-10">
             <h2 className="text-lg font-semibold">{t("apt.amenities")}</h2>
             <ul className="mt-3 flex flex-wrap gap-2">
-              {apartment.amenities.map((a) => (
+              {apartment.amenities.map((a: string) => (
                 <li key={a} className="rounded-full border border-border bg-secondary px-3 py-1 text-xs">
                   {t(`amenity.${a}`)}
                 </li>
