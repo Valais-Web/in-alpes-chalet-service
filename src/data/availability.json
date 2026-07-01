@@ -1,0 +1,14 @@
+[
+  { "apartmentId": "apt-01", "start": "2026-07-05", "end": "2026-07-12", "status": "booked" },
+  { "apartmentId": "apt-01", "start": "2026-07-20", "end": "2026-07-25", "status": "prebooked", "expiresAt": "2026-07-03T12:00:00Z" },
+  { "apartmentId": "apt-01", "start": "2026-08-15", "end": "2026-08-22", "status": "booked" },
+  { "apartmentId": "apt-01", "start": "2026-09-01", "end": "2026-09-05", "status": "blocked" },
+  { "apartmentId": "apt-01", "start": "2026-06-10", "end": "2026-06-15", "status": "prebooked", "expiresAt": "2026-06-20T12:00:00Z" },
+
+  { "apartmentId": "apt-02", "start": "2026-07-01", "end": "2026-07-08", "status": "booked" },
+  { "apartmentId": "apt-02", "start": "2026-08-01", "end": "2026-08-10", "status": "booked" },
+  { "apartmentId": "apt-02", "start": "2026-08-20", "end": "2026-08-22", "status": "prebooked", "expiresAt": "2026-07-15T12:00:00Z" },
+
+  { "apartmentId": "apt-03", "start": "2026-07-14", "end": "2026-07-16", "status": "booked" },
+  { "apartmentId": "apt-03", "start": "2026-08-05", "end": "2026-08-12", "status": "booked" }
+]
