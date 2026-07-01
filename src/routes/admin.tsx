@@ -58,19 +58,18 @@ function Shell() {
   const { logout } = useAdminAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const items = [
+  const items: { to: "/admin" | "/admin/apartments" | "/admin/availability" | "/admin/requests"; exact: boolean; label: string; Icon: typeof LayoutDashboard }[] = [
     { to: "/admin", exact: true, label: t("admin.nav.dashboard"), Icon: LayoutDashboard },
-    { to: "/admin/apartments", label: t("admin.nav.apartments"), Icon: Home },
-    { to: "/admin/availability", label: t("admin.nav.availability"), Icon: CalendarRange },
-    { to: "/admin/requests", label: t("admin.nav.requests"), Icon: Inbox },
-  ] as const;
+    { to: "/admin/apartments", exact: false, label: t("admin.nav.apartments"), Icon: Home },
+    { to: "/admin/availability", exact: false, label: t("admin.nav.availability"), Icon: CalendarRange },
+    { to: "/admin/requests", exact: false, label: t("admin.nav.requests"), Icon: Inbox },
+  ];
 
   return (
     <div className="container-page grid gap-8 py-10 md:grid-cols-[220px_1fr]">
       <aside className="space-y-1">
         {items.map(({ to, label, Icon, exact }) => {
-          const isExact = "exact" in { exact } && exact === true;
-          const active = isExact ? pathname === to : pathname.startsWith(to);
+          const active = exact ? pathname === to : pathname.startsWith(to);
           return (
             <Link
               key={to}
