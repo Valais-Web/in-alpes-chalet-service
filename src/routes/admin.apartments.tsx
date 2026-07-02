@@ -59,10 +59,10 @@ function AdminApartments() {
               <div className="text-xs text-muted-foreground">{a.slug} · CHF {a.pricePerNight}</div>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setEditing(a)} className="rounded-full border border-border p-2 hover:bg-secondary" aria-label="edit">
+              <button onClick={() => setEditing(a)} className="border border-border p-2 hover:bg-secondary" aria-label="edit">
                 <Pencil className="h-4 w-4" />
               </button>
-              <button onClick={() => onDelete(a.id)} className="rounded-full border border-border p-2 hover:bg-secondary" aria-label="delete">
+              <button onClick={() => onDelete(a.id)} className="border border-border p-2 hover:bg-secondary" aria-label="delete">
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>

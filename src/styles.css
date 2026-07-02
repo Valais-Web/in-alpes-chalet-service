@@ -5,14 +5,18 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  /* Squared, angular system (mediatheque.ch direction). All radii 0 —
+     tokens kept so a subtle radius could be dialled back in centrally. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Type — Jost (display/headings) + Hanken Grotesk (body). Max two families. */
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --font-display: "Jost", "Century Gothic", system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -25,6 +29,10 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-bright-hover: var(--accent-bright-hover);
+  --color-accent-tint: var(--accent-tint);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -36,19 +44,24 @@
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
 
-  --shadow-soft: 0 6px 24px -8px oklch(0 0 0 / 0.10), 0 2px 6px -2px oklch(0 0 0 / 0.06);
-  --shadow-lift: 0 20px 50px -20px oklch(0 0 0 / 0.20);
+  /* Discreet shadows — structure leans on the crisp 1px border. */
+  --shadow-soft: 0 1px 2px oklch(0.16 0 0 / 0.05);
+  --shadow-lift: 0 6px 18px oklch(0.16 0 0 / 0.08);
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 0px;
 
   /* Brand palette — black / white / fir green (no red) */
   --ink: oklch(0.16 0 0);                 /* #141414 */
   --white: oklch(1 0 0);                  /* #FFFFFF */
   --surface-2: oklch(0.965 0.003 100);    /* #F5F5F4 */
-  --fir: oklch(0.475 0.075 155);          /* #2F6B4F */
-  --fir-bright: oklch(0.63 0.11 155);     /* #4CA47B */
+  --fir: oklch(0.475 0.075 155);          /* #2F6B4F — primary accent */
+  --fir-700: oklch(0.42 0.07 155);        /* #275A43 — pressed / hover */
+  --fir-bright: oklch(0.63 0.11 155);     /* #4CA47B — vivid CTA */
+  --fir-bright-700: oklch(0.57 0.10 155); /* #3E8E69 — bright pressed */
+  --alpine-tint: oklch(0.945 0.02 155);   /* #E7F1EC — soft chip / badge fill */
+  --alpine-wash: oklch(0.975 0.01 155);   /* #F2F8F5 — faintest wash */
   --grey: oklch(0.52 0 0);                /* #6B6B6B */
   --line: oklch(0.905 0.002 100);         /* #E4E4E2 */
 
@@ -63,6 +76,10 @@
   --primary-foreground: var(--white);
   --accent: var(--fir);
   --accent-foreground: var(--white);
+  --accent-hover: var(--fir-700);
+  --accent-bright: var(--fir-bright);
+  --accent-bright-hover: var(--fir-bright-700);
+  --accent-tint: var(--alpine-tint);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--ink);
   --muted: var(--surface-2);
@@ -82,22 +99,46 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4 { letter-spacing: -0.02em; }
+  /* Display family (Jost) on headings — echoes the logo's geometric caps. */
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
 }
 
 @utility container-page {
   width: 100%;
   margin-inline: auto;
   padding-inline: 1.25rem;
-  max-width: 80rem;
+  max-width: 75rem; /* 1200px */
+}
+
+/* Off-white and ink section surfaces used sparingly for contrast. */
+@utility section-y {
+  padding-block: 3.5rem;
+}
+@media (min-width: 768px) {
+  .section-y { padding-block: 6rem; }
+}
+
+/* Eyebrow: uppercase Jost label with wide tracking, fir-green. */
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
 }
 
 @utility card-soft {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
 }
 
@@ -106,9 +147,15 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
-  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-lg); /* squared */
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-display);
   font-weight: 500;
+  letter-spacing: 0.01em;
   font-size: 0.95rem;
-  transition: all 0.2s ease;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+              color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+              border-color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
 }

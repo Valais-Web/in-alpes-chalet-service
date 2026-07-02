@@ -164,10 +164,15 @@ Coordonnées : In-Alpes Chalet Services Sàrl, Haute-Nendaz (Valais). Tél. 077 
 
 ## 9. Design
 
-- **Palette** : noir, blanc, vert en accent. **Aucun rouge.** Tokens de départ : encre `#141414`, fond `#FFFFFF`, fond secondaire `#F5F5F4`, vert sapin `#2F6B4F`, vert vif `#4CA47B`, gris `#6B6B6B`, bordures `#E4E4E2`.
-- **Style** : moderne, épuré, beaucoup d'espaces blancs, sans-serif géométrique simple, cartes arrondies, ombres douces, photographie mise en avant, ambiance alpine boutique.
-- **Interdits** : pas de vidéo embarquée, pas de page interminable, pas de rouge. Mobile-first.
-- Le logo In-Alpes (noir/blanc, motif alpin) est fourni séparément.
+Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `SKILL.md` / `readme.md` du projet). Appliqué dans `src/styles.css` (tokens) et les composants.
+
+- **Palette** : noir, blanc, vert en accent (jamais un aplat dominant). **Aucun rouge.** Encre `#141414`, fond `#FFFFFF`, fond secondaire `#F5F5F4`, vert sapin `#2F6B4F` (accent primaire — boutons, liens, chips), vert alpin `#4CA47B` (CTA vif/hover), sapin pressé `#275A43`, gris `#6B6B6B`, bordures `#E4E4E2`, teintes vertes douces `#E7F1EC` / `#F2F8F5` (chips d'icônes, badges). Étoiles de notation en encre `#141414`.
+- **Typographie** : deux familles max. **Jost** (géométrique) pour les titres/display et l'eyebrow ALL-CAPS (tracking large, `-0.02em` sur les grands titres) ; **Hanken Grotesk** pour le corps (lisible FR/EN/NL). Wordmark en Jost majuscules espacées.
+- **Style** : moderne, épuré, beaucoup d'espaces blancs (rythme ~96px desktop / 56px mobile). **Direction angulaire (mediatheque.ch) : coins carrés — `--radius-*` tous à 0** (cartes, boutons, badges, inputs). La structure repose sur la bordure 1px `#E4E4E2` plutôt que sur l'ombre ; ombres discrètes (`--shadow-soft` au repos, `--shadow-lift` au survol/lift `translateY(-3px)`). Photographie mise en avant, ambiance alpine boutique.
+- **Boutons** : carrés. Primaire = fill vert sapin (hover sapin-700) ; `bright` = vert alpin (CTA réservation) ; secondaire = contour encre ; tertiaire = lien texte vert ; on-dark = blanc. Pas de scale/bounce.
+- **Icônes** : Lucide, trait fin (~1.8), pas d'emoji ni de glyphes unicode.
+- **Interdits** : pas de vidéo embarquée, pas de page interminable, pas de rouge, pas de coins arrondis (sauf contrôles de formulaire circulaires natifs). Mobile-first.
+- Le logo In-Alpes (badge alpin noir/blanc) est dans `src/assets/logo-ink.png` (sur clair) et `logo-white.png` (sur foncé).
 
 ---
 

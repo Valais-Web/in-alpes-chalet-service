@@ -58,13 +58,13 @@ function AdminRequests() {
                 <td className="px-4 py-3">{b.arrival} → {b.departure}</td>
                 <td className="px-4 py-3">{b.guests}</td>
                 <td className="px-4 py-3">
-                  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">{t(`admin.requests.status.${b.status}`)}</span>
+                  <span className="bg-secondary px-2 py-0.5 text-xs">{t(`admin.requests.status.${b.status}`)}</span>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="inline-flex gap-1">
-                    <button onClick={() => update(b.id, "answered")} className="rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground">{t("admin.requests.confirm")}</button>
-                    <button onClick={() => update(b.id, "answered")} className="rounded-full border border-border px-2.5 py-1 text-xs">{t("admin.requests.decline")}</button>
-                    <button onClick={() => update(b.id, "archived")} className="rounded-full border border-border px-2.5 py-1 text-xs">{t("admin.requests.archive")}</button>
+                    <button onClick={() => update(b.id, "answered")} className="bg-accent px-2.5 py-1 text-xs text-accent-foreground">{t("admin.requests.confirm")}</button>
+                    <button onClick={() => update(b.id, "answered")} className="border border-border px-2.5 py-1 text-xs">{t("admin.requests.decline")}</button>
+                    <button onClick={() => update(b.id, "archived")} className="border border-border px-2.5 py-1 text-xs">{t("admin.requests.archive")}</button>
                   </div>
                 </td>
               </tr>

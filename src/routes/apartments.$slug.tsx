@@ -4,7 +4,20 @@ import { getApartmentBySlug, listAvailability, resolveImage } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
 import { BookingForm } from "@/components/site/BookingForm";
-import { BedDouble, Bath, Users, Ruler, Building2, MapPin, Clock } from "lucide-react";
+import {
+  BedDouble,
+  Bath,
+  Users,
+  Ruler,
+  Building2,
+  MapPin,
+  Clock,
+  Star,
+  Percent,
+  DoorOpen,
+  Sparkles,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/apartments/$slug")({
@@ -47,12 +60,27 @@ function Detail() {
       {/* Gallery */}
       <div className="grid gap-3 md:grid-cols-[2fr_1fr]">
         <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-secondary md:aspect-[16/10]">
-          <img src={resolveImage(apartment.images[current])} alt={tx(apartment.title)} className="h-full w-full object-cover" width={1280} height={800} />
+          <img
+            src={resolveImage(apartment.images[current])}
+            alt={tx(apartment.title)}
+            className="h-full w-full object-cover"
+            width={1280}
+            height={800}
+          />
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
           {apartment.images.slice(0, 4).map((img: string, i: number) => (
-            <button key={i} onClick={() => setCurrent(i)} className={`aspect-[4/3] overflow-hidden rounded-2xl bg-secondary ${i === current ? "ring-2 ring-accent" : ""}`}>
-              <img src={resolveImage(img)} alt="" className="h-full w-full object-cover" loading="lazy" />
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`aspect-[4/3] overflow-hidden rounded-2xl bg-secondary ${i === current ? "ring-2 ring-accent" : ""}`}
+            >
+              <img
+                src={resolveImage(img)}
+                alt=""
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
             </button>
           ))}
         </div>
@@ -61,22 +89,61 @@ function Detail() {
       {/* Title + facts */}
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_380px]">
         <div>
-          <h1 className="text-3xl font-semibold md:text-4xl">{tx(apartment.title)}</h1>
-          <p className="mt-2 text-muted-foreground">{tx(apartment.summary)}</p>
+          <div className="eyebrow flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
+          </div>
+          <h1 className="mt-3 text-3xl font-semibold md:text-4xl">{tx(apartment.title)}</h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            {tx(apartment.summary)}
+          </p>
+
+          {/* USP strip */}
+          <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-y border-border py-4 text-sm">
+            {[
+              { icon: Star, label: t("apt.usp.rating") },
+              { icon: Percent, label: t("apt.usp.promo") },
+              { icon: DoorOpen, label: t("apt.usp.flex") },
+              { icon: Sparkles, label: t("apt.usp.clean") },
+            ].map(({ icon: Icon, label }: { icon: LucideIcon; label: string }) => (
+              <li key={label} className="inline-flex items-center gap-2 text-muted-foreground">
+                <Icon className="h-4 w-4 text-accent" /> {label}
+              </li>
+            ))}
+          </ul>
 
           <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
-            <Fact icon={<Users className="h-4 w-4" />} label={t("apt.guests")} value={apartment.maxGuests} />
-            <Fact icon={<BedDouble className="h-4 w-4" />} label={t("apt.bedrooms")} value={apartment.bedrooms} />
-            <Fact icon={<Bath className="h-4 w-4" />} label={t("apt.bathrooms")} value={apartment.bathrooms} />
-            <Fact icon={<Ruler className="h-4 w-4" />} label={t("apt.surface")} value={apartment.surfaceM2} />
-            <Fact icon={<Building2 className="h-4 w-4" />} label={t("apt.floor")} value={apartment.floor} />
+            <Fact
+              icon={<Users className="h-4 w-4" />}
+              label={t("apt.guests")}
+              value={apartment.maxGuests}
+            />
+            <Fact
+              icon={<BedDouble className="h-4 w-4" />}
+              label={t("apt.bedrooms")}
+              value={apartment.bedrooms}
+            />
+            <Fact
+              icon={<Bath className="h-4 w-4" />}
+              label={t("apt.bathrooms")}
+              value={apartment.bathrooms}
+            />
+            <Fact
+              icon={<Ruler className="h-4 w-4" />}
+              label={t("apt.surface")}
+              value={apartment.surfaceM2}
+            />
+            <Fact
+              icon={<Building2 className="h-4 w-4" />}
+              label={t("apt.floor")}
+              value={apartment.floor}
+            />
           </dl>
 
           <section className="mt-10">
             <h2 className="text-lg font-semibold">{t("apt.amenities")}</h2>
             <ul className="mt-3 flex flex-wrap gap-2">
               {apartment.amenities.map((a: string) => (
-                <li key={a} className="rounded-full border border-border bg-secondary px-3 py-1 text-xs">
+                <li key={a} className="border border-border bg-secondary px-3 py-1 text-xs">
                   {t(`amenity.${a}`)}
                 </li>
               ))}
@@ -85,7 +152,9 @@ function Detail() {
 
           <section className="mt-10">
             <h2 className="text-lg font-semibold">{t("apt.description")}</h2>
-            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{tx(apartment.description)}</p>
+            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+              {tx(apartment.description)}
+            </p>
           </section>
 
           <section className="mt-10">
@@ -99,9 +168,18 @@ function Detail() {
             <div className="card-soft p-5">
               <h3 className="text-sm font-semibold">{t("apt.practical")}</h3>
               <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2"><Clock className="h-4 w-4 text-accent" /> {t("apt.checkIn")} : {apartment.practical.checkIn}</li>
-                <li className="flex items-center gap-2"><Clock className="h-4 w-4 text-accent" /> {t("apt.checkOut")} : {apartment.practical.checkOut}</li>
-                <li><span className="font-medium text-foreground">{t("apt.rules")}</span> : {tx(apartment.practical.rules)}</li>
+                <li className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-accent" /> {t("apt.checkIn")} :{" "}
+                  {apartment.practical.checkIn}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-accent" /> {t("apt.checkOut")} :{" "}
+                  {apartment.practical.checkOut}
+                </li>
+                <li>
+                  <span className="font-medium text-foreground">{t("apt.rules")}</span> :{" "}
+                  {tx(apartment.practical.rules)}
+                </li>
               </ul>
             </div>
             <div className="card-soft p-5">
@@ -134,10 +212,20 @@ function Detail() {
   );
 }
 
-function Fact({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
+function Fact({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="card-soft p-3 text-center">
-      <div className="mx-auto grid h-8 w-8 place-items-center rounded-full bg-accent/10 text-accent">{icon}</div>
+      <div className="mx-auto grid h-9 w-9 place-items-center bg-accent-tint text-accent">
+        {icon}
+      </div>
       <div className="mt-2 text-lg font-semibold">{value}</div>
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
     </div>

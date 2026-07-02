@@ -64,7 +64,7 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
         <button
           type="button"
           onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
-          className="rounded-full border border-border p-2 hover:bg-secondary"
+          className="border border-border p-2 hover:bg-secondary"
           aria-label="previous month"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -78,7 +78,7 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
         <button
           type="button"
           onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
-          className="rounded-full border border-border p-2 hover:bg-secondary"
+          className="border border-border p-2 hover:bg-secondary"
           aria-label="next month"
         >
           <ChevronRight className="h-4 w-4" />
