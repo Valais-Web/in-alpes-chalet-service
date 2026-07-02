@@ -40,7 +40,7 @@ function Dashboard() {
           {bookings.slice(0, 5).map((b) => (
             <li key={b.id} className="flex items-center justify-between px-4 py-3 text-sm">
               <span>{b.name} — {b.arrival} → {b.departure}</span>
-              <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">{t(`admin.requests.status.${b.status}`)}</span>
+              <span className="bg-secondary px-2 py-0.5 text-xs">{t(`admin.requests.status.${b.status}`)}</span>
             </li>
           ))}
         </ul>

@@ -6,7 +6,7 @@ const LOCALES: Locale[] = ["fr", "en", "nl"];
 export function LanguageSwitcher() {
   const { locale, setLocale } = useI18n();
   return (
-    <div className="inline-flex items-center rounded-full border border-border bg-background p-1 text-xs">
+    <div className="inline-flex items-center border border-border bg-background p-1 text-xs">
       {LOCALES.map((l) => (
         <button
           key={l}
@@ -14,7 +14,7 @@ export function LanguageSwitcher() {
           onClick={() => setLocale(l)}
           aria-pressed={locale === l}
           className={
-            "rounded-full px-3 py-1 uppercase tracking-wide transition-colors " +
+            "px-3 py-1 font-[family-name:var(--font-display)] uppercase tracking-wide transition-colors " +
             (locale === l
               ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground")

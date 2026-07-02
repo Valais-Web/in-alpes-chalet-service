@@ -4,7 +4,7 @@ type Dict = Record<string, string>;
 
 export const dictionaries: Record<Locale, Dict> = {
   fr: {
-    "brand": "In-Alpes Chalet Services",
+    brand: "In-Alpes Chalet Services",
     "brand.tagline": "Haute-Nendaz · Valais · 4 Vallées",
     "nav.home": "Accueil",
     "nav.apartments": "Logements",
@@ -16,10 +16,11 @@ export const dictionaries: Record<Locale, Dict> = {
     "lang.nl": "Nederlands",
 
     "hero.eyebrow": "Location & gérance en Valais",
-    "hero.title": "Vivez la montagne. Confiez-nous le reste.",
-    "hero.subtitle": "Chalets et appartements de caractère à Haute-Nendaz, et un service de gérance complet pour votre résidence secondaire.",
+    "hero.title": "Vos vacances à Haute-Nendaz, en toute simplicité",
+    "hero.subtitle":
+      "Des logements vraiment propres, une arrivée flexible et un contact humain. Et pour les propriétaires, un seul interlocuteur pour tout.",
     "hero.cta.rent": "Louer un logement",
-    "hero.cta.manage": "Confier la gestion de mon bien",
+    "hero.cta.manage": "Confier la gestion",
     "hero.proof": "4,95/5 sur 596 avis Airbnb",
 
     "home.apartments.title": "Nos logements",
@@ -30,7 +31,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.offer.title": "-10% dès 7 nuits",
     "home.offer.sub": "Offre valable toute l'année sur nos logements. Code : SEMAINE10.",
     "home.about.title": "À propos",
-    "home.about.body": "Basés à Haute-Nendaz, nous accueillons voyageurs et propriétaires avec le même soin depuis plus de dix ans. Une équipe locale, réactive, qui parle votre langue.",
+    "home.about.body":
+      "Basés à Haute-Nendaz, nous accueillons voyageurs et propriétaires avec le même soin depuis plus de dix ans. Une équipe locale, réactive, qui parle votre langue.",
     "home.contact.title": "Contact",
     "home.contact.sub": "Nous répondons sous 24 h ouvrées.",
 
@@ -69,14 +71,18 @@ export const dictionaries: Record<Locale, Dict> = {
     "form.message": "Message",
     "form.submit": "Envoyer la demande",
     "form.success.title": "Demande envoyée",
-    "form.success.body": "Il s'agit d'une DEMANDE, pas d'une confirmation instantanée. Nous revenons vers vous sous 24 h ouvrées.",
+    "form.success.body":
+      "Il s'agit d'une DEMANDE, pas d'une confirmation instantanée. Nous revenons vers vous sous 24 h ouvrées.",
 
+    "services.eyebrow": "Pour les propriétaires",
     "services.title": "Services de gérance",
     "services.sub": "Un interlocuteur unique pour votre résidence secondaire.",
     "svc.rental.title": "Location saisonnière",
-    "svc.rental.body": "Annonces, prix dynamiques, gestion des réservations, accueil des voyageurs.",
+    "svc.rental.body":
+      "Annonces, prix dynamiques, gestion des réservations, accueil des voyageurs.",
     "svc.cleaning.title": "Nettoyage",
-    "svc.cleaning.body": "Nettoyages hôteliers entre chaque séjour et grands nettoyages saisonniers.",
+    "svc.cleaning.body":
+      "Nettoyages hôteliers entre chaque séjour et grands nettoyages saisonniers.",
     "svc.laundry.title": "Blanchisserie",
     "svc.laundry.body": "Linge de lit, de bain et de table, lavage et repassage professionnels.",
     "svc.works.title": "Suivi de chantier",
@@ -136,9 +142,142 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Ascenseur",
 
     "footer.rights": "Tous droits réservés",
+
+    "hero.usp.1": "Pas de frais cachés",
+    "hero.usp.2": "Prix publics",
+    "hero.usp.3": "Arrivée flexible",
+    "hero.promo": "−10% dès 7 nuits",
+
+    "home.aud.eyebrow": "Deux services, un seul contact",
+    "home.aud.title": "Vous venez en vacances, ou vous confiez votre bien ?",
+    "home.aud.rent.eyebrow": "Locataires",
+    "home.aud.rent.title": "Louer un logement",
+    "home.aud.rent.desc":
+      "Des chalets et appartements propres et accueillants, une arrivée flexible et toute l'info locale.",
+    "home.aud.rent.cta": "Voir les logements",
+    "home.aud.own.eyebrow": "Propriétaires",
+    "home.aud.own.title": "Confier la gestion de mon bien",
+    "home.aud.own.desc":
+      "Location, nettoyage, blanchisserie, suivi de chantier : un interlocuteur unique pour votre résidence.",
+    "home.aud.own.cta": "Découvrir les services",
+
+    "home.props.eyebrow": "Nos logements",
+    "home.props.title": "Quelques-uns de nos chalets",
+    "home.props.lead": "Tous nos prix sont publics. Réservation en ligne, séjour serein.",
+
+    "home.svc.eyebrow": "Pour les propriétaires",
+    "home.svc.title": "Tout ce que votre résidence demande",
+    "home.svc.lead": "Un assortiment complet de services, géré par une seule équipe locale.",
+    "home.svc.cta": "Tous les services",
+
+    "home.how.eyebrow": "Comment ça se passe",
+    "home.how.title": "De la demande au séjour, en toute clarté",
+    "home.how.lead": "Sept étapes simples, sans surprise. Vous savez toujours où vous en êtes.",
+
+    "home.rev.eyebrow": "Ils nous ont fait confiance",
+    "home.rev.title": "4,95/5 sur 596 avis",
+
+    "home.local.eyebrow": "Bienvenue à Nendaz",
+    "home.local.title": "Au cœur des 4 Vallées",
+    "home.local.lead":
+      "On vous partage les bons plans : activités, événements et accès au domaine.",
+
+    "home.cta.title": "Une question, une date, un projet ?",
+    "home.cta.sub": "Écrivez-nous, on vous répond rapidement et en personne.",
+    "home.cta.btn": "Nous contacter",
+
+    "step.1.t": "Prise de contact",
+    "step.1.d": "Vous nous envoyez votre demande de réservation.",
+    "step.2.t": "Offre & détails",
+    "step.2.d": "Réponse initiale avec les détails et notre offre.",
+    "step.3.t": "Paiement",
+    "step.3.d": "Vous réglez la réservation en toute sécurité.",
+    "step.4.t": "Confirmation",
+    "step.4.d": "Votre séjour est confirmé.",
+    "step.5.t": "Préparation",
+    "step.5.d": "Nous préparons le logement, lits faits pour vous.",
+    "step.6.t": "Séjour à Nendaz",
+    "step.6.d": "Profitez de vos vacances, nous restons joignables.",
+    "step.7.t": "Contrôle & nettoyage",
+    "step.7.d": "Départ flexible, nous nous occupons du reste.",
+
+    "review.1.quote":
+      "Accueil chaleureux, chalet impeccable et une arrivée tardive sans aucun souci. On reviendra !",
+    "review.1.author": "Marie L.",
+    "review.1.meta": "Famille · Février 2025",
+    "review.2.quote":
+      "Communication parfaite, logement encore plus beau qu'en photo. Lits préparés à l'arrivée, un vrai plus.",
+    "review.2.author": "Thomas B.",
+    "review.2.meta": "Couple · Janvier 2025",
+    "review.3.quote":
+      "In-Alpes gère notre appartement depuis deux ans. Tranquillité totale, un seul contact pour tout.",
+    "review.3.author": "Famille Roux",
+    "review.3.meta": "Propriétaire",
+
+    "local.1.title": "Domaine des 4 Vallées",
+    "local.1.d": "412 km de pistes accessibles depuis Nendaz.",
+    "local.2.title": "Activités été comme hiver",
+    "local.2.d": "Randonnée, VTT, ski, raquettes et bisses.",
+    "local.3.title": "Événements locaux",
+    "local.3.d": "Nous vous partageons l'agenda de la station.",
+
+    "services.hero.eyebrow": "Services · Propriétaires",
+    "services.hero.title": "Votre résidence secondaire, gérée de A à Z",
+    "services.hero.sub":
+      "Vous nous confiez votre bien, nous nous occupons de tout. Un seul interlocuteur, pas de coordination à gérer.",
+    "services.hero.cta1": "Discuter de mon bien",
+    "services.hero.cta2": "Voir nos locations",
+
+    "services.benefits.eyebrow": "Nos avantages",
+    "services.benefits.title": "Pourquoi nous confier votre bien",
+    "services.benefits.lead": "Un seul partenaire local, disponible toute l'année.",
+    "benefit.1.t": "Un contact unique",
+    "benefit.1.d":
+      "Une seule personne pour la location, l'entretien et le suivi. Pas de coordination à gérer.",
+    "benefit.2.t": "Flexibilité & rapidité",
+    "benefit.2.d": "On s'adapte à vos besoins et on réagit vite, sur place et toute l'année.",
+    "benefit.3.t": "Tranquillité d'esprit",
+    "benefit.3.d":
+      "Votre résidence est entre de bonnes mains, entretenue et surveillée en votre absence.",
+
+    "services.assort.eyebrow": "Notre assortiment",
+    "services.assort.title": "Tous les services, sous un même toit",
+    "services.assort.lead": "Choisissez ce dont vous avez besoin — nous nous occupons du reste.",
+    "services.how.title": "Confier votre bien, étape par étape",
+
+    "services.faq.eyebrow": "Questions fréquentes",
+    "services.faq.title": "Vous vous demandez peut-être…",
+    "services.faq.lead":
+      "Les réponses aux questions que les propriétaires nous posent le plus souvent.",
+    "faq.1.q": "Puis-je choisir seulement certains services ?",
+    "faq.1.a":
+      "Oui. Notre assortiment est modulable : vous prenez ce dont vous avez besoin, de la seule location à la gestion complète.",
+    "faq.2.q": "Comment sont fixés les tarifs ?",
+    "faq.2.a":
+      "Au forfait, avec des prix publics et sans frais cachés. Nous vous remettons une offre claire après un premier échange.",
+    "faq.3.q": "Gérez-vous la location de mon logement ?",
+    "faq.3.a":
+      "Oui : annonces, réservations, accueil des voyageurs, ménage et blanchisserie entre les séjours. Vous n'avez rien à coordonner.",
+    "faq.4.q": "Que se passe-t-il en cas de problème pendant un séjour ?",
+    "faq.4.a":
+      "Nous sommes locaux et joignables rapidement. Une équipe intervient sur place, pour vos voyageurs comme pour votre bien.",
+    "faq.5.q": "Suivez-vous les travaux et l'entretien ?",
+    "faq.5.a":
+      "Oui, nous coordonnons les artisans, contrôlons les travaux et vous transmettons des comptes-rendus photo.",
+    "faq.6.q": "Dans quelles langues échangez-vous ?",
+    "faq.6.a": "En français, en anglais et en néerlandais — à l'écrit comme au téléphone.",
+    "services.cta.title": "Parlons de votre résidence",
+    "services.cta.sub":
+      "Un échange simple pour comprendre vos besoins et vous proposer une offre claire.",
+    "services.cta.btn": "Demander une offre",
+
+    "apt.usp.rating": "4,95/5 · 596 avis",
+    "apt.usp.promo": "−10% dès 7 nuits",
+    "apt.usp.flex": "Arrivée flexible",
+    "apt.usp.clean": "Ménage hôtelier",
   },
   en: {
-    "brand": "In-Alpes Chalet Services",
+    brand: "In-Alpes Chalet Services",
     "brand.tagline": "Haute-Nendaz · Valais · 4 Vallées",
     "nav.home": "Home",
     "nav.apartments": "Rentals",
@@ -150,10 +289,11 @@ export const dictionaries: Record<Locale, Dict> = {
     "lang.nl": "Nederlands",
 
     "hero.eyebrow": "Rentals & property management in Valais",
-    "hero.title": "Enjoy the mountain. Leave the rest to us.",
-    "hero.subtitle": "Character chalets and apartments in Haute-Nendaz, and a full property management service for your second home.",
+    "hero.title": "Your holiday in Haute-Nendaz, made simple",
+    "hero.subtitle":
+      "Genuinely clean homes, flexible check-in and a human contact. And for owners, a single point of contact for everything.",
     "hero.cta.rent": "Rent a place",
-    "hero.cta.manage": "Have my property managed",
+    "hero.cta.manage": "Have it managed",
     "hero.proof": "4.95/5 across 596 Airbnb reviews",
 
     "home.apartments.title": "Our rentals",
@@ -164,7 +304,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.offer.title": "-10% from 7 nights",
     "home.offer.sub": "Year-round offer on all our rentals. Code: WEEK10.",
     "home.about.title": "About us",
-    "home.about.body": "Based in Haute-Nendaz, we've been welcoming travellers and owners with the same care for over a decade. A local, responsive team that speaks your language.",
+    "home.about.body":
+      "Based in Haute-Nendaz, we've been welcoming travellers and owners with the same care for over a decade. A local, responsive team that speaks your language.",
     "home.contact.title": "Contact",
     "home.contact.sub": "We reply within 24 business hours.",
 
@@ -203,8 +344,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "form.message": "Message",
     "form.submit": "Send request",
     "form.success.title": "Request sent",
-    "form.success.body": "This is a REQUEST, not an instant confirmation. We'll get back to you within 24 business hours.",
+    "form.success.body":
+      "This is a REQUEST, not an instant confirmation. We'll get back to you within 24 business hours.",
 
+    "services.eyebrow": "For owners",
     "services.title": "Property management services",
     "services.sub": "One partner for your second home.",
     "svc.rental.title": "Seasonal rentals",
@@ -232,7 +375,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.login.sub": "Team access only.",
     "admin.login.password": "Password",
     "admin.login.submit": "Sign in",
-    "admin.login.hint": "Demo: the password is \"admin\".",
+    "admin.login.hint": 'Demo: the password is "admin".',
     "admin.login.error": "Wrong password.",
     "admin.logout": "Sign out",
     "admin.nav.dashboard": "Dashboard",
@@ -270,9 +413,136 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Elevator",
 
     "footer.rights": "All rights reserved",
+
+    "hero.usp.1": "No hidden fees",
+    "hero.usp.2": "Public prices",
+    "hero.usp.3": "Flexible check-in",
+    "hero.promo": "−10% from 7 nights",
+
+    "home.aud.eyebrow": "Two services, one contact",
+    "home.aud.title": "Here on holiday, or entrusting your property?",
+    "home.aud.rent.eyebrow": "Guests",
+    "home.aud.rent.title": "Rent a place",
+    "home.aud.rent.desc":
+      "Clean, welcoming chalets and apartments, flexible check-in and all the local tips.",
+    "home.aud.rent.cta": "See the rentals",
+    "home.aud.own.eyebrow": "Owners",
+    "home.aud.own.title": "Have your property managed",
+    "home.aud.own.desc":
+      "Rental, cleaning, laundry, works follow-up: a single contact for your second home.",
+    "home.aud.own.cta": "Discover the services",
+
+    "home.props.eyebrow": "Our rentals",
+    "home.props.title": "A few of our chalets",
+    "home.props.lead": "All our prices are public. Book online, stay with peace of mind.",
+
+    "home.svc.eyebrow": "For owners",
+    "home.svc.title": "Everything your property needs",
+    "home.svc.lead": "A complete range of services, handled by a single local team.",
+    "home.svc.cta": "All services",
+
+    "home.how.eyebrow": "How it works",
+    "home.how.title": "From request to stay, in full clarity",
+    "home.how.lead": "Seven simple steps, no surprises. You always know where things stand.",
+
+    "home.rev.eyebrow": "They trusted us",
+    "home.rev.title": "4.95/5 across 596 reviews",
+
+    "home.local.eyebrow": "Welcome to Nendaz",
+    "home.local.title": "In the heart of the 4 Vallées",
+    "home.local.lead": "We share the good tips: activities, events and access to the ski area.",
+
+    "home.cta.title": "A question, a date, a project?",
+    "home.cta.sub": "Write to us — we reply quickly and in person.",
+    "home.cta.btn": "Contact us",
+
+    "step.1.t": "Get in touch",
+    "step.1.d": "You send us your booking request.",
+    "step.2.t": "Offer & details",
+    "step.2.d": "An initial reply with the details and our offer.",
+    "step.3.t": "Payment",
+    "step.3.d": "You pay for the booking securely.",
+    "step.4.t": "Confirmation",
+    "step.4.d": "Your stay is confirmed.",
+    "step.5.t": "Preparation",
+    "step.5.d": "We prepare the home, beds made for you.",
+    "step.6.t": "Stay in Nendaz",
+    "step.6.d": "Enjoy your holiday — we stay reachable.",
+    "step.7.t": "Check & cleaning",
+    "step.7.d": "Flexible check-out, we take care of the rest.",
+
+    "review.1.quote":
+      "Warm welcome, spotless chalet and a late arrival with no trouble at all. We'll be back!",
+    "review.1.author": "Marie L.",
+    "review.1.meta": "Family · February 2025",
+    "review.2.quote":
+      "Perfect communication, the place even nicer than in the photos. Beds ready on arrival — a real plus.",
+    "review.2.author": "Thomas B.",
+    "review.2.meta": "Couple · January 2025",
+    "review.3.quote":
+      "In-Alpes has managed our apartment for two years. Total peace of mind, one contact for everything.",
+    "review.3.author": "The Roux family",
+    "review.3.meta": "Owner",
+
+    "local.1.title": "4 Vallées ski area",
+    "local.1.d": "412 km of slopes accessible from Nendaz.",
+    "local.2.title": "Activities summer and winter",
+    "local.2.d": "Hiking, mountain biking, skiing, snowshoeing and bisses.",
+    "local.3.title": "Local events",
+    "local.3.d": "We share the resort's calendar with you.",
+
+    "services.hero.eyebrow": "Services · Owners",
+    "services.hero.title": "Your second home, managed from A to Z",
+    "services.hero.sub":
+      "You entrust us with your property, we take care of everything. One contact, no coordination to handle.",
+    "services.hero.cta1": "Discuss my property",
+    "services.hero.cta2": "See our rentals",
+
+    "services.benefits.eyebrow": "Our advantages",
+    "services.benefits.title": "Why entrust your property to us",
+    "services.benefits.lead": "A single local partner, available all year round.",
+    "benefit.1.t": "A single contact",
+    "benefit.1.d": "One person for the rental, upkeep and follow-up. No coordination to handle.",
+    "benefit.2.t": "Flexibility & speed",
+    "benefit.2.d": "We adapt to your needs and react fast, on site and all year.",
+    "benefit.3.t": "Peace of mind",
+    "benefit.3.d": "Your home is in good hands, maintained and watched over while you're away.",
+
+    "services.assort.eyebrow": "Our range",
+    "services.assort.title": "Every service, under one roof",
+    "services.assort.lead": "Pick what you need — we take care of the rest.",
+    "services.how.title": "Entrusting your property, step by step",
+
+    "services.faq.eyebrow": "Frequently asked",
+    "services.faq.title": "You may be wondering…",
+    "services.faq.lead": "Answers to the questions owners ask us most often.",
+    "faq.1.q": "Can I choose only some services?",
+    "faq.1.a":
+      "Yes. Our range is modular: take what you need, from rental only to full management.",
+    "faq.2.q": "How is pricing set?",
+    "faq.2.a":
+      "A flat rate, with public prices and no hidden fees. We give you a clear offer after a first chat.",
+    "faq.3.q": "Do you manage the rental of my home?",
+    "faq.3.a":
+      "Yes: listings, bookings, guest welcome, cleaning and laundry between stays. You have nothing to coordinate.",
+    "faq.4.q": "What happens if there's a problem during a stay?",
+    "faq.4.a":
+      "We're local and quickly reachable. A team steps in on site, for your guests and your property alike.",
+    "faq.5.q": "Do you follow up on works and upkeep?",
+    "faq.5.a": "Yes, we coordinate the tradespeople, check the work and send you photo reports.",
+    "faq.6.q": "Which languages do you work in?",
+    "faq.6.a": "French, English and Dutch — in writing and by phone.",
+    "services.cta.title": "Let's talk about your property",
+    "services.cta.sub": "A simple conversation to understand your needs and propose a clear offer.",
+    "services.cta.btn": "Request an offer",
+
+    "apt.usp.rating": "4.95/5 · 596 reviews",
+    "apt.usp.promo": "−10% from 7 nights",
+    "apt.usp.flex": "Flexible check-in",
+    "apt.usp.clean": "Hotel-grade cleaning",
   },
   nl: {
-    "brand": "In-Alpes Chalet Services",
+    brand: "In-Alpes Chalet Services",
     "brand.tagline": "Haute-Nendaz · Wallis · 4 Vallées",
     "nav.home": "Home",
     "nav.apartments": "Verhuur",
@@ -284,10 +554,11 @@ export const dictionaries: Record<Locale, Dict> = {
     "lang.nl": "Nederlands",
 
     "hero.eyebrow": "Verhuur & beheer in Wallis",
-    "hero.title": "Geniet van de bergen. Wij regelen de rest.",
-    "hero.subtitle": "Karaktervolle chalets en appartementen in Haute-Nendaz, plus volledig beheer voor uw tweede verblijf.",
+    "hero.title": "Uw vakantie in Haute-Nendaz, eenvoudig geregeld",
+    "hero.subtitle":
+      "Echt schone verblijven, een flexibele aankomst en persoonlijk contact. En voor eigenaars: één aanspreekpunt voor alles.",
     "hero.cta.rent": "Een woning huren",
-    "hero.cta.manage": "Mijn woning laten beheren",
+    "hero.cta.manage": "Laten beheren",
     "hero.proof": "4,95/5 op 596 Airbnb-beoordelingen",
 
     "home.apartments.title": "Onze woningen",
@@ -298,7 +569,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.offer.title": "-10% vanaf 7 nachten",
     "home.offer.sub": "Het hele jaar geldig op al onze woningen. Code: WEEK10.",
     "home.about.title": "Over ons",
-    "home.about.body": "Gevestigd in Haute-Nendaz, verwelkomen wij al meer dan tien jaar reizigers en eigenaren met dezelfde zorg. Een lokaal, reactief team dat uw taal spreekt.",
+    "home.about.body":
+      "Gevestigd in Haute-Nendaz, verwelkomen wij al meer dan tien jaar reizigers en eigenaren met dezelfde zorg. Een lokaal, reactief team dat uw taal spreekt.",
     "home.contact.title": "Contact",
     "home.contact.sub": "Wij antwoorden binnen 24 werkuren.",
 
@@ -337,8 +609,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "form.message": "Bericht",
     "form.submit": "Aanvraag versturen",
     "form.success.title": "Aanvraag verstuurd",
-    "form.success.body": "Dit is een AANVRAAG, geen directe bevestiging. Wij nemen binnen 24 werkuren contact op.",
+    "form.success.body":
+      "Dit is een AANVRAAG, geen directe bevestiging. Wij nemen binnen 24 werkuren contact op.",
 
+    "services.eyebrow": "Voor eigenaars",
     "services.title": "Beheerdiensten",
     "services.sub": "Één partner voor uw tweede verblijf.",
     "svc.rental.title": "Seizoensverhuur",
@@ -366,7 +640,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.login.sub": "Alleen voor het team.",
     "admin.login.password": "Wachtwoord",
     "admin.login.submit": "Inloggen",
-    "admin.login.hint": "Demo: wachtwoord is \"admin\".",
+    "admin.login.hint": 'Demo: wachtwoord is "admin".',
     "admin.login.error": "Verkeerd wachtwoord.",
     "admin.logout": "Uitloggen",
     "admin.nav.dashboard": "Dashboard",
@@ -404,5 +678,135 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Lift",
 
     "footer.rights": "Alle rechten voorbehouden",
+
+    "hero.usp.1": "Geen verborgen kosten",
+    "hero.usp.2": "Publieke prijzen",
+    "hero.usp.3": "Flexibele aankomst",
+    "hero.promo": "−10% vanaf 7 nachten",
+
+    "home.aud.eyebrow": "Twee diensten, één aanspreekpunt",
+    "home.aud.title": "Komt u op vakantie of vertrouwt u uw woning toe?",
+    "home.aud.rent.eyebrow": "Gasten",
+    "home.aud.rent.title": "Een woning huren",
+    "home.aud.rent.desc":
+      "Schone, gastvrije chalets en appartementen, een flexibele aankomst en alle lokale tips.",
+    "home.aud.rent.cta": "Bekijk de woningen",
+    "home.aud.own.eyebrow": "Eigenaars",
+    "home.aud.own.title": "Uw woning laten beheren",
+    "home.aud.own.desc":
+      "Verhuur, schoonmaak, wasserij, werfopvolging: één aanspreekpunt voor uw tweede verblijf.",
+    "home.aud.own.cta": "Ontdek de diensten",
+
+    "home.props.eyebrow": "Onze woningen",
+    "home.props.title": "Enkele van onze chalets",
+    "home.props.lead": "Al onze prijzen zijn openbaar. Online boeken, zorgeloos verblijven.",
+
+    "home.svc.eyebrow": "Voor eigenaars",
+    "home.svc.title": "Alles wat uw woning nodig heeft",
+    "home.svc.lead": "Een volledig dienstenpakket, verzorgd door één lokaal team.",
+    "home.svc.cta": "Alle diensten",
+
+    "home.how.eyebrow": "Hoe het werkt",
+    "home.how.title": "Van aanvraag tot verblijf, volledig helder",
+    "home.how.lead": "Zeven eenvoudige stappen, geen verrassingen. U weet altijd waar u staat.",
+
+    "home.rev.eyebrow": "Zij vertrouwden ons",
+    "home.rev.title": "4,95/5 op 596 beoordelingen",
+
+    "home.local.eyebrow": "Welkom in Nendaz",
+    "home.local.title": "In het hart van de 4 Vallées",
+    "home.local.lead":
+      "Wij delen de goede tips: activiteiten, evenementen en toegang tot het skigebied.",
+
+    "home.cta.title": "Een vraag, een datum, een project?",
+    "home.cta.sub": "Schrijf ons — wij antwoorden snel en persoonlijk.",
+    "home.cta.btn": "Contacteer ons",
+
+    "step.1.t": "Contact opnemen",
+    "step.1.d": "U stuurt ons uw boekingsaanvraag.",
+    "step.2.t": "Aanbod & details",
+    "step.2.d": "Een eerste antwoord met de details en ons aanbod.",
+    "step.3.t": "Betaling",
+    "step.3.d": "U betaalt de boeking veilig.",
+    "step.4.t": "Bevestiging",
+    "step.4.d": "Uw verblijf is bevestigd.",
+    "step.5.t": "Voorbereiding",
+    "step.5.d": "Wij maken de woning klaar, bedden voor u opgemaakt.",
+    "step.6.t": "Verblijf in Nendaz",
+    "step.6.d": "Geniet van uw vakantie — wij blijven bereikbaar.",
+    "step.7.t": "Controle & schoonmaak",
+    "step.7.d": "Flexibel vertrek, wij regelen de rest.",
+
+    "review.1.quote":
+      "Warm onthaal, onberispelijk chalet en een late aankomst zonder enig probleem. Wij komen terug!",
+    "review.1.author": "Marie L.",
+    "review.1.meta": "Gezin · Februari 2025",
+    "review.2.quote":
+      "Perfecte communicatie, de woning nog mooier dan op de foto's. Bedden klaar bij aankomst — een echte plus.",
+    "review.2.author": "Thomas B.",
+    "review.2.meta": "Koppel · Januari 2025",
+    "review.3.quote":
+      "In-Alpes beheert ons appartement al twee jaar. Volledige gemoedsrust, één aanspreekpunt voor alles.",
+    "review.3.author": "Familie Roux",
+    "review.3.meta": "Eigenaar",
+
+    "local.1.title": "Skigebied 4 Vallées",
+    "local.1.d": "412 km pistes bereikbaar vanuit Nendaz.",
+    "local.2.title": "Activiteiten zomer en winter",
+    "local.2.d": "Wandelen, mountainbiken, skiën, sneeuwschoenwandelen en bisses.",
+    "local.3.title": "Lokale evenementen",
+    "local.3.d": "Wij delen de agenda van het resort met u.",
+
+    "services.hero.eyebrow": "Diensten · Eigenaars",
+    "services.hero.title": "Uw tweede verblijf, beheerd van A tot Z",
+    "services.hero.sub":
+      "U vertrouwt ons uw woning toe, wij regelen alles. Eén aanspreekpunt, geen coördinatie voor u.",
+    "services.hero.cta1": "Over mijn woning praten",
+    "services.hero.cta2": "Bekijk onze verhuur",
+
+    "services.benefits.eyebrow": "Onze voordelen",
+    "services.benefits.title": "Waarom uw woning aan ons toevertrouwen",
+    "services.benefits.lead": "Eén lokale partner, het hele jaar beschikbaar.",
+    "benefit.1.t": "Eén aanspreekpunt",
+    "benefit.1.d": "Eén persoon voor verhuur, onderhoud en opvolging. Geen coördinatie voor u.",
+    "benefit.2.t": "Flexibiliteit & snelheid",
+    "benefit.2.d":
+      "Wij passen ons aan uw wensen aan en reageren snel, ter plaatse en het hele jaar.",
+    "benefit.3.t": "Gemoedsrust",
+    "benefit.3.d": "Uw woning is in goede handen, onderhouden en bewaakt tijdens uw afwezigheid.",
+
+    "services.assort.eyebrow": "Ons aanbod",
+    "services.assort.title": "Alle diensten, onder één dak",
+    "services.assort.lead": "Kies wat u nodig hebt — wij regelen de rest.",
+    "services.how.title": "Uw woning toevertrouwen, stap voor stap",
+
+    "services.faq.eyebrow": "Veelgestelde vragen",
+    "services.faq.title": "Misschien vraagt u zich af…",
+    "services.faq.lead": "Antwoorden op de vragen die eigenaars ons het vaakst stellen.",
+    "faq.1.q": "Kan ik slechts enkele diensten kiezen?",
+    "faq.1.a":
+      "Ja. Ons aanbod is modulair: u neemt wat u nodig hebt, van enkel verhuur tot volledig beheer.",
+    "faq.2.q": "Hoe worden de tarieven bepaald?",
+    "faq.2.a":
+      "Een vast tarief, met publieke prijzen en geen verborgen kosten. Na een eerste gesprek krijgt u een helder aanbod.",
+    "faq.3.q": "Beheert u de verhuur van mijn woning?",
+    "faq.3.a":
+      "Ja: advertenties, boekingen, onthaal van gasten, schoonmaak en wasserij tussen verblijven. U hoeft niets te coördineren.",
+    "faq.4.q": "Wat gebeurt er bij een probleem tijdens een verblijf?",
+    "faq.4.a":
+      "Wij zijn lokaal en snel bereikbaar. Een team komt ter plaatse tussen, voor uw gasten én uw woning.",
+    "faq.5.q": "Volgt u werken en onderhoud op?",
+    "faq.5.a": "Ja, wij coördineren de vaklui, controleren de werken en bezorgen u fotoverslagen.",
+    "faq.6.q": "In welke talen communiceert u?",
+    "faq.6.a": "In het Frans, Engels en Nederlands — schriftelijk en telefonisch.",
+    "services.cta.title": "Laten we over uw woning praten",
+    "services.cta.sub":
+      "Een eenvoudig gesprek om uw wensen te begrijpen en een helder aanbod te doen.",
+    "services.cta.btn": "Een aanbod vragen",
+
+    "apt.usp.rating": "4,95/5 · 596 beoordelingen",
+    "apt.usp.promo": "−10% vanaf 7 nachten",
+    "apt.usp.flex": "Flexibele aankomst",
+    "apt.usp.clean": "Hotelschoonmaak",
   },
 };
