@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import type { Locale, LocalizedText } from "@/data/types";
 import { dictionaries } from "./translations";
 
@@ -28,13 +36,18 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (typeof window !== "undefined") window.localStorage.setItem(STORAGE_KEY, l);
   }, []);
 
+  // Keep the <html lang> attribute in sync with the active locale (a11y + SEO).
+  useEffect(() => {
+    if (typeof document !== "undefined") document.documentElement.lang = locale;
+  }, [locale]);
+
   const value = useMemo<I18nCtx>(() => {
     const dict = dictionaries[locale];
     return {
       locale,
       setLocale,
       t: (key) => dict[key] ?? dictionaries.fr[key] ?? key,
-      tx: (v) => (v ? v[locale] ?? v.fr : ""),
+      tx: (v) => (v ? (v[locale] ?? v.fr) : ""),
     };
   }, [locale, setLocale]);
 

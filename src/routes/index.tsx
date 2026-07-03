@@ -40,7 +40,10 @@ const LOCAL_ICONS: LucideIcon[] = [CableCar, MountainSnow, CalendarHeart];
 
 function Home_() {
   const { t } = useI18n();
-  const { data: apartments = [] } = useQuery({ queryKey: ["apartments"], queryFn: listApartments });
+  const { data: apartments = [], isPending } = useQuery({
+    queryKey: ["apartments"],
+    queryFn: listApartments,
+  });
 
   return (
     <>
@@ -134,9 +137,14 @@ function Home_() {
             </Link>
           </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {apartments.slice(0, 3).map((a) => (
-              <ApartmentCard key={a.id} apartment={a} />
-            ))}
+            {isPending
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-[4/3] animate-pulse border border-border bg-secondary"
+                  />
+                ))
+              : apartments.slice(0, 3).map((a) => <ApartmentCard key={a.id} apartment={a} />)}
           </div>
         </div>
       </section>

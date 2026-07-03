@@ -29,7 +29,7 @@ export type AvailabilityStatus = "free" | "booked" | "prebooked" | "blocked";
 export interface AvailabilityRange {
   apartmentId: string;
   start: string; // ISO date YYYY-MM-DD
-  end: string;   // ISO date YYYY-MM-DD (inclusive)
+  end: string; // ISO date YYYY-MM-DD (inclusive)
   status: AvailabilityStatus;
   expiresAt?: string; // ISO datetime for prebooked entries
 }
