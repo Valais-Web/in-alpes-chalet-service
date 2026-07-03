@@ -31,6 +31,15 @@ export const bookingInputSchema = z
   });
 export type BookingInput = z.infer<typeof bookingInputSchema>;
 
+/** Public contact-page message. */
+export const contactInputSchema = z.object({
+  name: z.string().min(1).max(120),
+  email: z.string().email().max(200),
+  phone: z.string().max(40).optional().default(""),
+  message: z.string().min(1).max(4000),
+});
+export type ContactInput = z.infer<typeof contactInputSchema>;
+
 /** Admin: create/update an apartment. */
 export const apartmentInputSchema = z.object({
   id: z.string().min(1).optional(), // absent → create

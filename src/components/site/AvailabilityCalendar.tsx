@@ -46,7 +46,10 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
   const [dragEnd, setDragEnd] = useState<string | null>(null);
 
   const monthList = useMemo(() => {
-    return Array.from({ length: months }, (_, i) => new Date(cursor.getFullYear(), cursor.getMonth() + i, 1));
+    return Array.from(
+      { length: months },
+      (_, i) => new Date(cursor.getFullYear(), cursor.getMonth() + i, 1),
+    );
   }, [cursor, months]);
 
   const commit = () => {
@@ -95,8 +98,13 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
             editable={editable}
             dragStart={dragStart}
             dragEnd={dragEnd}
-            onDown={(d) => { setDragStart(d); setDragEnd(d); }}
-            onEnter={(d) => { if (dragStart) setDragEnd(d); }}
+            onDown={(d) => {
+              setDragStart(d);
+              setDragEnd(d);
+            }}
+            onEnter={(d) => {
+              if (dragStart) setDragEnd(d);
+            }}
             onUp={commit}
           />
         ))}
@@ -115,7 +123,15 @@ function Legend({ swatch, label }: { swatch: string; label: string }) {
 }
 
 function MonthView({
-  month, ranges, locale, editable, dragStart, dragEnd, onDown, onEnter, onUp,
+  month,
+  ranges,
+  locale,
+  editable,
+  dragStart,
+  dragEnd,
+  onDown,
+  onEnter,
+  onUp,
 }: {
   month: Date;
   ranges: AvailabilityRange[];
@@ -132,11 +148,14 @@ function MonthView({
   const startOffset = (first.getDay() + 6) % 7; // Monday-first
   const cells: (Date | null)[] = [];
   for (let i = 0; i < startOffset; i++) cells.push(null);
-  for (let i = 1; i <= daysInMonth; i++) cells.push(new Date(month.getFullYear(), month.getMonth(), i));
+  for (let i = 1; i <= daysInMonth; i++)
+    cells.push(new Date(month.getFullYear(), month.getMonth(), i));
 
   const monthLabel = first.toLocaleDateString(locale, { month: "long", year: "numeric" });
   const dowFormatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
-  const dow = Array.from({ length: 7 }, (_, i) => dowFormatter.format(addDays(new Date(2024, 0, 1), i)));
+  const dow = Array.from({ length: 7 }, (_, i) =>
+    dowFormatter.format(addDays(new Date(2024, 0, 1), i)),
+  );
 
   const inDrag = (iso: string) => {
     if (!dragStart || !dragEnd) return false;
@@ -148,7 +167,9 @@ function MonthView({
     <div className="rounded-2xl border border-border p-4">
       <div className="mb-3 text-sm font-medium capitalize">{monthLabel}</div>
       <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-wide text-muted-foreground">
-        {dow.map((d) => <div key={d}>{d}</div>)}
+        {dow.map((d) => (
+          <div key={d}>{d}</div>
+        ))}
       </div>
       <div className="mt-1 grid grid-cols-7 gap-1" onMouseUp={onUp} onMouseLeave={onUp}>
         {cells.map((d, i) => {

@@ -62,6 +62,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "status.prebooked": "Pré-réservé",
     "status.blocked": "Bloqué",
 
+    "state.loading": "Chargement…",
+    "state.error": "Une erreur est survenue. Réessayez plus tard.",
+    "apt.empty": "Aucun logement disponible pour le moment.",
+
     "form.arrival": "Date d'arrivée",
     "form.departure": "Date de départ",
     "form.guests": "Nombre de voyageurs",
@@ -96,9 +100,13 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "contact.title": "Contact",
     "contact.sub": "Une question ? Écrivez-nous.",
+    "contact.sending": "Envoi…",
+    "contact.error": "L'envoi a échoué. Réessayez ou écrivez-nous directement.",
+    "contact.sent.title": "Message envoyé",
+    "contact.sent.body": "Merci ! Nous vous répondons sous 24 h ouvrées.",
     "contact.address": "Route de Nendaz 100, 1997 Haute-Nendaz, Suisse",
-    "contact.phone": "+41 27 000 00 00",
-    "contact.email": "hello@inalpes-chalet.ch",
+    "contact.phone": "+41 77 511 59 09",
+    "contact.email": "info@in-alpes.ch",
 
     "admin.login.title": "Espace admin",
     "admin.login.sub": "Connexion réservée à l'équipe.",
@@ -355,6 +363,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "status.prebooked": "Pre-booked",
     "status.blocked": "Blocked",
 
+    "state.loading": "Loading…",
+    "state.error": "Something went wrong. Please try again later.",
+    "apt.empty": "No rentals available right now.",
+
     "form.arrival": "Arrival date",
     "form.departure": "Departure date",
     "form.guests": "Number of guests",
@@ -387,9 +399,13 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "contact.title": "Contact",
     "contact.sub": "Have a question? Write to us.",
+    "contact.sending": "Sending…",
+    "contact.error": "Sending failed. Please try again or email us directly.",
+    "contact.sent.title": "Message sent",
+    "contact.sent.body": "Thank you! We reply within 1 business day.",
     "contact.address": "Route de Nendaz 100, 1997 Haute-Nendaz, Switzerland",
-    "contact.phone": "+41 27 000 00 00",
-    "contact.email": "hello@inalpes-chalet.ch",
+    "contact.phone": "+41 77 511 59 09",
+    "contact.email": "info@in-alpes.ch",
 
     "admin.login.title": "Admin area",
     "admin.login.sub": "Team access only.",
@@ -640,6 +656,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "status.prebooked": "Voorlopig",
     "status.blocked": "Geblokkeerd",
 
+    "state.loading": "Laden…",
+    "state.error": "Er ging iets mis. Probeer het later opnieuw.",
+    "apt.empty": "Momenteel geen woningen beschikbaar.",
+
     "form.arrival": "Aankomstdatum",
     "form.departure": "Vertrekdatum",
     "form.guests": "Aantal gasten",
@@ -672,9 +692,13 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "contact.title": "Contact",
     "contact.sub": "Een vraag? Schrijf ons.",
+    "contact.sending": "Verzenden…",
+    "contact.error": "Verzenden mislukt. Probeer opnieuw of mail ons rechtstreeks.",
+    "contact.sent.title": "Bericht verzonden",
+    "contact.sent.body": "Bedankt! We reageren binnen 1 werkdag.",
     "contact.address": "Route de Nendaz 100, 1997 Haute-Nendaz, Zwitserland",
-    "contact.phone": "+41 27 000 00 00",
-    "contact.email": "hello@inalpes-chalet.ch",
+    "contact.phone": "+41 77 511 59 09",
+    "contact.email": "info@in-alpes.ch",
 
     "admin.login.title": "Adminomgeving",
     "admin.login.sub": "Alleen voor het team.",
