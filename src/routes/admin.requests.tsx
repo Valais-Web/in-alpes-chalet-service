@@ -16,6 +16,8 @@ function AdminRequests() {
   const qc = useQueryClient();
   const { data: bookings = [] } = useQuery({ queryKey: ["bookings"], queryFn: listBookings });
   const [filter, setFilter] = useState<BookingStatus | "all">("all");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState(false);
 
   const filtered = filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
 
@@ -24,9 +26,17 @@ function AdminRequests() {
     status: BookingStatus,
     action: "confirm" | "decline" | "none" = "none",
   ) => {
-    await updateBookingStatus(id, status, action);
-    qc.invalidateQueries({ queryKey: ["bookings"] });
-    qc.invalidateQueries({ queryKey: ["availability"] });
+    setBusyId(id);
+    setActionError(false);
+    try {
+      await updateBookingStatus(id, status, action);
+      await qc.invalidateQueries({ queryKey: ["bookings"] });
+      qc.invalidateQueries({ queryKey: ["availability"] });
+    } catch {
+      setActionError(true);
+    } finally {
+      setBusyId(null);
+    }
   };
 
   return (
@@ -45,6 +55,12 @@ function AdminRequests() {
           ))}
         </select>
       </div>
+
+      {actionError && (
+        <p className="mt-4 border border-accent bg-accent-tint px-3 py-2 text-sm text-accent">
+          {t("admin.requests.actionError")}
+        </p>
+      )}
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-border">
         <table className="w-full text-sm">
@@ -77,19 +93,22 @@ function AdminRequests() {
                   <div className="inline-flex gap-1">
                     <button
                       onClick={() => update(b.id, "answered", "confirm")}
-                      className="bg-accent px-2.5 py-1 text-xs text-accent-foreground"
+                      disabled={busyId === b.id}
+                      className="bg-accent px-2.5 py-1 text-xs text-accent-foreground disabled:opacity-50"
                     >
                       {t("admin.requests.confirm")}
                     </button>
                     <button
                       onClick={() => update(b.id, "archived", "decline")}
-                      className="border border-border px-2.5 py-1 text-xs"
+                      disabled={busyId === b.id}
+                      className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
                     >
                       {t("admin.requests.decline")}
                     </button>
                     <button
                       onClick={() => update(b.id, "archived")}
-                      className="border border-border px-2.5 py-1 text-xs"
+                      disabled={busyId === b.id}
+                      className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
                     >
                       {t("admin.requests.archive")}
                     </button>
