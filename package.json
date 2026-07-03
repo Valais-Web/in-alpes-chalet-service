@@ -12,6 +12,9 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "@netlify/blobs": "^8.1.0",
+    "resend": "^4.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -67,6 +70,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@netlify/functions": "^2.8.2",
     "@lovable.dev/vite-tanstack-config": "^2.6.4",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
