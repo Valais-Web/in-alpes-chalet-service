@@ -23,8 +23,8 @@ import type {
   BookingStatus,
 } from "./types";
 
-import seedApartments from "../../src/data/apartments.json" with { type: "json" };
-import seedAvailability from "../../src/data/availability.json" with { type: "json" };
+import seedApartments from "../../src/data/apartments.json";
+import seedAvailability from "../../src/data/availability.json";
 
 export interface Repo {
   listApartments(): Promise<Apartment[]>;
