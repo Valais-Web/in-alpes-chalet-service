@@ -33,7 +33,7 @@ so the whole backend runs locally with nothing configured:
 | Blobs     | `NETLIFY_BLOBS_*` / Netlify | in-process Map                    |
 | Resend    | `RESEND_API_KEY`            | emails logged to console          |
 | Cloudinary| `CLOUDINARY_*`              | `sign-upload` returns 503         |
-| Auth      | `ADMIN_PASSWORD`+`SESSION_SECRET` / Neon Auth | fails **closed** (401) unless `ALLOW_DEV_OPEN_AUTH=1` in non-prod |
+| Auth      | `ADMIN_PASSWORD`+`SESSION_SECRET` (shared password) | fails **closed** (401) unless `ALLOW_DEV_OPEN_AUTH=1` in non-prod |
 
 Auth is the one service that does **not** silently fall open: with no secret
 configured, admin writes return 401. To work on the admin locally without auth
@@ -58,9 +58,9 @@ owner confirms in the admin.
 - Every admin write/upload calls `requireOwner(req)` server-side (§6).
 - Cloudinary secret never leaves the server: the browser gets a short-lived
   signature and uploads directly; Neon stores only the URL.
-- `lib/auth.ts` has a `verifyNeonAuthSession` seam where Neon Auth (Better Auth)
-  plugs in; until then a signed-cookie password login is the fallback. Real auth
-  is a launch blocker (§11.3).
+- `lib/auth.ts` uses a single shared password (`ADMIN_PASSWORD`) issued as a
+  signed HttpOnly session cookie — no third-party auth (CLAUDE.md §2). Set a
+  strong password + `SESSION_SECRET` in production; never set `ALLOW_DEV_OPEN_AUTH`.
 
 ## ⚠️ Deployment note — SSR target
 

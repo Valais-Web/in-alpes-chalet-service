@@ -26,9 +26,8 @@ export const env = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ?? "",
   CLOUDINARY_UPLOAD_FOLDER: process.env.CLOUDINARY_UPLOAD_FOLDER ?? "in-alpes/apartments",
 
-  // Owner auth. In production this is delegated to Neon Auth (Better Auth);
-  // ADMIN_PASSWORD + SESSION_SECRET provide a self-contained fallback so the
-  // admin is usable before Neon Auth is wired.
+  // Owner auth: a single shared password issued as a signed session cookie
+  // (CLAUDE.md §2 — no third-party auth for 1-2 admins).
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ?? "",
   SESSION_SECRET: process.env.SESSION_SECRET ?? "",
 

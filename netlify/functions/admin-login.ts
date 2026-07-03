@@ -2,8 +2,8 @@
  * POST /api/admin/login   { password }   → sets HttpOnly session cookie
  * POST /api/admin/logout                 → clears it
  *
- * Fallback owner auth for before Neon Auth is wired. In dev-open mode (no
- * ADMIN_PASSWORD configured) login succeeds so the admin is reachable locally.
+ * Shared-password owner auth. In dev-open mode (no ADMIN_PASSWORD configured,
+ * ALLOW_DEV_OPEN_AUTH=1, non-production) login succeeds so the admin is reachable locally.
  */
 import { verifyPassword, createSessionCookie, clearSessionCookie } from "../lib/auth";
 import { json, readJson, requireMethod, toErrorResponse, HttpError } from "../lib/http";
