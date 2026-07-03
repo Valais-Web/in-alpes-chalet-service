@@ -90,3 +90,38 @@ export async function sendBookingEmails({
     }),
   ]);
 }
+
+export interface ContactMessage {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}
+
+/** Contact-page message → owner inbox (reply-to the sender). */
+export async function sendContactEmail(input: ContactMessage): Promise<void> {
+  const html = `
+    <h2>Nouveau message de contact</h2>
+    <ul style="line-height:1.6">
+      <li><strong>Nom :</strong> ${esc(input.name)}</li>
+      <li><strong>Email :</strong> ${esc(input.email)}</li>
+      ${input.phone ? `<li><strong>Téléphone :</strong> ${esc(input.phone)}</li>` : ""}
+      <li><strong>Message :</strong><br/>${esc(input.message).replace(/\n/g, "<br/>")}</li>
+    </ul>`;
+
+  if (!flags.hasResend) {
+    console.info("[email] (dev, not sent) contact →", env.OWNER_NOTIFICATION_EMAIL, {
+      from: input.email,
+    });
+    return;
+  }
+
+  const resend = new Resend(env.RESEND_API_KEY);
+  await resend.emails.send({
+    from: env.EMAIL_FROM,
+    to: env.OWNER_NOTIFICATION_EMAIL,
+    replyTo: input.email,
+    subject: `Nouveau message de contact — ${input.name}`,
+    html,
+  });
+}

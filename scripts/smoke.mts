@@ -12,7 +12,7 @@ import adminAvailability from "../netlify/functions/admin-availability.ts";
 const BASE = "http://localhost";
 let failures = 0;
 function check(name: string, cond: boolean, extra?: unknown) {
-  console.log(`${cond ? "✅" : "❌"} ${name}`, cond ? "" : extra ?? "");
+  console.log(`${cond ? "✅" : "❌"} ${name}`, cond ? "" : (extra ?? ""));
   if (!cond) failures++;
 }
 
@@ -35,7 +35,11 @@ const bookRes = await submitBooking(
   }),
 );
 const booked = await bookRes.json();
-check("submit-booking returns ok+id", bookRes.status === 200 && booked.ok === true && !!booked.id, booked);
+check(
+  "submit-booking returns ok+id",
+  bookRes.status === 200 && booked.ok === true && !!booked.id,
+  booked,
+);
 
 // 2. availability now has a prebooked hold for the range
 const av1 = await (await content(new Request(`${BASE}/api/content?type=availability`))).json();
@@ -99,7 +103,9 @@ await adminAvailability(
 const av3 = await (await content(new Request(`${BASE}/api/content?type=availability`))).json();
 check(
   "admin block published",
-  av3.some((r: any) => r.apartmentId === "apt-03" && r.start === "2027-03-01" && r.status === "blocked"),
+  av3.some(
+    (r: any) => r.apartmentId === "apt-03" && r.start === "2027-03-01" && r.status === "blocked",
+  ),
 );
 
 // 7. apartments read path

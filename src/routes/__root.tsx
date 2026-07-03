@@ -21,7 +21,9 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
         <p className="mt-4 text-sm text-muted-foreground">Page not found.</p>
-        <a href="/" className="mt-6 inline-flex btn-base bg-primary text-primary-foreground">Home</a>
+        <a href="/" className="mt-6 inline-flex btn-base bg-primary text-primary-foreground">
+          Home
+        </a>
       </div>
     </div>
   );
@@ -29,12 +31,22 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
-  useEffect(() => { reportLovableError(error, { boundary: "tanstack_root_error_component" }); }, [error]);
+  useEffect(() => {
+    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+  }, [error]);
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold">Something went wrong</h1>
-        <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 btn-base bg-primary text-primary-foreground">Try again</button>
+        <button
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="mt-6 btn-base bg-primary text-primary-foreground"
+        >
+          Try again
+        </button>
       </div>
     </div>
   );
@@ -46,12 +58,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "In-Alpes Chalet Services — Location & gérance à Haute-Nendaz" },
-      { name: "description", content: "Location de chalets et appartements de caractère à Haute-Nendaz (Valais, 4 Vallées) et gérance complète de résidences secondaires." },
+      {
+        name: "description",
+        content:
+          "Location de chalets et appartements de caractère à Haute-Nendaz (Valais, 4 Vallées) et gérance complète de résidences secondaires.",
+      },
       { name: "author", content: "In-Alpes Chalet Services" },
       { property: "og:site_name", content: "In-Alpes Chalet Services" },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "fr_CH" },
+      { property: "og:locale:alternate", content: "en_GB" },
+      { property: "og:locale:alternate", content: "nl_NL" },
       { property: "og:title", content: "In-Alpes Chalet Services — Haute-Nendaz" },
-      { property: "og:description", content: "Chalets et appartements à Haute-Nendaz, gérance complète pour résidences secondaires." },
+      {
+        property: "og:description",
+        content:
+          "Chalets et appartements à Haute-Nendaz, gérance complète pour résidences secondaires.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -59,7 +82,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -71,7 +97,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
-      <head><HeadContent /></head>
+      <head>
+        <HeadContent />
+      </head>
       <body>
         {children}
         <Scripts />
@@ -97,7 +125,9 @@ function SiteFrame() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1"><Outlet /></main>
+      <main className="flex-1">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

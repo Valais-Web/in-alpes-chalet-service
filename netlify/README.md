@@ -27,13 +27,13 @@ db/
 Every service degrades gracefully when its env vars are absent (see `lib/env.ts`),
 so the whole backend runs locally with nothing configured:
 
-| Service   | Configured                  | Missing (fallback)                |
-| --------- | --------------------------- | --------------------------------- |
-| Neon      | `NEON_DATABASE_URL`         | in-memory store seeded from JSON  |
-| Blobs     | `NETLIFY_BLOBS_*` / Netlify | in-process Map                    |
-| Resend    | `RESEND_API_KEY`            | emails logged to console          |
-| Cloudinary| `CLOUDINARY_*`              | `sign-upload` returns 503         |
-| Auth      | `ADMIN_PASSWORD`+`SESSION_SECRET` (shared password) | fails **closed** (401) unless `ALLOW_DEV_OPEN_AUTH=1` in non-prod |
+| Service    | Configured                                          | Missing (fallback)                                                |
+| ---------- | --------------------------------------------------- | ----------------------------------------------------------------- |
+| Neon       | `NEON_DATABASE_URL`                                 | in-memory store seeded from JSON                                  |
+| Blobs      | `NETLIFY_BLOBS_*` / Netlify                         | in-process Map                                                    |
+| Resend     | `RESEND_API_KEY`                                    | emails logged to console                                          |
+| Cloudinary | `CLOUDINARY_*`                                      | `sign-upload` returns 503                                         |
+| Auth       | `ADMIN_PASSWORD`+`SESSION_SECRET` (shared password) | fails **closed** (401) unless `ALLOW_DEV_OPEN_AUTH=1` in non-prod |
 
 Auth is the one service that does **not** silently fall open: with no secret
 configured, admin writes return 401. To work on the admin locally without auth

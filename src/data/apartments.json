@@ -23,9 +23,22 @@
     "bathrooms": 2,
     "surfaceM2": 120,
     "floor": "R+1",
-    "amenities": ["wifi", "fireplace", "parking", "washer", "dishwasher", "balcony", "mountainView", "skiStorage"],
+    "amenities": [
+      "wifi",
+      "fireplace",
+      "parking",
+      "washer",
+      "dishwasher",
+      "balcony",
+      "mountainView",
+      "skiStorage"
+    ],
     "pricePerNight": 320,
-    "location": { "lat": 46.1783, "lng": 7.3097, "address": "Route de Nendaz 100, 1997 Haute-Nendaz" },
+    "location": {
+      "lat": 46.1783,
+      "lng": 7.3097,
+      "address": "Route de Nendaz 100, 1997 Haute-Nendaz"
+    },
     "practical": {
       "checkIn": "16:00",
       "checkOut": "10:00",
@@ -62,7 +75,11 @@
     "floor": "3",
     "amenities": ["wifi", "parking", "washer", "balcony", "mountainView", "skiStorage", "elevator"],
     "pricePerNight": 195,
-    "location": { "lat": 46.1795, "lng": 7.3105, "address": "Chemin des Ecluses 12, 1997 Haute-Nendaz" },
+    "location": {
+      "lat": 46.1795,
+      "lng": 7.3105,
+      "address": "Chemin des Ecluses 12, 1997 Haute-Nendaz"
+    },
     "practical": {
       "checkIn": "16:00",
       "checkOut": "10:00",
@@ -99,7 +116,7 @@
     "floor": "2",
     "amenities": ["wifi", "washer", "elevator", "mountainView"],
     "pricePerNight": 115,
-    "location": { "lat": 46.1770, "lng": 7.3090, "address": "Rue du Village 5, 1997 Haute-Nendaz" },
+    "location": { "lat": 46.177, "lng": 7.309, "address": "Rue du Village 5, 1997 Haute-Nendaz" },
     "practical": {
       "checkIn": "16:00",
       "checkOut": "10:00",

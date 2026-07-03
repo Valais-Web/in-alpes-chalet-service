@@ -13,7 +13,7 @@ import content from "../netlify/functions/content.ts";
 const sql = neon(process.env.NEON_DATABASE_URL!);
 let bad = 0;
 const ok = (n: string, c: boolean, x?: unknown) => {
-  console.log(`${c ? "✅" : "❌"} ${n}`, c ? "" : x ?? "");
+  console.log(`${c ? "✅" : "❌"} ${n}`, c ? "" : (x ?? ""));
   if (!c) bad++;
 };
 
@@ -40,11 +40,19 @@ const res = await submitBooking(
 ok("submit-booking → 200", res.status === 200, await res.clone().json());
 
 const rows = await sql`select id, status from booking_requests where email = 'verify@example.com'`;
-ok("booking row persisted in Neon (status=new)", rows.length === 1 && rows[0].status === "new", rows);
+ok(
+  "booking row persisted in Neon (status=new)",
+  rows.length === 1 && rows[0].status === "new",
+  rows,
+);
 
 const hold =
   await sql`select status, expires_at from availability where apartment_id='apt-01' and start_date='2099-01-01'`;
-ok("48h prebooked hold persisted in Neon", hold.length === 1 && hold[0].status === "prebooked" && !!hold[0].expires_at, hold);
+ok(
+  "48h prebooked hold persisted in Neon",
+  hold.length === 1 && hold[0].status === "prebooked" && !!hold[0].expires_at,
+  hold,
+);
 
 // cleanup
 await sql`delete from booking_requests where email = 'verify@example.com'`;
@@ -62,7 +70,11 @@ const loginRes = await adminLogin(
 );
 const setCookie = loginRes.headers.get("set-cookie") ?? "";
 const cookie = setCookie.split(";")[0];
-ok("admin login issues a session cookie", loginRes.status === 200 && cookie.startsWith("inalpes_session="), setCookie);
+ok(
+  "admin login issues a session cookie",
+  loginRes.status === 200 && cookie.startsWith("inalpes_session="),
+  setCookie,
+);
 
 // --- Admin apartment round-trip (editor payload → Neon → published JSON) ---
 const newApt = {
@@ -89,7 +101,11 @@ const createRes = await adminApartments(
   }),
 );
 const created = await createRes.json();
-ok("admin creates apartment with all fields", createRes.status === 200 && !!created.apartment?.id, created);
+ok(
+  "admin creates apartment with all fields",
+  createRes.status === 200 && !!created.apartment?.id,
+  created,
+);
 
 const published = await (await content(new Request("http://x/api/content?type=apartments"))).json();
 const found = published.find((p: any) => p.slug === "verify-studio");

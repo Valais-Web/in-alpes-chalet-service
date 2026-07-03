@@ -187,7 +187,7 @@ Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `
 
 ## 11. Bloqueurs de lancement
 
-1. Vérifier le domaine in-alpes.ch dans Resend (SPF/DKIM) avant tout email client.
+1. ✅ Domaine in-alpes.ch vérifié dans Resend (SPF/DKIM) — fait. Envoi depuis `info@in-alpes.ch`.
 2. ✅ Neon en région EU (Francfort) — fait.
 3. Auth admin : définir un `ADMIN_PASSWORD` fort + `SESSION_SECRET` aléatoire dans l'env de prod ; **ne jamais** poser `ALLOW_DEV_OPEN_AUTH`. Session vérifiée côté serveur sur écritures/uploads (déjà implémenté).
 4. ✅ Tier gratuit Cloudinary confirmé pour les 3 logements — fait.

@@ -53,17 +53,17 @@
   --radius: 0px;
 
   /* Brand palette — black / white / fir green (no red) */
-  --ink: oklch(0.16 0 0);                 /* #141414 */
-  --white: oklch(1 0 0);                  /* #FFFFFF */
-  --surface-2: oklch(0.965 0.003 100);    /* #F5F5F4 */
-  --fir: oklch(0.475 0.075 155);          /* #2F6B4F — primary accent */
-  --fir-700: oklch(0.42 0.07 155);        /* #275A43 — pressed / hover */
-  --fir-bright: oklch(0.63 0.11 155);     /* #4CA47B — vivid CTA */
-  --fir-bright-700: oklch(0.57 0.10 155); /* #3E8E69 — bright pressed */
-  --alpine-tint: oklch(0.945 0.02 155);   /* #E7F1EC — soft chip / badge fill */
-  --alpine-wash: oklch(0.975 0.01 155);   /* #F2F8F5 — faintest wash */
-  --grey: oklch(0.52 0 0);                /* #6B6B6B */
-  --line: oklch(0.905 0.002 100);         /* #E4E4E2 */
+  --ink: oklch(0.16 0 0); /* #141414 */
+  --white: oklch(1 0 0); /* #FFFFFF */
+  --surface-2: oklch(0.965 0.003 100); /* #F5F5F4 */
+  --fir: oklch(0.475 0.075 155); /* #2F6B4F — primary accent */
+  --fir-700: oklch(0.42 0.07 155); /* #275A43 — pressed / hover */
+  --fir-bright: oklch(0.63 0.11 155); /* #4CA47B — vivid CTA */
+  --fir-bright-700: oklch(0.57 0.1 155); /* #3E8E69 — bright pressed */
+  --alpine-tint: oklch(0.945 0.02 155); /* #E7F1EC — soft chip / badge fill */
+  --alpine-wash: oklch(0.975 0.01 155); /* #F2F8F5 — faintest wash */
+  --grey: oklch(0.52 0 0); /* #6B6B6B */
+  --line: oklch(0.905 0.002 100); /* #E4E4E2 */
 
   --background: var(--white);
   --foreground: var(--ink);
@@ -93,8 +93,12 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { -webkit-font-smoothing: antialiased; }
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -102,12 +106,18 @@
     text-rendering: optimizeLegibility;
   }
   /* Display family (Jost) on headings — echoes the logo's geometric caps. */
-  h1, h2, h3, h4, h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  p { text-wrap: pretty; }
+  p {
+    text-wrap: pretty;
+  }
 }
 
 @utility container-page {
@@ -122,7 +132,9 @@
   padding-block: 3.5rem;
 }
 @media (min-width: 768px) {
-  .section-y { padding-block: 6rem; }
+  .section-y {
+    padding-block: 6rem;
+  }
 }
 
 /* Eyebrow: uppercase Jost label with wide tracking, fir-green. */
@@ -155,7 +167,8 @@
   font-size: 0.95rem;
   line-height: 1;
   white-space: nowrap;
-  transition: background 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
-              color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
-              border-color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition:
+    background 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
 }

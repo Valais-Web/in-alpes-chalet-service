@@ -212,6 +212,17 @@ export async function submitBookingRequest(
   return { ok: true, id: req.id };
 }
 
+export async function submitContact(input: {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}): Promise<{ ok: true }> {
+  if (LIVE) return apiSend<{ ok: true }>("POST", "/api/contact", input);
+  await delay(400);
+  return { ok: true };
+}
+
 export async function listBookings(): Promise<BookingRequest[]> {
   if (LIVE) return apiGet<BookingRequest[]>("/api/admin/requests");
   await delay();
