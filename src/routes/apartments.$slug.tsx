@@ -205,7 +205,7 @@ function Detail() {
             <span className="text-2xl font-semibold">CHF {apartment.pricePerNight}</span>
             <span className="text-xs text-muted-foreground">{t("apt.night")}</span>
           </div>
-          <BookingForm apartment={apartment} />
+          <BookingForm apartment={apartment} ranges={ranges} />
         </aside>
       </div>
     </div>
