@@ -1,0 +1,19 @@
+# Netlify configuration — In-Alpes Chalet Services.
+#
+# The SSR app is built by the Lovable/TanStack Start (nitro) pipeline; adjust the
+# publish dir if your nitro preset differs. Functions in netlify/functions/ are
+# deployed as standalone serverless functions and own the /api/* routes via each
+# function's `export const config = { path }` (Netlify Functions v2).
+
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+
+[functions]
+  # Bundle the shared lib + JSON fixtures imported by the functions.
+  node_bundler = "esbuild"
+  included_files = ["netlify/lib/**", "src/data/*.json"]
+
+[dev]
+  framework = "vite"
+  targetPort = 8080

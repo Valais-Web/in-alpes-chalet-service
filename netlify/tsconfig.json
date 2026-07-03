@@ -1,0 +1,16 @@
+{
+  "//": "Editor-only typing for the Netlify Functions. Not part of the app build (vite build ignores netlify/); Netlify bundles these at deploy with esbuild.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "../src/data/*.json"]
+}

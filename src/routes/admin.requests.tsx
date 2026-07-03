@@ -19,16 +19,25 @@ function AdminRequests() {
 
   const filtered = filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
 
-  const update = async (id: string, status: BookingStatus) => {
-    await updateBookingStatus(id, status);
+  const update = async (
+    id: string,
+    status: BookingStatus,
+    action: "confirm" | "decline" | "none" = "none",
+  ) => {
+    await updateBookingStatus(id, status, action);
     qc.invalidateQueries({ queryKey: ["bookings"] });
+    qc.invalidateQueries({ queryKey: ["availability"] });
   };
 
   return (
     <div>
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">{t("admin.nav.requests")}</h1>
-        <select value={filter} onChange={(e) => setFilter(e.target.value as BookingStatus | "all")} className="rounded-xl border border-border bg-background px-3 py-2 text-sm">
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value as BookingStatus | "all")}
+          className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+        >
           {STATUSES.map((s) => (
             <option key={s} value={s}>
               {s === "all" ? t("admin.requests.all") : t(`admin.requests.status.${s}`)}
@@ -55,22 +64,45 @@ function AdminRequests() {
                   <div className="font-medium">{b.name}</div>
                   <div className="text-xs text-muted-foreground">{b.email}</div>
                 </td>
-                <td className="px-4 py-3">{b.arrival} → {b.departure}</td>
+                <td className="px-4 py-3">
+                  {b.arrival} → {b.departure}
+                </td>
                 <td className="px-4 py-3">{b.guests}</td>
                 <td className="px-4 py-3">
-                  <span className="bg-secondary px-2 py-0.5 text-xs">{t(`admin.requests.status.${b.status}`)}</span>
+                  <span className="bg-secondary px-2 py-0.5 text-xs">
+                    {t(`admin.requests.status.${b.status}`)}
+                  </span>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="inline-flex gap-1">
-                    <button onClick={() => update(b.id, "answered")} className="bg-accent px-2.5 py-1 text-xs text-accent-foreground">{t("admin.requests.confirm")}</button>
-                    <button onClick={() => update(b.id, "answered")} className="border border-border px-2.5 py-1 text-xs">{t("admin.requests.decline")}</button>
-                    <button onClick={() => update(b.id, "archived")} className="border border-border px-2.5 py-1 text-xs">{t("admin.requests.archive")}</button>
+                    <button
+                      onClick={() => update(b.id, "answered", "confirm")}
+                      className="bg-accent px-2.5 py-1 text-xs text-accent-foreground"
+                    >
+                      {t("admin.requests.confirm")}
+                    </button>
+                    <button
+                      onClick={() => update(b.id, "archived", "decline")}
+                      className="border border-border px-2.5 py-1 text-xs"
+                    >
+                      {t("admin.requests.decline")}
+                    </button>
+                    <button
+                      onClick={() => update(b.id, "archived")}
+                      className="border border-border px-2.5 py-1 text-xs"
+                    >
+                      {t("admin.requests.archive")}
+                    </button>
                   </div>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">—</td></tr>
+              <tr>
+                <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+                  —
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

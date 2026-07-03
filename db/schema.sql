@@ -1,0 +1,81 @@
+-- In-Alpes Chalet Services — Neon (Postgres) schema.
+-- Source of truth, written only by Netlify Functions / admin (CLAUDE.md §3).
+-- Region: EU / Frankfurt (nLPD/RGPD, CLAUDE.md §2, §11).
+--
+-- Deviations from CLAUDE.md §4, applied deliberately:
+--   * `availability` stores date RANGES (start/end), not one row per date —
+--     this is what the frontend and published JSON already consume.
+--   * `apartments` adds price_per_night + lat/lng/address, required by the UI.
+
+CREATE TABLE IF NOT EXISTS apartments (
+  id                 text PRIMARY KEY,
+  slug               text UNIQUE NOT NULL,
+  sort_order         integer NOT NULL DEFAULT 0,
+
+  name_fr            text NOT NULL,
+  name_en            text NOT NULL DEFAULT '',
+  name_nl            text NOT NULL DEFAULT '',
+
+  short_desc_fr      text NOT NULL DEFAULT '',
+  short_desc_en      text NOT NULL DEFAULT '',
+  short_desc_nl      text NOT NULL DEFAULT '',
+
+  long_desc_fr       text NOT NULL DEFAULT '',
+  long_desc_en       text NOT NULL DEFAULT '',
+  long_desc_nl       text NOT NULL DEFAULT '',
+
+  guests             integer NOT NULL DEFAULT 1,
+  bedrooms           integer NOT NULL DEFAULT 0,
+  bathrooms          integer NOT NULL DEFAULT 0,
+  size_m2            integer NOT NULL DEFAULT 0,
+  floor              text NOT NULL DEFAULT '',
+
+  amenities          jsonb NOT NULL DEFAULT '[]'::jsonb,
+
+  rules_fr           text NOT NULL DEFAULT '',
+  rules_en           text NOT NULL DEFAULT '',
+  rules_nl           text NOT NULL DEFAULT '',
+
+  check_in           text NOT NULL DEFAULT '16:00',
+  check_out          text NOT NULL DEFAULT '10:00',
+
+  price_per_night    integer NOT NULL DEFAULT 0,       -- CHF
+  lat                double precision NOT NULL DEFAULT 0,
+  lng                double precision NOT NULL DEFAULT 0,
+  address            text NOT NULL DEFAULT '',
+
+  cover_image_url    text,                              -- Cloudinary URL
+  gallery_image_urls jsonb NOT NULL DEFAULT '[]'::jsonb,
+
+  created_at         timestamptz NOT NULL DEFAULT now(),
+  updated_at         timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS availability (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  apartment_id  text NOT NULL REFERENCES apartments(id) ON DELETE CASCADE,
+  start_date    date NOT NULL,
+  end_date      date NOT NULL,                          -- inclusive
+  status        text NOT NULL CHECK (status IN ('free','booked','prebooked','blocked')),
+  expires_at    timestamptz,                            -- non-null only for 'prebooked'
+  CHECK (end_date >= start_date)
+);
+CREATE INDEX IF NOT EXISTS availability_apartment_idx ON availability (apartment_id, start_date);
+
+CREATE TABLE IF NOT EXISTS booking_requests (
+  id            text PRIMARY KEY,
+  apartment_id  text NOT NULL REFERENCES apartments(id) ON DELETE CASCADE,
+  guest_name    text NOT NULL,
+  email         text NOT NULL,
+  phone         text,
+  arrival       date NOT NULL,
+  departure     date NOT NULL,
+  guests        integer NOT NULL DEFAULT 1,
+  message       text,
+  status        text NOT NULL DEFAULT 'new'
+                CHECK (status IN ('new','in_progress','answered','archived')),
+  created_at    timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS booking_requests_status_idx ON booking_requests (status, created_at DESC);
+
+-- Owner accounts are managed by Neon Auth (Better Auth); a single 'owner'.

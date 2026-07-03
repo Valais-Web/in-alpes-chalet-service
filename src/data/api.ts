@@ -1,9 +1,14 @@
 /**
  * Data access layer — front-end only.
  *
- * ALL reads and writes are stubbed and operate on in-memory copies of the
- * JSON fixtures. Every function returns a Promise so a real API can drop in
- * later without changing any component.
+ * Two interchangeable implementations behind one API:
+ *   • STUB (default): in-memory copies of the JSON fixtures. Zero config, used
+ *     for local UI work and preview builds.
+ *   • LIVE (VITE_API_MODE="live"): talks to the Netlify Functions. Reads come
+ *     from the published JSON via /api/content (never Neon directly — CLAUDE.md
+ *     §3); writes go to the /api/admin/* + /api/submit-booking endpoints.
+ *
+ * Components never know which is active — they just call these functions.
  */
 import apartmentsJson from "./apartments.json";
 import availabilityJson from "./availability.json";
@@ -20,6 +25,8 @@ import apt2 from "@/assets/apt-2.jpg";
 import apt3 from "@/assets/apt-3.jpg";
 import apt4 from "@/assets/apt-4.jpg";
 
+const LIVE = import.meta.env.VITE_API_MODE === "live";
+
 const IMAGE_MAP: Record<string, string> = {
   "apt-1": apt1,
   "apt-2": apt2,
@@ -27,11 +34,48 @@ const IMAGE_MAP: Record<string, string> = {
   "apt-4": apt4,
 };
 
+/** Cloudinary URLs pass through; fixture keys resolve to bundled assets. */
 export function resolveImage(key: string): string {
+  if (/^https?:\/\//.test(key)) return key;
   return IMAGE_MAP[key] ?? apt1;
 }
 
-// --- in-memory stores (reset on reload; simulates a backend) ---
+/** Expired pre-reservations read as free (computed client-side, CLAUDE.md §5). */
+export function effectiveStatus(r: AvailabilityRange): AvailabilityStatus {
+  if (r.status === "prebooked" && r.expiresAt && new Date(r.expiresAt) < new Date()) {
+    return "free";
+  }
+  return r.status;
+}
+
+// ---------------------------------------------------------------------------
+// LIVE transport
+// ---------------------------------------------------------------------------
+
+async function apiGet<T>(path: string): Promise<T> {
+  const res = await fetch(path, { credentials: "same-origin" });
+  if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
+  return res.json() as Promise<T>;
+}
+
+async function apiSend<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const res = await fetch(path, {
+    method,
+    credentials: "same-origin",
+    headers: body ? { "content-type": "application/json" } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`${method} ${path} failed: ${res.status} ${detail}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// ---------------------------------------------------------------------------
+// STUB in-memory stores
+// ---------------------------------------------------------------------------
+
 let apartments: Apartment[] = JSON.parse(JSON.stringify(apartmentsJson));
 let availability: AvailabilityRange[] = JSON.parse(JSON.stringify(availabilityJson));
 let bookings: BookingRequest[] = [
@@ -52,26 +96,34 @@ let bookings: BookingRequest[] = [
 
 const delay = (ms = 150) => new Promise((r) => setTimeout(r, ms));
 
-// --- effective status: expired prebooked -> free ---
-export function effectiveStatus(r: AvailabilityRange): AvailabilityStatus {
-  if (r.status === "prebooked" && r.expiresAt && new Date(r.expiresAt) < new Date()) {
-    return "free";
-  }
-  return r.status;
-}
+// ---------------------------------------------------------------------------
+// Apartments
+// ---------------------------------------------------------------------------
 
-// --- Apartments ---
 export async function listApartments(): Promise<Apartment[]> {
+  if (LIVE) return apiGet<Apartment[]>("/api/content?type=apartments");
   await delay();
   return apartments;
 }
 
 export async function getApartmentBySlug(slug: string): Promise<Apartment | null> {
+  if (LIVE) {
+    const all = await listApartments();
+    return all.find((a) => a.slug === slug) ?? null;
+  }
   await delay();
   return apartments.find((a) => a.slug === slug) ?? null;
 }
 
 export async function upsertApartment(apt: Apartment): Promise<Apartment> {
+  if (LIVE) {
+    const { apartment } = await apiSend<{ apartment: Apartment }>(
+      "POST",
+      "/api/admin/apartments",
+      apt,
+    );
+    return apartment;
+  }
   await delay();
   const idx = apartments.findIndex((a) => a.id === apt.id);
   if (idx >= 0) apartments[idx] = apt;
@@ -80,12 +132,25 @@ export async function upsertApartment(apt: Apartment): Promise<Apartment> {
 }
 
 export async function deleteApartment(id: string): Promise<void> {
+  if (LIVE) {
+    await apiSend("DELETE", `/api/admin/apartments?id=${encodeURIComponent(id)}`);
+    return;
+  }
   await delay();
   apartments = apartments.filter((a) => a.id !== id);
 }
 
-// --- Availability ---
+// ---------------------------------------------------------------------------
+// Availability
+// ---------------------------------------------------------------------------
+
 export async function listAvailability(apartmentId: string): Promise<AvailabilityRange[]> {
+  if (LIVE) {
+    const all = await apiGet<AvailabilityRange[]>("/api/content?type=availability");
+    return all
+      .filter((r) => r.apartmentId === apartmentId)
+      .map((r) => ({ ...r, status: effectiveStatus(r) }));
+  }
   await delay();
   return availability
     .filter((r) => r.apartmentId === apartmentId)
@@ -93,21 +158,39 @@ export async function listAvailability(apartmentId: string): Promise<Availabilit
 }
 
 export async function setAvailability(range: AvailabilityRange): Promise<void> {
+  if (LIVE) {
+    await apiSend("POST", "/api/admin/availability", range);
+    return;
+  }
   await delay();
   availability = [...availability, range];
 }
 
-export async function clearAvailability(apartmentId: string, start: string, end: string): Promise<void> {
+export async function clearAvailability(
+  apartmentId: string,
+  start: string,
+  end: string,
+): Promise<void> {
+  if (LIVE) {
+    await apiSend("DELETE", "/api/admin/availability", { apartmentId, start, end });
+    return;
+  }
   await delay();
   availability = availability.filter(
     (r) => !(r.apartmentId === apartmentId && r.start === start && r.end === end),
   );
 }
 
-// --- Bookings ---
+// ---------------------------------------------------------------------------
+// Bookings
+// ---------------------------------------------------------------------------
+
 export async function submitBookingRequest(
-  input: Omit<BookingRequest, "id" | "status" | "createdAt">,
-): Promise<BookingRequest> {
+  input: Omit<BookingRequest, "id" | "status" | "createdAt"> & { locale?: string },
+): Promise<{ ok: true; id: string }> {
+  if (LIVE) {
+    return apiSend<{ ok: true; id: string }>("POST", "/api/submit-booking", input);
+  }
   await delay(400);
   const req: BookingRequest = {
     ...input,
@@ -116,7 +199,6 @@ export async function submitBookingRequest(
     createdAt: new Date().toISOString(),
   };
   bookings = [req, ...bookings];
-  // simulate soft-hold: mark the period as prebooked in local data
   availability = [
     ...availability,
     {
@@ -124,18 +206,27 @@ export async function submitBookingRequest(
       start: input.arrival,
       end: input.departure,
       status: "prebooked",
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
     },
   ];
-  return req;
+  return { ok: true, id: req.id };
 }
 
 export async function listBookings(): Promise<BookingRequest[]> {
+  if (LIVE) return apiGet<BookingRequest[]>("/api/admin/requests");
   await delay();
   return bookings;
 }
 
-export async function updateBookingStatus(id: string, status: BookingStatus): Promise<void> {
+export async function updateBookingStatus(
+  id: string,
+  status: BookingStatus,
+  action: "confirm" | "decline" | "none" = "none",
+): Promise<void> {
+  if (LIVE) {
+    await apiSend("PATCH", "/api/admin/requests", { id, status, action });
+    return;
+  }
   await delay();
   bookings = bookings.map((b) => (b.id === id ? { ...b, status } : b));
 }
