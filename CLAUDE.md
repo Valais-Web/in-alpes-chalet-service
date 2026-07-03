@@ -20,7 +20,7 @@ Le site présente l'entreprise, vend les locations en ligne (demande de réserva
 - **Frontend** : Vite + React + TypeScript + Tailwind. Build statique.
 - **Hébergement** : Netlify (site statique + Netlify Functions en TypeScript + Netlify Blobs + Scheduled Functions si besoin).
 - **Base de données** : Neon (Postgres serverless, scale-to-zero, réveil automatique). **Région EU (Francfort)** pour les données des voyageurs (nLPD/RGPD).
-- **Auth admin** : Neon Auth (Better Auth), compte propriétaire unique. Gratuit jusqu'à 60 000 MAU. AWS EU uniquement.
+- **Auth admin** : mot de passe partagé unique + session signée (cookie HttpOnly HMAC), vérifiée côté serveur. Pas de service tiers : le site n'a qu'un seul admin (Bart), 1-2 au plus à terme, ce qui ne justifie pas Neon Auth. Décision du propriétaire (2026-07), remplace le choix initial Neon Auth. `ADMIN_PASSWORD` + `SESSION_SECRET`.
 - **Images** : Cloudinary (upload, optimisation, WebP, CDN). Neon ne stocke que les URLs.
 - **Emails** : Resend (transactionnel). Domaine in-alpes.ch à vérifier (SPF/DKIM) avant lancement.
 - **Domaine** : in-alpes.ch (actuellement chez Infomaniak, DNS à repointer vers Netlify).
@@ -72,7 +72,8 @@ booking_requests(
   created_at
 )
 
--- Comptes gérés par Neon Auth. Un seul compte 'owner'.
+-- Pas de table de comptes : un mot de passe partagé unique (ADMIN_PASSWORD),
+-- session via cookie signé HMAC (SESSION_SECRET). Voir netlify/lib/auth.ts.
 ```
 
 ---
@@ -94,7 +95,7 @@ Une pré-réservation ne devient `blocked`/`unavailable` que lorsque le proprié
 
 ## 6. Espace admin (propriétaire unique)
 
-Derrière Neon Auth. **Vérifier la session côté serveur sur chaque écriture et chaque upload**, jamais seulement masquer côté client.
+Derrière le login mot de passe (cookie de session signé). **Vérifier la session côté serveur sur chaque écriture et chaque upload**, jamais seulement masquer côté client.
 
 - **Tableau de bord** : aperçu logements + demandes récentes.
 - **Logements** : CRUD, champs bilingues FR/EN/NL, upload d'images (Cloudinary), réordonnancement de la galerie. Sauvegarde → régénère `apartments.json`.
@@ -187,9 +188,9 @@ Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `
 ## 11. Bloqueurs de lancement
 
 1. Vérifier le domaine in-alpes.ch dans Resend (SPF/DKIM) avant tout email client.
-2. Neon en région EU (Francfort).
-3. Auth admin réelle (Neon Auth), avec vérification de session serveur sur écritures/uploads.
-4. Confirmer le tier gratuit Cloudinary pour le volume de photos des 3 logements.
+2. ✅ Neon en région EU (Francfort) — fait.
+3. Auth admin : définir un `ADMIN_PASSWORD` fort + `SESSION_SECRET` aléatoire dans l'env de prod ; **ne jamais** poser `ALLOW_DEV_OPEN_AUTH`. Session vérifiée côté serveur sur écritures/uploads (déjà implémenté).
+4. ✅ Tier gratuit Cloudinary confirmé pour les 3 logements — fait.
 5. Repointer le DNS de in-alpes.ch d'Infomaniak vers Netlify, SSL Let's Encrypt.
 
 ---
@@ -198,7 +199,8 @@ Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `
 
 ```
 NEON_DATABASE_URL
-NEON_AUTH_*              # selon la config Neon Auth / Better Auth
+ADMIN_PASSWORD          # mot de passe admin partagé
+SESSION_SECRET          # signe le cookie de session (chaîne aléatoire longue)
 CLOUDINARY_CLOUD_NAME
 CLOUDINARY_API_KEY
 CLOUDINARY_API_SECRET

@@ -42,7 +42,9 @@ export const apartmentInputSchema = z.object({
   title: localized,
   summary: localized,
   description: localized,
-  images: z.array(z.string().url()).default([]),
+  // Accepts Cloudinary URLs and legacy fixture keys ("apt-1") alike;
+  // resolveImage() on the client handles both.
+  images: z.array(z.string().min(1)).default([]),
   maxGuests: z.coerce.number().int().min(1),
   bedrooms: z.coerce.number().int().min(0),
   bathrooms: z.coerce.number().int().min(0),

@@ -2,16 +2,14 @@
  * Owner authentication — the server-side security boundary. CLAUDE.md §6:
  * "Vérifier la session côté serveur sur chaque écriture et chaque upload."
  *
- * Two layers, checked in order:
- *   1. Neon Auth (Better Auth) — the production target. `verifyNeonAuthSession`
- *      is the seam where its session/token check plugs in once configured.
- *   2. Signed-cookie fallback — a self-contained HMAC session issued after an
- *      ADMIN_PASSWORD login, so the admin is usable before Neon Auth is wired.
+ * A single shared password (ADMIN_PASSWORD) issued as a self-contained HMAC
+ * session cookie (SESSION_SECRET). No third-party auth: the site has one admin
+ * (Bart), 1-2 at most — CLAUDE.md §2 chose this over Neon Auth.
  *
- * If NEITHER is configured, auth fails CLOSED (401). A missing secret can never
- * silently open the admin. For local admin work without auth you must opt in
- * explicitly with ALLOW_DEV_OPEN_AUTH=1, which is additionally refused in any
- * production/deployed context. Real auth is a launch blocker (CLAUDE.md §11.3).
+ * If no password is configured, auth fails CLOSED (401). A missing secret can
+ * never silently open the admin. For local admin work without auth you must opt
+ * in explicitly with ALLOW_DEV_OPEN_AUTH=1, which is additionally refused in any
+ * production/deployed context.
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env, flags, allowDevOpenAuth } from "./env";
@@ -82,25 +80,10 @@ function verifyCookieSession(req: Request): Session | null {
   }
 }
 
-// --- Neon Auth seam ---------------------------------------------------------
-
-/**
- * Plug Neon Auth (Better Auth) session verification in here. It should read the
- * Better Auth session cookie / bearer token from `req`, validate it against
- * Neon, and return a Session for the owner account (or null).
- */
-async function verifyNeonAuthSession(_req: Request): Promise<Session | null> {
-  // TODO: integrate Better Auth once NEON_AUTH_* is provisioned.
-  return null;
-}
-
 // --- guard ------------------------------------------------------------------
 
 /** Throws 401 unless the request carries a valid owner session. */
 export async function requireOwner(req: Request): Promise<Session> {
-  const viaNeon = await verifyNeonAuthSession(req);
-  if (viaNeon) return viaNeon;
-
   const viaCookie = verifyCookieSession(req);
   if (viaCookie) return viaCookie;
 
