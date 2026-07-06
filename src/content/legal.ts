@@ -185,7 +185,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
         heading: "Cookies et traceurs",
         paragraphs: [
           "Le site n'utilise pas de cookies publicitaires ou de suivi. Un stockage local conserve uniquement votre choix de langue, et un cookie technique sécurise l'accès à l'espace d'administration.",
-          "[Si des outils de mesure d'audience (p. ex. Google Analytics) sont ajoutés ultérieurement, cette section sera mise à jour et votre consentement recueilli le cas échéant.]",
+          "Si des outils de mesure d'audience (par exemple Google Analytics) sont ajoutés ultérieurement, cette section sera mise à jour et votre consentement recueilli le cas échéant.",
         ],
       },
       {
@@ -245,7 +245,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
         heading: "Cookies and trackers",
         paragraphs: [
           "The site uses no advertising or tracking cookies. Local storage only keeps your language choice, and a technical cookie secures access to the admin area.",
-          "[If audience-measurement tools (e.g. Google Analytics) are added later, this section will be updated and your consent obtained where required.]",
+          "If audience-measurement tools (e.g. Google Analytics) are added later, this section will be updated and your consent obtained where required.",
         ],
       },
       {
@@ -305,7 +305,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
         heading: "Cookies en trackers",
         paragraphs: [
           "De site gebruikt geen advertentie- of trackingcookies. Lokale opslag bewaart alleen uw taalkeuze, en een technische cookie beveiligt de toegang tot het beheer.",
-          "[Als er later meetinstrumenten (bijv. Google Analytics) worden toegevoegd, wordt deze sectie bijgewerkt en zo nodig uw toestemming gevraagd.]",
+          "Als er later meetinstrumenten (bijv. Google Analytics) worden toegevoegd, wordt deze sectie bijgewerkt en zo nodig uw toestemming gevraagd.",
         ],
       },
       {
