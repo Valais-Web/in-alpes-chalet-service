@@ -56,6 +56,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Départ",
     "apt.rules": "Règles",
     "apt.from": "Dès",
+    "apt.photo": "Photo",
 
     "status.free": "Libre",
     "status.booked": "Occupé",
@@ -174,6 +175,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Ascenseur",
 
     "footer.rights": "Tous droits réservés",
+    "footer.legal": "Mentions légales",
+    "footer.privacy": "Confidentialité",
 
     "hero.usp.1": "Pas de frais cachés",
     "hero.usp.2": "Prix publics",
@@ -361,6 +364,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Check-out",
     "apt.rules": "House rules",
     "apt.from": "From",
+    "apt.photo": "Photo",
 
     "status.free": "Free",
     "status.booked": "Booked",
@@ -477,6 +481,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Elevator",
 
     "footer.rights": "All rights reserved",
+    "footer.legal": "Legal notice",
+    "footer.privacy": "Privacy",
 
     "hero.usp.1": "No hidden fees",
     "hero.usp.2": "Public prices",
@@ -658,6 +664,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Check-out",
     "apt.rules": "Huisregels",
     "apt.from": "Vanaf",
+    "apt.photo": "Foto",
 
     "status.free": "Vrij",
     "status.booked": "Bezet",
@@ -775,6 +782,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Lift",
 
     "footer.rights": "Alle rechten voorbehouden",
+    "footer.legal": "Wettelijke vermeldingen",
+    "footer.privacy": "Privacy",
 
     "hero.usp.1": "Geen verborgen kosten",
     "hero.usp.2": "Publieke prijzen",
