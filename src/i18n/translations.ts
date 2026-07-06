@@ -56,6 +56,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Départ",
     "apt.rules": "Règles",
     "apt.from": "Dès",
+    "apt.photo": "Photo",
 
     "status.free": "Libre",
     "status.booked": "Occupé",
@@ -74,6 +75,9 @@ export const dictionaries: Record<Locale, Dict> = {
     "form.phone": "Téléphone",
     "form.message": "Message",
     "form.submit": "Envoyer la demande",
+    "form.datesUnavailable": "Ces dates ne sont pas disponibles. Choisissez une autre période.",
+    "form.datesPrebookedWarn":
+      "Ces dates font l'objet d'une pré-réservation en attente. Vous pouvez tout de même envoyer une demande.",
     "form.success.title": "Demande envoyée",
     "form.success.body":
       "Il s'agit d'une DEMANDE, pas d'une confirmation instantanée. Nous revenons vers vous sous 24 h ouvrées.",
@@ -112,7 +116,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.login.sub": "Connexion réservée à l'équipe.",
     "admin.login.password": "Mot de passe",
     "admin.login.submit": "Se connecter",
-    "admin.login.hint": "Démo : le mot de passe est « admin ».",
+    "admin.login.hint": "Accès réservé au propriétaire.",
     "admin.login.error": "Mot de passe incorrect.",
     "admin.logout": "Déconnexion",
     "admin.nav.dashboard": "Tableau de bord",
@@ -124,6 +128,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.confirm": "Confirmer",
     "admin.requests.decline": "Décliner",
     "admin.requests.archive": "Archiver",
+    "admin.requests.actionError": "L'action a échoué. Vérifiez votre connexion et réessayez.",
     "admin.requests.all": "Toutes",
     "admin.requests.status.new": "Nouvelle",
     "admin.requests.status.in_progress": "En cours",
@@ -170,6 +175,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Ascenseur",
 
     "footer.rights": "Tous droits réservés",
+    "footer.legal": "Mentions légales",
+    "footer.privacy": "Confidentialité",
 
     "hero.usp.1": "Pas de frais cachés",
     "hero.usp.2": "Prix publics",
@@ -357,6 +364,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Check-out",
     "apt.rules": "House rules",
     "apt.from": "From",
+    "apt.photo": "Photo",
 
     "status.free": "Free",
     "status.booked": "Booked",
@@ -375,6 +383,9 @@ export const dictionaries: Record<Locale, Dict> = {
     "form.phone": "Phone",
     "form.message": "Message",
     "form.submit": "Send request",
+    "form.datesUnavailable": "These dates are not available. Please choose another period.",
+    "form.datesPrebookedWarn":
+      "These dates have a pending pre-reservation. You can still send a request.",
     "form.success.title": "Request sent",
     "form.success.body":
       "This is a REQUEST, not an instant confirmation. We'll get back to you within 24 business hours.",
@@ -411,7 +422,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.login.sub": "Team access only.",
     "admin.login.password": "Password",
     "admin.login.submit": "Sign in",
-    "admin.login.hint": 'Demo: the password is "admin".',
+    "admin.login.hint": "Owner access only.",
     "admin.login.error": "Wrong password.",
     "admin.logout": "Sign out",
     "admin.nav.dashboard": "Dashboard",
@@ -423,6 +434,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.confirm": "Confirm",
     "admin.requests.decline": "Decline",
     "admin.requests.archive": "Archive",
+    "admin.requests.actionError": "The action failed. Check your connection and try again.",
     "admin.requests.all": "All",
     "admin.requests.status.new": "New",
     "admin.requests.status.in_progress": "In progress",
@@ -469,6 +481,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Elevator",
 
     "footer.rights": "All rights reserved",
+    "footer.legal": "Legal notice",
+    "footer.privacy": "Privacy",
 
     "hero.usp.1": "No hidden fees",
     "hero.usp.2": "Public prices",
@@ -650,6 +664,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Check-out",
     "apt.rules": "Huisregels",
     "apt.from": "Vanaf",
+    "apt.photo": "Foto",
 
     "status.free": "Vrij",
     "status.booked": "Bezet",
@@ -668,6 +683,9 @@ export const dictionaries: Record<Locale, Dict> = {
     "form.phone": "Telefoon",
     "form.message": "Bericht",
     "form.submit": "Aanvraag versturen",
+    "form.datesUnavailable": "Deze data zijn niet beschikbaar. Kies een andere periode.",
+    "form.datesPrebookedWarn":
+      "Voor deze data loopt een voorlopige reservering. U kunt toch een aanvraag versturen.",
     "form.success.title": "Aanvraag verstuurd",
     "form.success.body":
       "Dit is een AANVRAAG, geen directe bevestiging. Wij nemen binnen 24 werkuren contact op.",
@@ -704,7 +722,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.login.sub": "Alleen voor het team.",
     "admin.login.password": "Wachtwoord",
     "admin.login.submit": "Inloggen",
-    "admin.login.hint": 'Demo: wachtwoord is "admin".',
+    "admin.login.hint": "Alleen toegang voor de eigenaar.",
     "admin.login.error": "Verkeerd wachtwoord.",
     "admin.logout": "Uitloggen",
     "admin.nav.dashboard": "Dashboard",
@@ -716,6 +734,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.confirm": "Bevestigen",
     "admin.requests.decline": "Weigeren",
     "admin.requests.archive": "Archiveren",
+    "admin.requests.actionError":
+      "De actie is mislukt. Controleer uw verbinding en probeer opnieuw.",
     "admin.requests.all": "Alle",
     "admin.requests.status.new": "Nieuw",
     "admin.requests.status.in_progress": "In behandeling",
@@ -762,6 +782,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "amenity.elevator": "Lift",
 
     "footer.rights": "Alle rechten voorbehouden",
+    "footer.legal": "Wettelijke vermeldingen",
+    "footer.privacy": "Privacy",
 
     "hero.usp.1": "Geen verborgen kosten",
     "hero.usp.2": "Publieke prijzen",

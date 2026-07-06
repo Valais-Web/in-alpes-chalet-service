@@ -1,11 +1,21 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useI18n } from "@/i18n/I18nProvider";
-import { submitBookingRequest } from "@/data/api";
-import type { Apartment } from "@/data/types";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { submitBookingRequest, effectiveStatus } from "@/data/api";
+import type { Apartment, AvailabilityRange } from "@/data/types";
+import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-export function BookingForm({ apartment }: { apartment: Apartment }) {
+const todayISO = () => new Date().toISOString().slice(0, 10);
+
+export function BookingForm({
+  apartment,
+  ranges = [],
+}: {
+  apartment: Apartment;
+  ranges?: AvailabilityRange[];
+}) {
   const { t, locale } = useI18n();
+  const qc = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -25,12 +35,36 @@ export function BookingForm({ apartment }: { apartment: Apartment }) {
       setForm((f) => ({ ...f, [k]: k === "guests" ? Number(v) : v }));
     };
 
+  // Availability check for the selected range (only when both dates are set).
+  const datesChosen = form.arrival && form.departure && form.departure > form.arrival;
+  const conflicts = datesChosen
+    ? ranges
+        .map((r) => ({ r, s: effectiveStatus(r) }))
+        .filter(({ s }) => s !== "free")
+        .filter(({ r }) => form.arrival <= r.end && form.departure >= r.start)
+    : [];
+  const hardBlock = conflicts.some(({ s }) => s === "booked" || s === "blocked");
+  const preWarn = !hardBlock && conflicts.some(({ s }) => s === "prebooked");
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (hardBlock) return;
     setSubmitting(true);
     setError(false);
     try {
       await submitBookingRequest({ apartmentId: apartment.id, ...form, locale });
+      // Reflect the 48h pre-reservation immediately in the shared availability
+      // query — the apartment-page calendar reads the same key and updates at once.
+      qc.setQueryData<AvailabilityRange[]>(["availability", apartment.id], (old = []) => [
+        ...old,
+        {
+          apartmentId: apartment.id,
+          start: form.arrival,
+          end: form.departure,
+          status: "prebooked",
+          expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
+        },
+      ]);
       setSuccess(true);
     } catch {
       setError(true);
@@ -61,6 +95,7 @@ export function BookingForm({ apartment }: { apartment: Apartment }) {
           <input
             type="date"
             required
+            min={todayISO()}
             className={input}
             value={form.arrival}
             onChange={onChange("arrival")}
@@ -71,12 +106,27 @@ export function BookingForm({ apartment }: { apartment: Apartment }) {
           <input
             type="date"
             required
+            min={form.arrival || todayISO()}
             className={input}
             value={form.departure}
             onChange={onChange("departure")}
           />
         </label>
       </div>
+
+      {hardBlock && (
+        <p className="flex items-center gap-2 border border-border bg-secondary px-3 py-2 text-sm text-foreground">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-accent" />
+          {t("form.datesUnavailable")}
+        </p>
+      )}
+      {preWarn && (
+        <p className="flex items-center gap-2 border border-accent bg-accent-tint px-3 py-2 text-sm">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-accent" />
+          {t("form.datesPrebookedWarn")}
+        </p>
+      )}
+
       <label className="block space-y-1">
         <span className={label}>{t("form.guests")}</span>
         <input
@@ -128,7 +178,7 @@ export function BookingForm({ apartment }: { apartment: Apartment }) {
       {error && <p className="text-sm text-accent">{t("contact.error")}</p>}
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || hardBlock}
         className="btn-base flex w-full items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-foreground/90 disabled:opacity-60"
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" />}

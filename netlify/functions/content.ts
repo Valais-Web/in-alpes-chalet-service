@@ -27,7 +27,10 @@ export default async (req: Request): Promise<Response> => {
         data = await repo.listApartments();
         await publishApartments();
       }
-      return cached(data);
+      // Apartments change rarely (admin edits republish); a short CDN cache is fine.
+      return json(data, 200, {
+        "cache-control": "public, max-age=60, stale-while-revalidate=300",
+      });
     }
     if (type === "availability") {
       let data = await getJson(AVAILABILITY_KEY);
@@ -35,17 +38,14 @@ export default async (req: Request): Promise<Response> => {
         data = await repo.listAvailability();
         await publishAvailability();
       }
-      return cached(data);
+      // Availability must be fresh: a booking or admin action changes it and it
+      // gates double-bookings. Always revalidate rather than serve stale.
+      return json(data, 200, { "cache-control": "no-cache, must-revalidate" });
     }
     throw new HttpError(400, "unknown_type: use ?type=apartments|availability");
   } catch (err) {
     return toErrorResponse(err);
   }
 };
-
-function cached(data: unknown): Response {
-  // Short CDN cache; admin writes republish immediately so staleness is bounded.
-  return json(data, 200, { "cache-control": "public, max-age=60, stale-while-revalidate=300" });
-}
 
 export const config = { path: "/api/content" };

@@ -72,12 +72,15 @@ function Detail() {
           {apartment.images.slice(0, 4).map((img: string, i: number) => (
             <button
               key={i}
+              type="button"
               onClick={() => setCurrent(i)}
+              aria-label={`${tx(apartment.title)} — ${t("apt.photo")} ${i + 1}`}
+              aria-current={i === current}
               className={`aspect-[4/3] overflow-hidden rounded-2xl bg-secondary ${i === current ? "ring-2 ring-accent" : ""}`}
             >
               <img
                 src={resolveImage(img)}
-                alt=""
+                alt={`${tx(apartment.title)} ${i + 1}`}
                 className="h-full w-full object-cover"
                 loading="lazy"
               />
@@ -205,7 +208,7 @@ function Detail() {
             <span className="text-2xl font-semibold">CHF {apartment.pricePerNight}</span>
             <span className="text-xs text-muted-foreground">{t("apt.night")}</span>
           </div>
-          <BookingForm apartment={apartment} />
+          <BookingForm apartment={apartment} ranges={ranges} />
         </aside>
       </div>
     </div>

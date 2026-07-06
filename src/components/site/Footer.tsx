@@ -46,7 +46,13 @@ export function Footer() {
           <div>
             © {new Date().getFullYear()} {t("brand")}. {t("footer.rights")}.
           </div>
-          <div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <Link to="/mentions-legales" className="hover:text-foreground">
+              {t("footer.legal")}
+            </Link>
+            <Link to="/confidentialite" className="hover:text-foreground">
+              {t("footer.privacy")}
+            </Link>
             <Link to="/admin" className="hover:text-foreground">
               {t("nav.admin")}
             </Link>
