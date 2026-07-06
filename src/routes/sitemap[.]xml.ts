@@ -12,6 +12,8 @@ const STATIC: SitemapEntry[] = [
   { path: "/apartments", changefreq: "weekly", priority: "0.9" },
   { path: "/services", changefreq: "monthly", priority: "0.8" },
   { path: "/contact", changefreq: "yearly", priority: "0.5" },
+  { path: "/mentions-legales", changefreq: "yearly", priority: "0.2" },
+  { path: "/confidentialite", changefreq: "yearly", priority: "0.2" },
 ];
 
 const FALLBACK_SLUGS = ["chalet-arolle", "appartement-mont-fort", "studio-tracouet"];
