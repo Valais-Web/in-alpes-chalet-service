@@ -24,15 +24,17 @@ export const mentionsLegales: Record<Locale, LegalDoc> = {
         heading: "Éditeur du site",
         paragraphs: [
           "In-Alpes Chalet Services Sàrl",
-          "[Adresse complète à confirmer], 1997 Haute-Nendaz, Valais, Suisse",
+          "Société à responsabilité limitée — capital social : CHF 20'000",
+          "Chemin de Sofleu 31, Batterie de la Combe 328, 1997 Haute-Nendaz, Valais, Suisse",
+          "Siège : Nendaz (VS)",
           "Téléphone : +41 77 511 59 09",
           "Email : info@in-alpes.ch",
-          "N° IDE : [CHE-XXX.XXX.XXX à compléter]",
+          "N° IDE : CHE-221.566.159",
         ],
       },
       {
         heading: "Directeur de la publication",
-        paragraphs: ["[Nom du responsable à compléter], In-Alpes Chalet Services Sàrl."],
+        paragraphs: ["Bart Goes, gérant, In-Alpes Chalet Services Sàrl."],
       },
       {
         heading: "Hébergement",
@@ -63,15 +65,17 @@ export const mentionsLegales: Record<Locale, LegalDoc> = {
         heading: "Site publisher",
         paragraphs: [
           "In-Alpes Chalet Services Sàrl",
-          "[Full address to be confirmed], 1997 Haute-Nendaz, Valais, Switzerland",
+          "Limited liability company (Sàrl) — share capital: CHF 20,000",
+          "Chemin de Sofleu 31, Batterie de la Combe 328, 1997 Haute-Nendaz, Valais, Switzerland",
+          "Registered seat: Nendaz (VS)",
           "Phone: +41 77 511 59 09",
           "Email: info@in-alpes.ch",
-          "Business ID: [CHE-XXX.XXX.XXX to be completed]",
+          "Business ID (UID): CHE-221.566.159",
         ],
       },
       {
         heading: "Publication director",
-        paragraphs: ["[Responsible person to be completed], In-Alpes Chalet Services Sàrl."],
+        paragraphs: ["Bart Goes, manager, In-Alpes Chalet Services Sàrl."],
       },
       {
         heading: "Hosting",
@@ -102,15 +106,17 @@ export const mentionsLegales: Record<Locale, LegalDoc> = {
         heading: "Uitgever van de site",
         paragraphs: [
           "In-Alpes Chalet Services Sàrl",
-          "[Volledig adres te bevestigen], 1997 Haute-Nendaz, Wallis, Zwitserland",
+          "Besloten vennootschap (Sàrl) — maatschappelijk kapitaal: CHF 20.000",
+          "Chemin de Sofleu 31, Batterie de la Combe 328, 1997 Haute-Nendaz, Wallis, Zwitserland",
+          "Zetel: Nendaz (VS)",
           "Telefoon: +41 77 511 59 09",
           "E-mail: info@in-alpes.ch",
-          "Ondernemingsnr.: [CHE-XXX.XXX.XXX aan te vullen]",
+          "Ondernemingsnr. (UID): CHE-221.566.159",
         ],
       },
       {
         heading: "Verantwoordelijke uitgever",
-        paragraphs: ["[Verantwoordelijke aan te vullen], In-Alpes Chalet Services Sàrl."],
+        paragraphs: ["Bart Goes, zaakvoerder, In-Alpes Chalet Services Sàrl."],
       },
       {
         heading: "Hosting",
@@ -145,7 +151,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
       {
         heading: "Responsable du traitement",
         paragraphs: [
-          "In-Alpes Chalet Services Sàrl, Haute-Nendaz (Valais), Suisse — info@in-alpes.ch.",
+          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Valais), Suisse — info@in-alpes.ch.",
         ],
       },
       {
@@ -205,7 +211,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
       {
         heading: "Data controller",
         paragraphs: [
-          "In-Alpes Chalet Services Sàrl, Haute-Nendaz (Valais), Switzerland — info@in-alpes.ch.",
+          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Valais), Switzerland — info@in-alpes.ch.",
         ],
       },
       {
@@ -265,7 +271,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
       {
         heading: "Verwerkingsverantwoordelijke",
         paragraphs: [
-          "In-Alpes Chalet Services Sàrl, Haute-Nendaz (Wallis), Zwitserland — info@in-alpes.ch.",
+          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Wallis), Zwitserland — info@in-alpes.ch.",
         ],
       },
       {
