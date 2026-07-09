@@ -102,7 +102,7 @@ let bookings: BookingRequest[] = [
     email: "sophie@example.com",
     phone: "+41 79 123 45 67",
     message: "Bonjour, nous serions intéressés pour la semaine de Noël.",
-    status: "new",
+    status: "pending",
     createdAt: new Date().toISOString(),
   },
 ];
@@ -208,7 +208,7 @@ export async function submitBookingRequest(
   const req: BookingRequest = {
     ...input,
     id: `req-${Date.now()}`,
-    status: "new",
+    status: "pending",
     createdAt: new Date().toISOString(),
   };
   bookings = [req, ...bookings];

@@ -34,7 +34,7 @@ export interface AvailabilityRange {
   expiresAt?: string; // ISO datetime for prebooked entries
 }
 
-export type BookingStatus = "new" | "in_progress" | "answered" | "archived";
+export type BookingStatus = "pending" | "accepted" | "declined" | "archived";
 
 export interface BookingRequest {
   id: string;
