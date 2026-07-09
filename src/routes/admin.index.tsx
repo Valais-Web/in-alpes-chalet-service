@@ -32,8 +32,8 @@ function Dashboard() {
         <Stat label={t("admin.nav.apartments")} value={apartments.length} to="/admin/apartments" />
         <Stat label={t("admin.nav.requests")} value={bookings.length} to="/admin/requests" />
         <Stat
-          label={t("admin.requests.status.new")}
-          value={bookings.filter((b) => b.status === "new").length}
+          label={t("admin.requests.status.pending")}
+          value={bookings.filter((b) => b.status === "pending").length}
           to="/admin/requests"
         />
       </div>

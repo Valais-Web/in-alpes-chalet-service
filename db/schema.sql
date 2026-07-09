@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS booking_requests (
   departure     date NOT NULL,
   guests        integer NOT NULL DEFAULT 1,
   message       text,
-  status        text NOT NULL DEFAULT 'new'
-                CHECK (status IN ('new','in_progress','answered','archived')),
+  status        text NOT NULL DEFAULT 'pending'
+                CHECK (status IN ('pending','accepted','declined','archived')),
   created_at    timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS booking_requests_status_idx ON booking_requests (status, created_at DESC);

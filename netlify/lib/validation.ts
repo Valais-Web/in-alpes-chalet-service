@@ -99,7 +99,7 @@ export const availabilityClearSchema = z.object({
 /** Admin: booking status transition + resulting availability action. */
 export const requestUpdateSchema = z.object({
   id: z.string().min(1),
-  status: z.enum(["new", "in_progress", "answered", "archived"]),
+  status: z.enum(["pending", "accepted", "declined", "archived"]),
   /** confirm → block the range; decline → free it. */
   action: z.enum(["confirm", "decline", "none"]).default("none"),
 });

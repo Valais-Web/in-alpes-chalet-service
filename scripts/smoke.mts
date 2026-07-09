@@ -69,14 +69,14 @@ check("invalid booking rejected (400)", badRes.status === 400);
 // 4. admin: list requests (dev-open auth)
 const reqs = await (await adminRequests(new Request(`${BASE}/api/admin/requests`))).json();
 const mine = reqs.find((b: any) => b.email === "test@example.com");
-check("admin sees the new request", !!mine && mine.status === "new", reqs);
+check("admin sees the new request", !!mine && mine.status === "pending", reqs);
 
 // 5. admin: confirm → range becomes booked, hold gone
 await adminRequests(
   new Request(`${BASE}/api/admin/requests`, {
     method: "PATCH",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ id: mine.id, status: "answered", action: "confirm" }),
+    body: JSON.stringify({ id: mine.id, status: "accepted", action: "confirm" }),
   }),
 );
 const av2 = await (await content(new Request(`${BASE}/api/content?type=availability`))).json();
