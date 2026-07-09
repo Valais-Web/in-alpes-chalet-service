@@ -4,22 +4,39 @@ import { useState } from "react";
 import { listBookings, updateBookingStatus } from "@/data/api";
 import type { BookingStatus } from "@/data/types";
 import { useI18n } from "@/i18n/I18nProvider";
+import { RefreshCw, Archive, ArchiveRestore } from "lucide-react";
 
 export const Route = createFileRoute("/admin/requests")({
   component: AdminRequests,
 });
 
-const STATUSES: (BookingStatus | "all")[] = ["all", "new", "in_progress", "answered", "archived"];
+const STATUSES: (BookingStatus | "all")[] = ["all", "pending", "accepted", "declined", "archived"];
 
 function AdminRequests() {
   const { t } = useI18n();
   const qc = useQueryClient();
-  const { data: bookings = [] } = useQuery({ queryKey: ["bookings"], queryFn: listBookings });
+  const {
+    data: bookings = [],
+    isError,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: listBookings,
+    refetchOnMount: "always",
+    refetchInterval: 20000, // new requests surface automatically
+  });
   const [filter, setFilter] = useState<BookingStatus | "all">("all");
+  const [showArchived, setShowArchived] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [actionError, setActionError] = useState(false);
 
-  const filtered = filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
+  const archivedCount = bookings.filter((b) => b.status === "archived").length;
+  const filtered = bookings.filter((b) => {
+    if (filter !== "all") return b.status === filter;
+    // Default "all" view hides archived unless explicitly revealed.
+    return showArchived || b.status !== "archived";
+  });
 
   const update = async (
     id: string,
@@ -41,20 +58,55 @@ function AdminRequests() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">{t("admin.nav.requests")}</h1>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value as BookingStatus | "all")}
-          className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
-        >
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s === "all" ? t("admin.requests.all") : t(`admin.requests.status.${s}`)}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-wrap items-center gap-2">
+          {filter === "all" && archivedCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowArchived((v) => !v)}
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-2 text-sm hover:bg-secondary"
+            >
+              {showArchived ? (
+                <>
+                  <Archive className="h-4 w-4" /> {t("admin.requests.hideArchived")}
+                </>
+              ) : (
+                <>
+                  <ArchiveRestore className="h-4 w-4" /> {t("admin.requests.showArchived")} (
+                  {archivedCount})
+                </>
+              )}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="inline-flex items-center gap-1.5 border border-border px-3 py-2 text-sm hover:bg-secondary disabled:opacity-60"
+          >
+            <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
+            {t("admin.requests.refresh")}
+          </button>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as BookingStatus | "all")}
+            className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+          >
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s === "all" ? t("admin.requests.all") : t(`admin.requests.status.${s}`)}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      {isError && (
+        <p className="mt-4 border border-accent bg-accent-tint px-3 py-2 text-sm text-accent">
+          {t("state.error")}
+        </p>
+      )}
 
       {actionError && (
         <p className="mt-4 border border-accent bg-accent-tint px-3 py-2 text-sm text-accent">
@@ -92,14 +144,14 @@ function AdminRequests() {
                 <td className="px-4 py-3 text-right">
                   <div className="inline-flex gap-1">
                     <button
-                      onClick={() => update(b.id, "answered", "confirm")}
+                      onClick={() => update(b.id, "accepted", "confirm")}
                       disabled={busyId === b.id}
                       className="bg-accent px-2.5 py-1 text-xs text-accent-foreground disabled:opacity-50"
                     >
                       {t("admin.requests.confirm")}
                     </button>
                     <button
-                      onClick={() => update(b.id, "archived", "decline")}
+                      onClick={() => update(b.id, "declined", "decline")}
                       disabled={busyId === b.id}
                       className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
                     >

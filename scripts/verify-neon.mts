@@ -41,8 +41,8 @@ ok("submit-booking → 200", res.status === 200, await res.clone().json());
 
 const rows = await sql`select id, status from booking_requests where email = 'verify@example.com'`;
 ok(
-  "booking row persisted in Neon (status=new)",
-  rows.length === 1 && rows[0].status === "new",
+  "booking row persisted in Neon (status=pending)",
+  rows.length === 1 && rows[0].status === "pending",
   rows,
 );
 

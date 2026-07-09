@@ -19,7 +19,7 @@ function AdminLayout() {
 
 function LoginScreen() {
   const { t } = useI18n();
-  const { login } = useAdminAuth();
+  const { login, sessionExpired } = useAdminAuth();
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState(false);
   return (
@@ -35,6 +35,11 @@ function LoginScreen() {
           <h1 className="text-xl font-semibold">{t("admin.login.title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("admin.login.sub")}</p>
         </div>
+        {sessionExpired && (
+          <p className="border border-accent bg-accent-tint px-3 py-2 text-xs text-accent">
+            {t("admin.login.expired")}
+          </p>
+        )}
         <label className="block space-y-1">
           <span className="text-xs font-medium text-muted-foreground">
             {t("admin.login.password")}

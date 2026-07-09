@@ -94,7 +94,7 @@ function memoryRepo(): Repo {
       const b: BookingRequest = {
         ...input,
         id: `req-${randomUUID()}`,
-        status: "new",
+        status: "pending",
         createdAt: new Date().toISOString(),
       };
       bookings.unshift(b);
@@ -253,7 +253,7 @@ function neonRepo(): Repo {
       const id = `req-${randomUUID()}`;
       const rows = await sql`
         INSERT INTO booking_requests (id, apartment_id, guest_name, email, phone, arrival, departure, guests, message, status)
-        VALUES (${id}, ${input.apartmentId}, ${input.name}, ${input.email}, ${input.phone}, ${input.arrival}, ${input.departure}, ${input.guests}, ${input.message}, 'new')
+        VALUES (${id}, ${input.apartmentId}, ${input.name}, ${input.email}, ${input.phone}, ${input.arrival}, ${input.departure}, ${input.guests}, ${input.message}, 'pending')
         RETURNING *
       `;
       return rowToBooking(rows[0]);
