@@ -16,9 +16,13 @@ import {
   Percent,
   DoorOpen,
   Sparkles,
+  Expand,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/apartments/$slug")({
   loader: async ({ params }) => {
@@ -49,45 +53,129 @@ export const Route = createFileRoute("/apartments/$slug")({
 function Detail() {
   const { apartment } = Route.useLoaderData();
   const { t, tx } = useI18n();
+  const images = apartment.images;
   const [current, setCurrent] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
   });
 
+  const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);
+  const next = () => setCurrent((c) => (c + 1) % images.length);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(false);
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lightbox, images.length]);
+
   return (
     <div className="container-page py-8">
-      {/* Gallery */}
-      <div className="grid gap-3 md:grid-cols-[2fr_1fr]">
-        <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-secondary md:aspect-[16/10]">
+      {/* Gallery — large hero image + scrollable thumbnail strip */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setLightbox(true)}
+          aria-label={t("apt.enlarge")}
+          className="group relative block aspect-[16/9] w-full overflow-hidden rounded-3xl bg-secondary"
+        >
           <img
-            src={resolveImage(apartment.images[current])}
+            src={resolveImage(images[current])}
             alt={tx(apartment.title)}
-            className="h-full w-full object-cover"
-            width={1280}
-            height={800}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            width={1600}
+            height={900}
           />
-        </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-          {apartment.images.slice(0, 4).map((img: string, i: number) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setCurrent(i)}
-              aria-label={`${tx(apartment.title)} — ${t("apt.photo")} ${i + 1}`}
-              aria-current={i === current}
-              className={`aspect-[4/3] overflow-hidden rounded-2xl bg-secondary ${i === current ? "ring-2 ring-accent" : ""}`}
-            >
-              <img
-                src={resolveImage(img)}
-                alt={`${tx(apartment.title)} ${i + 1}`}
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            </button>
-          ))}
-        </div>
+          <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 bg-foreground/70 px-2.5 py-1 text-xs text-background opacity-0 transition-opacity group-hover:opacity-100">
+            <Expand className="h-3.5 w-3.5" /> {t("apt.enlarge")}
+          </span>
+        </button>
+
+        {images.length > 1 && (
+          <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
+            {images.map((img: string, i: number) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setCurrent(i)}
+                aria-label={`${tx(apartment.title)} — ${t("apt.photo")} ${i + 1}`}
+                aria-current={i === current}
+                className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-secondary transition ${
+                  i === current ? "ring-2 ring-accent" : "opacity-70 hover:opacity-100"
+                }`}
+              >
+                <img
+                  src={resolveImage(img)}
+                  alt={`${tx(apartment.title)} ${i + 1}`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/90 p-4"
+          onClick={() => setLightbox(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={() => setLightbox(false)}
+            aria-label={t("apt.close")}
+            className="absolute right-4 top-4 grid h-10 w-10 place-items-center text-background hover:bg-background/10"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          {images.length > 1 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                prev();
+              }}
+              aria-label="Précédent"
+              className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center text-background hover:bg-background/10 sm:left-4"
+            >
+              <ChevronLeft className="h-7 w-7" />
+            </button>
+          )}
+          <img
+            src={resolveImage(images[current])}
+            alt={tx(apartment.title)}
+            className="max-h-[88vh] max-w-[92vw] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          {images.length > 1 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                next();
+              }}
+              aria-label="Suivant"
+              className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center text-background hover:bg-background/10 sm:right-4"
+            >
+              <ChevronRight className="h-7 w-7" />
+            </button>
+          )}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-background/80">
+            {current + 1} / {images.length}
+          </div>
+        </div>
+      )}
 
       {/* Title + facts */}
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_380px]">
