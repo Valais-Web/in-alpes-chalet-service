@@ -52,8 +52,20 @@ export function effectiveStatus(r: AvailabilityRange): AvailabilityStatus {
 // LIVE transport
 // ---------------------------------------------------------------------------
 
+/**
+ * Called whenever an admin API call returns 401 — the client-side "logged in"
+ * flag (sessionStorage) has no expiry, but the server session cookie does, so
+ * they can desync. AdminAuth registers a handler that forces a re-login instead
+ * of letting the admin silently render empty lists.
+ */
+let onUnauthorized: (() => void) | null = null;
+export function setUnauthorizedHandler(fn: (() => void) | null) {
+  onUnauthorized = fn;
+}
+
 async function apiGet<T>(path: string): Promise<T> {
   const res = await fetch(path, { credentials: "same-origin" });
+  if (res.status === 401) onUnauthorized?.();
   if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -65,6 +77,7 @@ async function apiSend<T>(method: string, path: string, body?: unknown): Promise
     headers: body ? { "content-type": "application/json" } : undefined,
     body: body ? JSON.stringify(body) : undefined,
   });
+  if (res.status === 401) onUnauthorized?.();
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
     throw new Error(`${method} ${path} failed: ${res.status} ${detail}`);
