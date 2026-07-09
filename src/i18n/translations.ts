@@ -57,6 +57,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.rules": "Règles",
     "apt.from": "Dès",
     "apt.photo": "Photo",
+    "apt.enlarge": "Agrandir",
+    "apt.close": "Fermer",
 
     "status.free": "Libre",
     "status.booked": "Occupé",
@@ -369,6 +371,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.rules": "House rules",
     "apt.from": "From",
     "apt.photo": "Photo",
+    "apt.enlarge": "Enlarge",
+    "apt.close": "Close",
 
     "status.free": "Free",
     "status.booked": "Booked",
@@ -673,6 +677,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.rules": "Huisregels",
     "apt.from": "Vanaf",
     "apt.photo": "Foto",
+    "apt.enlarge": "Vergroten",
+    "apt.close": "Sluiten",
 
     "status.free": "Vrij",
     "status.booked": "Bezet",
