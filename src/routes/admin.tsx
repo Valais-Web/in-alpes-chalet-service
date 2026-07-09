@@ -1,6 +1,8 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAdminAuth } from "@/admin/AdminAuth";
+import { listBookings } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { LogOut, LayoutDashboard, Home, CalendarRange, Inbox } from "lucide-react";
 
@@ -69,6 +71,12 @@ function Shell() {
   const { t } = useI18n();
   const { logout } = useAdminAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { data: bookings = [] } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: listBookings,
+    refetchInterval: 20000,
+  });
+  const pendingCount = bookings.filter((b) => b.status === "pending").length;
 
   const items: {
     to: "/admin" | "/admin/apartments" | "/admin/availability" | "/admin/requests";
@@ -104,6 +112,11 @@ function Shell() {
               }
             >
               <Icon className="h-4 w-4" /> {label}
+              {to === "/admin/requests" && pendingCount > 0 && (
+                <span className="ml-auto inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-accent-foreground">
+                  {pendingCount}
+                </span>
+              )}
             </Link>
           );
         })}

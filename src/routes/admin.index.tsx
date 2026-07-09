@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { listApartments, listBookings } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Inbox } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
   component: Dashboard,
@@ -18,9 +18,21 @@ function Dashboard() {
     refetchInterval: 20000,
   });
 
+  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+
   return (
     <div>
-      <h1 className="text-2xl font-semibold">{t("admin.dashboard.title")}</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-semibold">{t("admin.dashboard.title")}</h1>
+        {pendingCount > 0 && (
+          <Link
+            to="/admin/requests"
+            className="inline-flex items-center gap-1.5 bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground hover:bg-accent-hover"
+          >
+            <Inbox className="h-3.5 w-3.5" /> {pendingCount} {t("admin.newRequests")}
+          </Link>
+        )}
+      </div>
 
       {isError && (
         <p className="mt-4 border border-accent bg-accent-tint px-3 py-2 text-sm text-accent">
