@@ -11,11 +11,22 @@ export const Route = createFileRoute("/admin/")({
 function Dashboard() {
   const { t, tx } = useI18n();
   const { data: apartments = [] } = useQuery({ queryKey: ["apartments"], queryFn: listApartments });
-  const { data: bookings = [] } = useQuery({ queryKey: ["bookings"], queryFn: listBookings });
+  const { data: bookings = [], isError } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: listBookings,
+    refetchOnMount: "always",
+    refetchInterval: 20000,
+  });
 
   return (
     <div>
       <h1 className="text-2xl font-semibold">{t("admin.dashboard.title")}</h1>
+
+      {isError && (
+        <p className="mt-4 border border-accent bg-accent-tint px-3 py-2 text-sm text-accent">
+          {t("state.error")}
+        </p>
+      )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <Stat label={t("admin.nav.apartments")} value={apartments.length} to="/admin/apartments" />
