@@ -22,6 +22,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { ApartmentCard } from "@/components/site/ApartmentCard";
 import aptOwner from "@/assets/apt-2.jpg";
 import audImg from "@/assets/apt-3.jpg";
+import destinationImg from "@/assets/apt-4.jpg";
 
 export const Route = createFileRoute("/")({
   component: Home_,
@@ -245,12 +246,31 @@ function Home_() {
       {/* DESTINATION / LOCAL */}
       <section className="section-y">
         <div className="container-page">
-          <SectionHead
-            eyebrow={t("home.local.eyebrow")}
-            title={t("home.local.title")}
-            lead={t("home.local.lead")}
-          />
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="grid items-center gap-10 md:grid-cols-2">
+            <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-secondary">
+              <img
+                src={destinationImg}
+                alt="Haute-Nendaz, 4 Vallées"
+                className="h-full w-full object-cover"
+                width={1280}
+                height={960}
+                loading="lazy"
+              />
+            </div>
+            <div>
+              <div className="eyebrow">{t("home.local.eyebrow")}</div>
+              <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
+                {t("home.local.title")}
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+                {t("home.local.lead")}
+              </p>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                {t("home.local.body")}
+              </p>
+            </div>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[1, 2, 3].map((n) => {
               const Icon = LOCAL_ICONS[n - 1];
               return (

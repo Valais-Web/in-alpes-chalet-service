@@ -235,6 +235,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.title": "Au cœur des 4 Vallées",
     "home.local.lead":
       "On vous partage les bons plans : activités, événements et accès au domaine.",
+    "home.local.body":
+      "Au cœur des 4 Vallées, Haute-Nendaz ouvre sur l'un des plus grands domaines skiables de Suisse — plus de 400 km de pistes reliant Nendaz, Verbier et Veysonnaz. L'hiver pour le ski, l'été pour la randonnée, le VTT et les lacs d'altitude : la station vit toute l'année, à seulement quelques minutes de nos logements.",
 
     "home.cta.title": "Une question, une date, un projet ?",
     "home.cta.sub": "Écrivez-nous, on vous répond rapidement et en personne.",
@@ -298,6 +300,25 @@ export const dictionaries: Record<Locale, Dict> = {
     "services.assort.title": "Tous les services, sous un même toit",
     "services.assort.lead": "Choisissez ce dont vous avez besoin — nous nous occupons du reste.",
     "services.how.title": "Confier votre bien, étape par étape",
+    "services.intro.eyebrow": "Qui sommes-nous",
+    "services.intro.title": "Votre partenaire local à Haute-Nendaz",
+    "services.intro.body":
+      "Depuis 2020, In-Alpes prend soin des résidences secondaires de Haute-Nendaz comme si c'étaient les siennes. Une équipe locale et réactive, disponible sur place, avec un seul interlocuteur pour la location, l'entretien, la blanchisserie et le suivi de votre bien.",
+    "services.intro.body2":
+      "Notre objectif : vous simplifier la vie et valoriser votre bien, en toute transparence et sans frais cachés.",
+    "services.ownerhow.eyebrow": "Devenir client",
+    "services.ownerhow.title": "Comment nous confier votre bien",
+    "services.ownerhow.lead":
+      "Un parcours simple, de la première prise de contact à la gestion au quotidien.",
+    "owner.step.1.t": "Prise de contact",
+    "owner.step.1.d": "Un premier échange pour comprendre votre bien et vos attentes.",
+    "owner.step.2.t": "Visite & évaluation",
+    "owner.step.2.d": "Nous visitons votre résidence et évaluons les services adaptés.",
+    "owner.step.3.t": "Proposition sur-mesure",
+    "owner.step.3.d": "Une offre claire et flexible, adaptée à votre bien, sans frais cachés.",
+    "owner.step.4.t": "Mise en place & gestion",
+    "owner.step.4.d":
+      "Nous prenons le relais : location, entretien et suivi en continu, un seul contact.",
 
     "services.faq.eyebrow": "Questions fréquentes",
     "services.faq.title": "Vous vous demandez peut-être…",
@@ -559,6 +580,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.eyebrow": "Welcome to Nendaz",
     "home.local.title": "In the heart of the 4 Vallées",
     "home.local.lead": "We share the good tips: activities, events and access to the ski area.",
+    "home.local.body":
+      "In the heart of the 4 Vallées, Haute-Nendaz opens onto one of Switzerland's largest ski areas — over 400 km of slopes linking Nendaz, Verbier and Veysonnaz. Skiing in winter, hiking, mountain biking and alpine lakes in summer: the resort lives all year round, just minutes from our apartments.",
 
     "home.cta.title": "A question, a date, a project?",
     "home.cta.sub": "Write to us — we reply quickly and in person.",
@@ -620,6 +643,23 @@ export const dictionaries: Record<Locale, Dict> = {
     "services.assort.title": "Every service, under one roof",
     "services.assort.lead": "Pick what you need — we take care of the rest.",
     "services.how.title": "Entrusting your property, step by step",
+    "services.intro.eyebrow": "Who we are",
+    "services.intro.title": "Your local partner in Haute-Nendaz",
+    "services.intro.body":
+      "Since 2020, In-Alpes has cared for the second homes of Haute-Nendaz as if they were its own. A local, responsive team on the ground, with a single point of contact for renting, upkeep, laundry and looking after your property.",
+    "services.intro.body2":
+      "Our goal: make your life easier and enhance your property, with full transparency and no hidden fees.",
+    "services.ownerhow.eyebrow": "Becoming a client",
+    "services.ownerhow.title": "How to entrust us with your property",
+    "services.ownerhow.lead": "A simple journey, from the first contact to day-to-day management.",
+    "owner.step.1.t": "Get in touch",
+    "owner.step.1.d": "A first conversation to understand your property and expectations.",
+    "owner.step.2.t": "Visit & assessment",
+    "owner.step.2.d": "We visit your home and assess the services it needs.",
+    "owner.step.3.t": "Tailored proposal",
+    "owner.step.3.d": "A clear, flexible offer suited to your property, with no hidden fees.",
+    "owner.step.4.t": "Setup & management",
+    "owner.step.4.d": "We take over: renting, upkeep and ongoing care — one single contact.",
 
     "services.faq.eyebrow": "Frequently asked",
     "services.faq.title": "You may be wondering…",
@@ -880,6 +920,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.title": "In het hart van de 4 Vallées",
     "home.local.lead":
       "Wij delen de goede tips: activiteiten, evenementen en toegang tot het skigebied.",
+    "home.local.body":
+      "In het hart van de 4 Vallées opent Haute-Nendaz naar een van de grootste skigebieden van Zwitserland — meer dan 400 km pistes die Nendaz, Verbier en Veysonnaz verbinden. Skiën in de winter, wandelen, mountainbiken en bergmeren in de zomer: het resort leeft het hele jaar, op enkele minuten van onze woningen.",
 
     "home.cta.title": "Een vraag, een datum, een project?",
     "home.cta.sub": "Schrijf ons — wij antwoorden snel en persoonlijk.",
@@ -942,6 +984,24 @@ export const dictionaries: Record<Locale, Dict> = {
     "services.assort.title": "Alle diensten, onder één dak",
     "services.assort.lead": "Kies wat u nodig hebt — wij regelen de rest.",
     "services.how.title": "Uw woning toevertrouwen, stap voor stap",
+    "services.intro.eyebrow": "Wie we zijn",
+    "services.intro.title": "Uw lokale partner in Haute-Nendaz",
+    "services.intro.body":
+      "Sinds 2020 verzorgt In-Alpes de tweede woningen van Haute-Nendaz alsof het de eigen woningen zijn. Een lokaal, snel team ter plaatse, met één aanspreekpunt voor verhuur, onderhoud, wasserij en de opvolging van uw woning.",
+    "services.intro.body2":
+      "Ons doel: uw leven vereenvoudigen en uw woning laten renderen, volledig transparant en zonder verborgen kosten.",
+    "services.ownerhow.eyebrow": "Klant worden",
+    "services.ownerhow.title": "Hoe u uw woning aan ons toevertrouwt",
+    "services.ownerhow.lead":
+      "Een eenvoudig traject, van het eerste contact tot het dagelijkse beheer.",
+    "owner.step.1.t": "Contact opnemen",
+    "owner.step.1.d": "Een eerste gesprek om uw woning en verwachtingen te begrijpen.",
+    "owner.step.2.t": "Bezoek & evaluatie",
+    "owner.step.2.d": "We bezoeken uw woning en bepalen de nodige diensten.",
+    "owner.step.3.t": "Voorstel op maat",
+    "owner.step.3.d": "Een helder, flexibel aanbod op maat van uw woning, zonder verborgen kosten.",
+    "owner.step.4.t": "Opstart & beheer",
+    "owner.step.4.d": "Wij nemen het over: verhuur, onderhoud en continue opvolging — één contact.",
 
     "services.faq.eyebrow": "Veelgestelde vragen",
     "services.faq.title": "Misschien vraagt u zich af…",
