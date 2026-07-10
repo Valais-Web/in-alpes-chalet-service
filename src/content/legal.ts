@@ -24,7 +24,7 @@ export const mentionsLegales: Record<Locale, LegalDoc> = {
         heading: "Éditeur du site",
         paragraphs: [
           "In-Alpes Chalet Services Sàrl",
-          "Société à responsabilité limitée — capital social : CHF 20'000",
+          "Société à responsabilité limitée, capital social : CHF 20'000",
           "Chemin de Sofleu 31, Batterie de la Combe 328, 1997 Haute-Nendaz, Valais, Suisse",
           "Siège : Nendaz (VS)",
           "Téléphone : +41 77 511 59 09",
@@ -65,7 +65,7 @@ export const mentionsLegales: Record<Locale, LegalDoc> = {
         heading: "Site publisher",
         paragraphs: [
           "In-Alpes Chalet Services Sàrl",
-          "Limited liability company (Sàrl) — share capital: CHF 20,000",
+          "Limited liability company (Sàrl), share capital: CHF 20,000",
           "Chemin de Sofleu 31, Batterie de la Combe 328, 1997 Haute-Nendaz, Valais, Switzerland",
           "Registered seat: Nendaz (VS)",
           "Phone: +41 77 511 59 09",
@@ -106,7 +106,7 @@ export const mentionsLegales: Record<Locale, LegalDoc> = {
         heading: "Uitgever van de site",
         paragraphs: [
           "In-Alpes Chalet Services Sàrl",
-          "Besloten vennootschap (Sàrl) — maatschappelijk kapitaal: CHF 20.000",
+          "Besloten vennootschap (Sàrl), maatschappelijk kapitaal: CHF 20.000",
           "Chemin de Sofleu 31, Batterie de la Combe 328, 1997 Haute-Nendaz, Wallis, Zwitserland",
           "Zetel: Nendaz (VS)",
           "Telefoon: +41 77 511 59 09",
@@ -151,7 +151,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
       {
         heading: "Responsable du traitement",
         paragraphs: [
-          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Valais), Suisse — info@in-alpes.ch.",
+          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Valais), Suisse, info@in-alpes.ch.",
         ],
       },
       {
@@ -211,7 +211,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
       {
         heading: "Data controller",
         paragraphs: [
-          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Valais), Switzerland — info@in-alpes.ch.",
+          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Valais), Switzerland, info@in-alpes.ch.",
         ],
       },
       {
@@ -271,7 +271,7 @@ export const confidentialite: Record<Locale, LegalDoc> = {
       {
         heading: "Verwerkingsverantwoordelijke",
         paragraphs: [
-          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Wallis), Zwitserland — info@in-alpes.ch.",
+          "In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, 1997 Haute-Nendaz (Wallis), Zwitserland, info@in-alpes.ch.",
         ],
       },
       {

@@ -7,12 +7,12 @@ import { CheckCircle2, Mail, Phone, MapPin, Loader2 } from "lucide-react";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — In-Alpes Chalet Services" },
+      { title: "Contact · In-Alpes Chalet Services" },
       {
         name: "description",
         content: "Contactez In-Alpes Chalet Services à Haute-Nendaz (Valais).",
       },
-      { property: "og:title", content: "Contact — In-Alpes" },
+      { property: "og:title", content: "Contact · In-Alpes" },
       { property: "og:url", content: "/contact" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],

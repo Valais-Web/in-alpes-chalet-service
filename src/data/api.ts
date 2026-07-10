@@ -20,24 +20,15 @@ import type {
   BookingStatus,
 } from "./types";
 
-import apt1 from "@/assets/apt-1.jpg";
-import apt2 from "@/assets/apt-2.jpg";
-import apt3 from "@/assets/apt-3.jpg";
-import apt4 from "@/assets/apt-4.jpg";
+import { SITE_IMAGES } from "@/content/media";
 
 const LIVE = import.meta.env.VITE_API_MODE === "live";
 
-const IMAGE_MAP: Record<string, string> = {
-  "apt-1": apt1,
-  "apt-2": apt2,
-  "apt-3": apt3,
-  "apt-4": apt4,
-};
-
-/** Cloudinary URLs pass through; fixture keys resolve to bundled assets. */
+/** Real photos are Cloudinary URLs and pass straight through; anything else
+ * (a legacy fixture key, an empty value) falls back to a real house photo. */
 export function resolveImage(key: string): string {
   if (/^https?:\/\//.test(key)) return key;
-  return IMAGE_MAP[key] ?? apt1;
+  return SITE_IMAGES.heroChalet;
 }
 
 /** Expired pre-reservations read as free (computed client-side, CLAUDE.md §5). */

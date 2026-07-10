@@ -20,10 +20,12 @@ import type { LucideIcon } from "lucide-react";
 import { listApartments } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { GLOBAL_RATING, HOME_REVIEWS, formatRating } from "@/content/reviews";
+import { SITE_IMAGES } from "@/content/media";
 import { ApartmentCard } from "@/components/site/ApartmentCard";
-import aptOwner from "@/assets/apt-2.jpg";
-import audImg from "@/assets/apt-3.jpg";
-import destinationImg from "@/assets/apt-4.jpg";
+
+const aptOwner = SITE_IMAGES.heroChalet;
+const audImg = SITE_IMAGES.valleyView;
+const destinationImg = SITE_IMAGES.skiFourValleys;
 
 export const Route = createFileRoute("/")({
   component: Home_,

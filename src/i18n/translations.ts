@@ -236,7 +236,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.lead":
       "On vous partage les bons plans : activités, événements et accès au domaine.",
     "home.local.body":
-      "Au cœur des 4 Vallées, Haute-Nendaz ouvre sur l'un des plus grands domaines skiables de Suisse — plus de 400 km de pistes reliant Nendaz, Verbier et Veysonnaz. L'hiver pour le ski, l'été pour la randonnée, le VTT et les lacs d'altitude : la station vit toute l'année, à seulement quelques minutes de nos logements.",
+      "Au cœur des 4 Vallées, Haute-Nendaz ouvre sur l'un des plus grands domaines skiables de Suisse, avec plus de 400 km de pistes reliant Nendaz, Verbier et Veysonnaz. L'hiver pour le ski, l'été pour la randonnée, le VTT et les lacs d'altitude : la station vit toute l'année, à seulement quelques minutes de nos logements.",
 
     "home.cta.title": "Une question, une date, un projet ?",
     "home.cta.sub": "Écrivez-nous, on vous répond rapidement et en personne.",
@@ -298,7 +298,7 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "services.assort.eyebrow": "Notre assortiment",
     "services.assort.title": "Tous les services, sous un même toit",
-    "services.assort.lead": "Choisissez ce dont vous avez besoin — nous nous occupons du reste.",
+    "services.assort.lead": "Choisissez ce dont vous avez besoin, nous nous occupons du reste.",
     "services.how.title": "Confier votre bien, étape par étape",
     "services.intro.eyebrow": "Qui sommes-nous",
     "services.intro.title": "Votre partenaire local à Haute-Nendaz",
@@ -340,7 +340,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "faq.5.a":
       "Oui, nous coordonnons les artisans, contrôlons les travaux et vous transmettons des comptes-rendus photo.",
     "faq.6.q": "Dans quelles langues échangez-vous ?",
-    "faq.6.a": "En français, en anglais et en néerlandais — à l'écrit comme au téléphone.",
+    "faq.6.a": "En français, en anglais et en néerlandais, à l'écrit comme au téléphone.",
     "services.cta.title": "Parlons de votre résidence",
     "services.cta.sub":
       "Un échange simple pour comprendre vos besoins et vous proposer une offre claire.",
@@ -442,13 +442,13 @@ export const dictionaries: Record<Locale, Dict> = {
     "svc.cleaning.title": "Cleaning",
     "svc.cleaning.body": "Hotel-grade turnovers between stays and seasonal deep cleans.",
     "svc.laundry.title": "Laundry",
-    "svc.laundry.body": "Bed, bath and table linen — professional washing and pressing.",
+    "svc.laundry.body": "Bed, bath and table linen: professional washing and pressing.",
     "svc.works.title": "Works follow-up",
     "svc.works.body": "Craftsmen coordination, on-site checks, photo reports.",
     "svc.keys.title": "Keys & parcels",
     "svc.keys.body": "Parcel reception, key handover to trades and providers.",
     "svc.garden.title": "Gardening",
-    "svc.garden.body": "Outdoor upkeep — mowing, pruning, watering.",
+    "svc.garden.body": "Outdoor upkeep: mowing, pruning, watering.",
     "svc.snow.title": "Snow clearing",
     "svc.snow.body": "Clear access all season, morning and evening.",
 
@@ -583,10 +583,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.title": "In the heart of the 4 Vallées",
     "home.local.lead": "We share the good tips: activities, events and access to the ski area.",
     "home.local.body":
-      "In the heart of the 4 Vallées, Haute-Nendaz opens onto one of Switzerland's largest ski areas — over 400 km of slopes linking Nendaz, Verbier and Veysonnaz. Skiing in winter, hiking, mountain biking and alpine lakes in summer: the resort lives all year round, just minutes from our apartments.",
+      "In the heart of the 4 Vallées, Haute-Nendaz opens onto one of Switzerland's largest ski areas, with over 400 km of slopes linking Nendaz, Verbier and Veysonnaz. Skiing in winter, hiking, mountain biking and alpine lakes in summer: the resort lives all year round, just minutes from our apartments.",
 
     "home.cta.title": "A question, a date, a project?",
-    "home.cta.sub": "Write to us — we reply quickly and in person.",
+    "home.cta.sub": "Write to us. We reply quickly and in person.",
     "home.cta.btn": "Contact us",
 
     "step.1.t": "Get in touch",
@@ -600,7 +600,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "step.5.t": "Preparation",
     "step.5.d": "We prepare the home, beds made for you.",
     "step.6.t": "Stay in Nendaz",
-    "step.6.d": "Enjoy your holiday — we stay reachable.",
+    "step.6.d": "Enjoy your holiday. We stay reachable.",
     "step.7.t": "Check & cleaning",
     "step.7.d": "Flexible check-out, we take care of the rest.",
 
@@ -609,7 +609,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "review.1.author": "Marie L.",
     "review.1.meta": "Family · February 2025",
     "review.2.quote":
-      "Perfect communication, the place even nicer than in the photos. Beds ready on arrival — a real plus.",
+      "Perfect communication, the place even nicer than in the photos. Beds ready on arrival, a real plus.",
     "review.2.author": "Thomas B.",
     "review.2.meta": "Couple · January 2025",
     "review.3.quote":
@@ -643,7 +643,7 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "services.assort.eyebrow": "Our range",
     "services.assort.title": "Every service, under one roof",
-    "services.assort.lead": "Pick what you need — we take care of the rest.",
+    "services.assort.lead": "Pick what you need, and we take care of the rest.",
     "services.how.title": "Entrusting your property, step by step",
     "services.intro.eyebrow": "Who we are",
     "services.intro.title": "Your local partner in Haute-Nendaz",
@@ -661,7 +661,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "owner.step.3.t": "Tailored proposal",
     "owner.step.3.d": "A clear, flexible offer suited to your property, with no hidden fees.",
     "owner.step.4.t": "Setup & management",
-    "owner.step.4.d": "We take over: renting, upkeep and ongoing care — one single contact.",
+    "owner.step.4.d": "We take over: renting, upkeep and ongoing care: one single contact.",
 
     "services.faq.eyebrow": "Frequently asked",
     "services.faq.title": "You may be wondering…",
@@ -681,7 +681,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "faq.5.q": "Do you follow up on works and upkeep?",
     "faq.5.a": "Yes, we coordinate the tradespeople, check the work and send you photo reports.",
     "faq.6.q": "Which languages do you work in?",
-    "faq.6.a": "French, English and Dutch — in writing and by phone.",
+    "faq.6.a": "French, English and Dutch, in writing and by phone.",
     "services.cta.title": "Let's talk about your property",
     "services.cta.sub": "A simple conversation to understand your needs and propose a clear offer.",
     "services.cta.btn": "Request an offer",
@@ -782,13 +782,13 @@ export const dictionaries: Record<Locale, Dict> = {
     "svc.cleaning.title": "Schoonmaak",
     "svc.cleaning.body": "Hotelniveau tussen verblijven en grondige seizoensbeurten.",
     "svc.laundry.title": "Wasserij",
-    "svc.laundry.body": "Bed-, bad- en tafellinnen — professioneel wassen en strijken.",
+    "svc.laundry.body": "Bed-, bad- en tafellinnen: professioneel wassen en strijken.",
     "svc.works.title": "Werfopvolging",
     "svc.works.body": "Coördinatie vaklui, controles ter plaatse, fotorapporten.",
     "svc.keys.title": "Sleutels & pakjes",
     "svc.keys.body": "Ontvangst van pakjes, sleuteloverdracht aan vaklui en dienstverleners.",
     "svc.garden.title": "Tuinonderhoud",
-    "svc.garden.body": "Onderhoud van buitenruimtes — maaien, snoeien, water geven.",
+    "svc.garden.body": "Onderhoud van buitenruimtes: maaien, snoeien, water geven.",
     "svc.snow.title": "Sneeuwruimen",
     "svc.snow.body": "Vrije toegang het hele seizoen, ochtend en avond.",
 
@@ -925,10 +925,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.lead":
       "Wij delen de goede tips: activiteiten, evenementen en toegang tot het skigebied.",
     "home.local.body":
-      "In het hart van de 4 Vallées opent Haute-Nendaz naar een van de grootste skigebieden van Zwitserland — meer dan 400 km pistes die Nendaz, Verbier en Veysonnaz verbinden. Skiën in de winter, wandelen, mountainbiken en bergmeren in de zomer: het resort leeft het hele jaar, op enkele minuten van onze woningen.",
+      "In het hart van de 4 Vallées opent Haute-Nendaz naar een van de grootste skigebieden van Zwitserland, meer dan 400 km pistes die Nendaz, Verbier en Veysonnaz verbinden. Skiën in de winter, wandelen, mountainbiken en bergmeren in de zomer: het resort leeft het hele jaar, op enkele minuten van onze woningen.",
 
     "home.cta.title": "Een vraag, een datum, een project?",
-    "home.cta.sub": "Schrijf ons — wij antwoorden snel en persoonlijk.",
+    "home.cta.sub": "Schrijf ons. Wij antwoorden snel en persoonlijk.",
     "home.cta.btn": "Contacteer ons",
 
     "step.1.t": "Contact opnemen",
@@ -942,7 +942,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "step.5.t": "Voorbereiding",
     "step.5.d": "Wij maken de woning klaar, bedden voor u opgemaakt.",
     "step.6.t": "Verblijf in Nendaz",
-    "step.6.d": "Geniet van uw vakantie — wij blijven bereikbaar.",
+    "step.6.d": "Geniet van uw vakantie. Wij blijven bereikbaar.",
     "step.7.t": "Controle & schoonmaak",
     "step.7.d": "Flexibel vertrek, wij regelen de rest.",
 
@@ -951,7 +951,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "review.1.author": "Marie L.",
     "review.1.meta": "Gezin · Februari 2025",
     "review.2.quote":
-      "Perfecte communicatie, de woning nog mooier dan op de foto's. Bedden klaar bij aankomst — een echte plus.",
+      "Perfecte communicatie, de woning nog mooier dan op de foto's. Bedden klaar bij aankomst, een echte plus.",
     "review.2.author": "Thomas B.",
     "review.2.meta": "Koppel · Januari 2025",
     "review.3.quote":
@@ -986,7 +986,7 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "services.assort.eyebrow": "Ons aanbod",
     "services.assort.title": "Alle diensten, onder één dak",
-    "services.assort.lead": "Kies wat u nodig hebt — wij regelen de rest.",
+    "services.assort.lead": "Kies wat u nodig hebt, wij regelen de rest.",
     "services.how.title": "Uw woning toevertrouwen, stap voor stap",
     "services.intro.eyebrow": "Wie we zijn",
     "services.intro.title": "Uw lokale partner in Haute-Nendaz",
@@ -1005,7 +1005,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "owner.step.3.t": "Voorstel op maat",
     "owner.step.3.d": "Een helder, flexibel aanbod op maat van uw woning, zonder verborgen kosten.",
     "owner.step.4.t": "Opstart & beheer",
-    "owner.step.4.d": "Wij nemen het over: verhuur, onderhoud en continue opvolging — één contact.",
+    "owner.step.4.d": "Wij nemen het over: verhuur, onderhoud en continue opvolging: één contact.",
 
     "services.faq.eyebrow": "Veelgestelde vragen",
     "services.faq.title": "Misschien vraagt u zich af…",
@@ -1025,7 +1025,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "faq.5.q": "Volgt u werken en onderhoud op?",
     "faq.5.a": "Ja, wij coördineren de vaklui, controleren de werken en bezorgen u fotoverslagen.",
     "faq.6.q": "In welke talen communiceert u?",
-    "faq.6.a": "In het Frans, Engels en Nederlands — schriftelijk en telefonisch.",
+    "faq.6.a": "In het Frans, Engels en Nederlands, schriftelijk en telefonisch.",
     "services.cta.title": "Laten we over uw woning praten",
     "services.cta.sub":
       "Een eenvoudig gesprek om uw wensen te begrijpen en een helder aanbod te doen.",

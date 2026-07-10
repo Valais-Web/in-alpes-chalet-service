@@ -21,19 +21,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import servicesHero from "@/assets/apt-4.jpg";
-import presentationImg from "@/assets/apt-2.jpg";
+import { SITE_IMAGES } from "@/content/media";
+
+const servicesHero = SITE_IMAGES.cosyLiving;
+const presentationImg = SITE_IMAGES.brightLiving;
 
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services de gérance — In-Alpes Chalet Services" },
+      { title: "Services de gérance · In-Alpes Chalet Services" },
       {
         name: "description",
         content:
           "Gérance complète de résidences secondaires à Haute-Nendaz : location, nettoyage, blanchisserie, chantier, clés, jardinage, déneigement. Un interlocuteur unique.",
       },
-      { property: "og:title", content: "Services de gérance — In-Alpes" },
+      { property: "og:title", content: "Services de gérance · In-Alpes" },
       { property: "og:url", content: "/services" },
     ],
     links: [{ rel: "canonical", href: "/services" }],
