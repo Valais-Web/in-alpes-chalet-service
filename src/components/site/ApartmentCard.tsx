@@ -45,9 +45,15 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
         </div>
         <div className="mt-4 flex items-baseline justify-between">
           <div className="text-sm">
-            <span className="text-muted-foreground">{t("apt.from")} </span>
-            <span className="font-semibold">CHF {apartment.pricePerNight}</span>
-            <span className="text-muted-foreground"> {t("apt.night")}</span>
+            {apartment.pricePerNight > 0 ? (
+              <>
+                <span className="text-muted-foreground">{t("apt.from")} </span>
+                <span className="font-semibold">CHF {apartment.pricePerNight}</span>
+                <span className="text-muted-foreground"> {t("apt.night")}</span>
+              </>
+            ) : (
+              <span className="font-semibold">{t("apt.priceOnRequest")}</span>
+            )}
           </div>
           <span className="text-xs font-medium text-accent">{t("cta.discover")} →</span>
         </div>

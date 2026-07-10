@@ -19,3 +19,7 @@ export const SITE_IMAGES = {
   /** Perce Neige 21: bright, tastefully furnished living room. Presentation. */
   brightLiving: `${CLOUD}/v1783681694/in-alpes/apartments/perce-neige-21/qizwst6umdlt8bbjj4k3.jpg`,
 } as const;
+
+/** Official Airbnb wordmark (coral). Shown beside the aggregate rating so the
+ * reviews read as verified Airbnb reviews. The one deliberate red on the site. */
+export const AIRBNB_LOGO = `${CLOUD}/v1783689153/in-alpes/brand/nbronulj0h24bowijj4k.webp`;
