@@ -4,6 +4,7 @@ import { useState } from "react";
 import { listBookings, updateBookingStatus } from "@/data/api";
 import type { BookingStatus } from "@/data/types";
 import { useI18n } from "@/i18n/I18nProvider";
+import { StatusBadge } from "@/admin/StatusBadge";
 import { RefreshCw, Archive, ArchiveRestore } from "lucide-react";
 
 export const Route = createFileRoute("/admin/requests")({
@@ -137,9 +138,7 @@ function AdminRequests() {
                 </td>
                 <td className="px-4 py-3">{b.guests}</td>
                 <td className="px-4 py-3">
-                  <span className="bg-secondary px-2 py-0.5 text-xs">
-                    {t(`admin.requests.status.${b.status}`)}
-                  </span>
+                  <StatusBadge status={b.status} />
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="inline-flex gap-1">
