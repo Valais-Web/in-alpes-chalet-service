@@ -21,7 +21,7 @@ export const dictionaries: Record<Locale, Dict> = {
       "Des logements vraiment propres, une arrivée flexible et un contact humain. Et pour les propriétaires, un seul interlocuteur pour tout.",
     "hero.cta.rent": "Louer un logement",
     "hero.cta.manage": "Confier la gestion",
-    "hero.proof": "4,95/5 sur 596 avis Airbnb",
+    "hero.proof": "4,95/5 sur 603 avis Airbnb",
 
     "home.apartments.title": "Nos logements",
     "home.apartments.sub": "Sélection de chalets et appartements à Haute-Nendaz.",
@@ -229,7 +229,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.how.lead": "Sept étapes simples, sans surprise. Vous savez toujours où vous en êtes.",
 
     "home.rev.eyebrow": "Ils nous ont fait confiance",
-    "home.rev.title": "4,95/5 sur 596 avis",
+    "home.rev.title": "4,95/5 sur 603 avis",
 
     "home.local.eyebrow": "Bienvenue à Nendaz",
     "home.local.title": "Au cœur des 4 Vallées",
@@ -346,7 +346,9 @@ export const dictionaries: Record<Locale, Dict> = {
       "Un échange simple pour comprendre vos besoins et vous proposer une offre claire.",
     "services.cta.btn": "Demander une offre",
 
-    "apt.usp.rating": "4,95/5 · 596 avis",
+    "apt.usp.rating": "4,95/5 · 603 avis",
+    "reviews.word": "avis",
+    "apt.reviews.seeOnAirbnb": "Voir tous les avis sur Airbnb",
     "apt.usp.promo": "−10% dès 7 nuits",
     "apt.usp.flex": "Arrivée flexible",
     "apt.usp.clean": "Ménage hôtelier",
@@ -369,7 +371,7 @@ export const dictionaries: Record<Locale, Dict> = {
       "Genuinely clean homes, flexible check-in and a human contact. And for owners, a single point of contact for everything.",
     "hero.cta.rent": "Rent a place",
     "hero.cta.manage": "Have it managed",
-    "hero.proof": "4.95/5 across 596 Airbnb reviews",
+    "hero.proof": "4.95/5 across 603 Airbnb reviews",
 
     "home.apartments.title": "Our rentals",
     "home.apartments.sub": "A curated selection of chalets and apartments in Haute-Nendaz.",
@@ -575,7 +577,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.how.lead": "Seven simple steps, no surprises. You always know where things stand.",
 
     "home.rev.eyebrow": "They trusted us",
-    "home.rev.title": "4.95/5 across 596 reviews",
+    "home.rev.title": "4.95/5 across 603 reviews",
 
     "home.local.eyebrow": "Welcome to Nendaz",
     "home.local.title": "In the heart of the 4 Vallées",
@@ -684,7 +686,9 @@ export const dictionaries: Record<Locale, Dict> = {
     "services.cta.sub": "A simple conversation to understand your needs and propose a clear offer.",
     "services.cta.btn": "Request an offer",
 
-    "apt.usp.rating": "4.95/5 · 596 reviews",
+    "apt.usp.rating": "4.95/5 · 603 reviews",
+    "reviews.word": "reviews",
+    "apt.reviews.seeOnAirbnb": "See all reviews on Airbnb",
     "apt.usp.promo": "−10% from 7 nights",
     "apt.usp.flex": "Flexible check-in",
     "apt.usp.clean": "Hotel-grade cleaning",
@@ -707,7 +711,7 @@ export const dictionaries: Record<Locale, Dict> = {
       "Echt schone verblijven, een flexibele aankomst en persoonlijk contact. En voor eigenaars: één aanspreekpunt voor alles.",
     "hero.cta.rent": "Een woning huren",
     "hero.cta.manage": "Laten beheren",
-    "hero.proof": "4,95/5 op 596 Airbnb-beoordelingen",
+    "hero.proof": "4,95/5 op 603 Airbnb-beoordelingen",
 
     "home.apartments.title": "Onze woningen",
     "home.apartments.sub": "Zorgvuldige selectie van chalets en appartementen in Haute-Nendaz.",
@@ -914,7 +918,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.how.lead": "Zeven eenvoudige stappen, geen verrassingen. U weet altijd waar u staat.",
 
     "home.rev.eyebrow": "Zij vertrouwden ons",
-    "home.rev.title": "4,95/5 op 596 beoordelingen",
+    "home.rev.title": "4,95/5 op 603 beoordelingen",
 
     "home.local.eyebrow": "Welkom in Nendaz",
     "home.local.title": "In het hart van de 4 Vallées",
@@ -1027,7 +1031,9 @@ export const dictionaries: Record<Locale, Dict> = {
       "Een eenvoudig gesprek om uw wensen te begrijpen en een helder aanbod te doen.",
     "services.cta.btn": "Een aanbod vragen",
 
-    "apt.usp.rating": "4,95/5 · 596 beoordelingen",
+    "apt.usp.rating": "4,95/5 · 603 beoordelingen",
+    "reviews.word": "beoordelingen",
+    "apt.reviews.seeOnAirbnb": "Bekijk alle beoordelingen op Airbnb",
     "apt.usp.promo": "−10% vanaf 7 nachten",
     "apt.usp.flex": "Flexibele aankomst",
     "apt.usp.clean": "Hotelschoonmaak",
