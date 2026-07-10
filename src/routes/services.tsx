@@ -22,6 +22,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import servicesHero from "@/assets/apt-4.jpg";
+import presentationImg from "@/assets/apt-2.jpg";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -95,6 +96,33 @@ function Services() {
         </div>
       </section>
 
+      {/* PRÉSENTATION */}
+      <section className="section-y">
+        <div className="container-page grid items-center gap-10 md:grid-cols-2">
+          <div>
+            <div className="eyebrow">{t("services.intro.eyebrow")}</div>
+            <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
+              {t("services.intro.title")}
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              {t("services.intro.body")}
+            </p>
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              {t("services.intro.body2")}
+            </p>
+          </div>
+          <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-secondary">
+            <img
+              src={presentationImg}
+              alt=""
+              className="h-full w-full object-cover"
+              width={1280}
+              height={960}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* BENEFITS / USP */}
       <section className="section-y">
         <div className="container-page">
@@ -152,21 +180,26 @@ function Services() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* HOW IT WORKS (owner onboarding) */}
       <section className="section-y">
         <div className="container-page">
-          <SectionHead center eyebrow={t("home.how.eyebrow")} title={t("services.how.title")} />
+          <SectionHead
+            center
+            eyebrow={t("services.ownerhow.eyebrow")}
+            title={t("services.ownerhow.title")}
+            lead={t("services.ownerhow.lead")}
+          />
           <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+            {[1, 2, 3, 4].map((n) => (
               <li key={n} className="flex flex-col gap-2 border-t-2 border-accent pt-4">
                 <span className="font-[family-name:var(--font-display)] text-sm font-semibold text-accent">
                   {String(n).padStart(2, "0")}
                 </span>
                 <div className="font-[family-name:var(--font-display)] font-semibold">
-                  {t(`step.${n}.t`)}
+                  {t(`owner.step.${n}.t`)}
                 </div>
                 <div className="text-sm leading-relaxed text-muted-foreground">
-                  {t(`step.${n}.d`)}
+                  {t(`owner.step.${n}.d`)}
                 </div>
               </li>
             ))}
