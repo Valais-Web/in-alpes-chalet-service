@@ -12,8 +12,14 @@ export const SITE_IMAGES = {
   heroChalet: `${CLOUD}/v1783681662/in-alpes/apartments/le-combin/ehrfrnojtjttuxsj1vzx.jpg`,
   /** Studio In-Alpes: bed under the panoramic arched window over the valley. */
   valleyView: `${CLOUD}/v1783681676/in-alpes/apartments/studio-in-alpes/c9zu0d0xlpnekugxnhqn.jpg`,
+  /** Nendaz in summer. Home hero, May–October. */
+  heroSummer: `${CLOUD}/v1783691739/in-alpes/site/lywajsrdcqcrmvyi5cwb.avif`,
+  /** Nendaz in winter. Home hero, November–April. */
+  heroWinter: `${CLOUD}/v1783691738/in-alpes/site/udzsje9loedim16et5kv.jpg`,
   /** 4 Vallées ski area (Plan-du-Fou). Home destination section. */
   skiFourValleys: `${CLOUD}/v1783683927/in-alpes/site/vx8bhtjmoccush7qvdej.jpg`,
+  /** Ridge hike above Nendaz (Dent de Nendaz, autumn). 4 Vallées inset. */
+  fourValleysHike: `${CLOUD}/v1783691741/in-alpes/site/rctvx95ckp57uz38rder.jpg`,
   /** Le Combin: cosy living room with beams and leather sofa. Services hero. */
   cosyLiving: `${CLOUD}/v1783681662/in-alpes/apartments/le-combin/pva8kdd85vcdzygieuww.jpg`,
   /** Perce Neige 21: bright, tastefully furnished living room. Presentation. */
