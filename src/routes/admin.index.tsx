@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { listApartments, listBookings } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
+import { StatusBadge } from "@/admin/StatusBadge";
 import { ArrowRight, Inbox } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
@@ -84,9 +85,7 @@ function Dashboard() {
               <span>
                 {b.name} — {b.arrival} → {b.departure}
               </span>
-              <span className="bg-secondary px-2 py-0.5 text-xs">
-                {t(`admin.requests.status.${b.status}`)}
-              </span>
+              <StatusBadge status={b.status} />
             </li>
           ))}
         </ul>
