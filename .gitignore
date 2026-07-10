@@ -38,3 +38,9 @@ dist-ssr
 
 # Framework SSR build output (nitro netlify preset)
 .netlify/
+
+# Local scrape cache (Airbnb import) — never commit
+.scrape/
+
+# Local restart handover — not committed
+HANDOVER.md
