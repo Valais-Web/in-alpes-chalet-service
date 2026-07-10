@@ -9,7 +9,9 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import ogImage from "@/assets/apt-1.jpg";
+import { SITE_IMAGES } from "@/content/media";
+
+const ogImage = SITE_IMAGES.heroChalet;
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { AdminAuthProvider } from "@/admin/AdminAuth";
@@ -58,7 +60,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "In-Alpes Chalet Services — Location & gérance à Haute-Nendaz" },
+      { title: "In-Alpes Chalet Services · Location & gérance à Haute-Nendaz" },
       {
         name: "description",
         content:
@@ -70,7 +72,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:locale", content: "fr_CH" },
       { property: "og:locale:alternate", content: "en_GB" },
       { property: "og:locale:alternate", content: "nl_NL" },
-      { property: "og:title", content: "In-Alpes Chalet Services — Haute-Nendaz" },
+      { property: "og:title", content: "In-Alpes Chalet Services · Haute-Nendaz" },
       {
         property: "og:description",
         content:

@@ -6,12 +6,12 @@ import { confidentialite } from "@/content/legal";
 export const Route = createFileRoute("/confidentialite")({
   head: () => ({
     meta: [
-      { title: "Politique de confidentialité — In-Alpes Chalet Services" },
+      { title: "Politique de confidentialité · In-Alpes Chalet Services" },
       {
         name: "description",
         content: "Comment In-Alpes Chalet Services protège vos données personnelles (nLPD/RGPD).",
       },
-      { property: "og:title", content: "Politique de confidentialité — In-Alpes" },
+      { property: "og:title", content: "Politique de confidentialité · In-Alpes" },
       { property: "og:url", content: "/confidentialite" },
     ],
     links: [{ rel: "canonical", href: "/confidentialite" }],

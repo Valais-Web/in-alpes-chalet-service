@@ -83,7 +83,7 @@ function Dashboard() {
           {bookings.slice(0, 5).map((b) => (
             <li key={b.id} className="flex items-center justify-between px-4 py-3 text-sm">
               <span>
-                {b.name} — {b.arrival} → {b.departure}
+                {b.name} · {b.arrival} → {b.departure}
               </span>
               <StatusBadge status={b.status} />
             </li>

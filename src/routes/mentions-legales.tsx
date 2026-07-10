@@ -6,9 +6,9 @@ import { mentionsLegales } from "@/content/legal";
 export const Route = createFileRoute("/mentions-legales")({
   head: () => ({
     meta: [
-      { title: "Mentions légales — In-Alpes Chalet Services" },
+      { title: "Mentions légales · In-Alpes Chalet Services" },
       { name: "description", content: "Mentions légales du site In-Alpes Chalet Services." },
-      { property: "og:title", content: "Mentions légales — In-Alpes" },
+      { property: "og:title", content: "Mentions légales · In-Alpes" },
       { property: "og:url", content: "/mentions-legales" },
     ],
     links: [{ rel: "canonical", href: "/mentions-legales" }],

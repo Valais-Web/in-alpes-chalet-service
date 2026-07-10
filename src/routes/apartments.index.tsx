@@ -7,12 +7,12 @@ import { useI18n } from "@/i18n/I18nProvider";
 export const Route = createFileRoute("/apartments/")({
   head: () => ({
     meta: [
-      { title: "Nos logements — In-Alpes Chalet Services" },
+      { title: "Nos logements · In-Alpes Chalet Services" },
       {
         name: "description",
         content: "Chalets et appartements en location à Haute-Nendaz (Valais).",
       },
-      { property: "og:title", content: "Nos logements — In-Alpes Chalet Services" },
+      { property: "og:title", content: "Nos logements · In-Alpes Chalet Services" },
       { property: "og:url", content: "/apartments" },
     ],
     links: [{ rel: "canonical", href: "/apartments" }],

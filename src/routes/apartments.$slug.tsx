@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getApartmentBySlug, listAvailability, resolveImage } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
+import { APARTMENT_REVIEWS, formatRating } from "@/content/reviews";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
 import { BookingForm } from "@/components/site/BookingForm";
 import {
@@ -36,7 +37,7 @@ export const Route = createFileRoute("/apartments/$slug")({
     const img = loaderData ? resolveImage(loaderData.apartment.images[0]) : undefined;
     return {
       meta: [
-        { title: `${title} — In-Alpes` },
+        { title: `${title} · In-Alpes` },
         { name: "description", content: desc },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
@@ -52,7 +53,8 @@ export const Route = createFileRoute("/apartments/$slug")({
 
 function Detail() {
   const { apartment } = Route.useLoaderData();
-  const { t, tx } = useI18n();
+  const { t, tx, locale } = useI18n();
+  const reviews = APARTMENT_REVIEWS[apartment.slug];
   const images = apartment.images;
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
@@ -105,7 +107,7 @@ function Detail() {
                 key={i}
                 type="button"
                 onClick={() => setCurrent(i)}
-                aria-label={`${tx(apartment.title)} — ${t("apt.photo")} ${i + 1}`}
+                aria-label={`${tx(apartment.title)} · ${t("apt.photo")} ${i + 1}`}
                 aria-current={i === current}
                 className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-secondary transition ${
                   i === current ? "ring-2 ring-accent" : "opacity-70 hover:opacity-100"
@@ -191,7 +193,12 @@ function Detail() {
           {/* USP strip */}
           <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-y border-border py-4 text-sm">
             {[
-              { icon: Star, label: t("apt.usp.rating") },
+              {
+                icon: Star,
+                label: reviews
+                  ? `${formatRating(reviews.rating, locale)}/5 · ${reviews.count} ${t("reviews.word")}`
+                  : t("apt.usp.rating"),
+              },
               { icon: Percent, label: t("apt.usp.promo") },
               { icon: DoorOpen, label: t("apt.usp.flex") },
               { icon: Sparkles, label: t("apt.usp.clean") },
@@ -247,6 +254,36 @@ function Detail() {
               {tx(apartment.description)}
             </p>
           </section>
+
+          {reviews && (
+            <section className="mt-10">
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="flex items-center gap-2 text-lg font-semibold">
+                  <Star className="h-4 w-4 fill-current" />
+                  {formatRating(reviews.rating, locale)}/5 · {reviews.count} {t("reviews.word")}
+                </h2>
+                <a
+                  href={reviews.airbnbUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-accent underline-offset-4 hover:underline"
+                >
+                  {t("apt.reviews.seeOnAirbnb")}
+                </a>
+              </div>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {reviews.reviews.map((r) => (
+                  <figure key={r.author} className="flex flex-col gap-3 border border-border p-5">
+                    <blockquote className="text-sm leading-relaxed">« {tx(r.quote)} »</blockquote>
+                    <figcaption className="mt-auto text-sm">
+                      <span className="font-semibold">{r.author}</span>
+                      <span className="text-muted-foreground"> · {tx(r.meta)}</span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="mt-10">
             <h2 className="text-lg font-semibold">{t("apt.availability")}</h2>

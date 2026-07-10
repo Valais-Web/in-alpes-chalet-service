@@ -1,129 +1,252 @@
 [
   {
-    "id": "apt-01",
-    "slug": "chalet-arolle",
+    "id": "apt-le-combin",
+    "slug": "le-combin",
     "title": {
-      "fr": "Chalet Arolle — Vue Plaine du Rhône",
-      "en": "Chalet Arolle — Rhône Valley View",
-      "nl": "Chalet Arolle — Uitzicht op Rhônedal"
+      "fr": "Le Combin",
+      "en": "Le Combin",
+      "nl": "Le Combin"
     },
     "summary": {
-      "fr": "Un cocon boisé pour 6 personnes, au calme, à 5 min des pistes.",
-      "en": "A warm wooden nest for 6, quiet setting, 5 min from the slopes.",
-      "nl": "Een warm houten nest voor 6, rustig gelegen, 5 min van de pistes."
+      "fr": "Appartement d'une chambre entièrement rénové (2025) au dernier étage d'un chalet centenaire, avec jardin privé et jacuzzi face aux Alpes.",
+      "en": "Fully renovated (2025) one-bedroom apartment on the top floor of a century-old chalet, with a private garden and a hot tub facing the Alps.",
+      "nl": "Volledig gerenoveerd (2025) appartement met één slaapkamer op de bovenste verdieping van een eeuwenoud chalet, met privétuin en jacuzzi met uitzicht op de Alpen."
     },
     "description": {
-      "fr": "Chalet indépendant entièrement rénové en 2023, matériaux locaux, cheminée à bois, terrasse plein sud avec vue imprenable sur les Alpes valaisannes.",
-      "en": "Standalone chalet fully renovated in 2023, local materials, wood-burning fireplace, south-facing terrace with sweeping views over the Valais Alps.",
-      "nl": "Vrijstaand chalet volledig gerenoveerd in 2023, lokale materialen, houtkachel, zuidgericht terras met weids uitzicht over de Walliser Alpen."
+      "fr": "Rénové en 2025 et situé au dernier étage d'un chalet centenaire, cet appartement spacieux de 50 m² dispose de tout le confort pour des vacances reposantes. Il se niche au milieu d'une prairie appelée La Combe, à 1 450 m d'altitude et à 1,5 km du centre de Haute-Nendaz.\n\nLe salon offre un plafond à poutres apparentes, une cuisine moderne entièrement équipée, un grand canapé, une table à manger pour quatre et un poêle à granulés pour les froides nuits d'hiver. La chambre dispose d'un lit queen size (160 × 200 cm) et d'une grande armoire. La salle de bain comprend un double lavabo et une douche à l'italienne.\n\nEn été, profitez de 80 m² de jardin privé clôturé avec mobilier d'extérieur et d'un jacuzzi avec vue sur les Alpes, utilisable toute l'année. Une place de parking privée est réservée à 30 m du chalet.\n\nEn hiver, un chemin est déneigé entre le parking et l'appartement ; si la route est difficile, une cabine Polaris est mise à disposition depuis le parking accessible à 800 m.",
+      "en": "Renovated in 2025 and set on the top floor of a century-old chalet, this spacious 50 m² apartment has everything you need for a restful holiday. It sits in the middle of a meadow called La Combe, at 1,450 m altitude and 1.5 km from the centre of Haute-Nendaz.\n\nThe living room features an exposed-beam ceiling, a fully equipped modern kitchen, a large sofa, a dining table for four and a pellet stove for cold winter nights. The bedroom has a queen-size bed (160 × 200 cm) and a large wardrobe. The bathroom offers a double basin and a walk-in shower.\n\nIn summer, enjoy 80 m² of fenced private garden with outdoor furniture and a hot tub overlooking the Alps, usable all year round. A private parking space is reserved 30 m from the chalet.\n\nIn winter a path is cleared between the parking and the apartment; if the road is difficult, a Polaris cabin is available from the easily accessible parking 800 m away.",
+      "nl": "Dit ruime appartement van 50 m², in 2025 gerenoveerd en gelegen op de bovenste verdieping van een eeuwenoud chalet, biedt alle comfort voor een rustgevende vakantie. Het ligt midden in een weide genaamd La Combe, op 1.450 m hoogte en 1,5 km van het centrum van Haute-Nendaz.\n\nDe woonkamer heeft een balkenplafond, een volledig uitgeruste moderne keuken, een grote bank, een eettafel voor vier en een pelletkachel voor koude winternachten. De slaapkamer beschikt over een queensize bed (160 × 200 cm) en een grote kast. De badkamer heeft een dubbele wastafel en een inloopdouche.\n\nIn de zomer geniet u van 80 m² omheinde privétuin met tuinmeubilair en een jacuzzi met uitzicht op de Alpen, het hele jaar bruikbaar. Een privéparkeerplaats is gereserveerd op 30 m van het chalet.\n\nIn de winter wordt een pad vrijgemaakt tussen de parking en het appartement; is de weg lastig, dan staat een Polaris-cabine ter beschikking vanaf de goed bereikbare parking op 800 m."
     },
-    "images": ["apt-1", "apt-2", "apt-3", "apt-4"],
-    "maxGuests": 6,
-    "bedrooms": 3,
-    "bathrooms": 2,
-    "surfaceM2": 120,
-    "floor": "R+1",
+    "images": [
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681662/in-alpes/apartments/le-combin/ehrfrnojtjttuxsj1vzx.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681662/in-alpes/apartments/le-combin/pva8kdd85vcdzygieuww.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681663/in-alpes/apartments/le-combin/qsxceclzpzpwlagmptdh.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681664/in-alpes/apartments/le-combin/m0zgwhigvzsfpoggwxm7.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681665/in-alpes/apartments/le-combin/d0m5dj5zcngmc9nz4bjk.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681666/in-alpes/apartments/le-combin/tnnubpgksifrydbnrmuj.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681666/in-alpes/apartments/le-combin/hcp6peflbck4fngg6i2y.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681667/in-alpes/apartments/le-combin/ezcepexfr13mmdztzdul.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681668/in-alpes/apartments/le-combin/ojyjfualjgt1btljbajt.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681669/in-alpes/apartments/le-combin/rli2pevanbwcccducya2.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681670/in-alpes/apartments/le-combin/au4s3ltw1d2eykx5rwz3.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681671/in-alpes/apartments/le-combin/vnmbnbpm9nzydu0m2scs.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681671/in-alpes/apartments/le-combin/qdayk5nm7naiqbk3txyu.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681672/in-alpes/apartments/le-combin/f6t7bna5hjexsgd7pr3z.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681673/in-alpes/apartments/le-combin/hc7v08b4e0y81kxzbnty.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681674/in-alpes/apartments/le-combin/idqkeyvkasdrvnvdwitw.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681675/in-alpes/apartments/le-combin/kocrcndeubhebd0xmbon.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681675/in-alpes/apartments/le-combin/lqg2gp2e7eso59bkjgzz.jpg"
+    ],
+    "maxGuests": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "surfaceM2": 50,
+    "floor": "Dernier étage",
     "amenities": [
       "wifi",
       "fireplace",
       "parking",
-      "washer",
       "dishwasher",
-      "balcony",
-      "mountainView",
-      "skiStorage"
+      "mountainView"
     ],
-    "pricePerNight": 320,
+    "pricePerNight": 0,
     "location": {
-      "lat": 46.1783,
-      "lng": 7.3097,
-      "address": "Route de Nendaz 100, 1997 Haute-Nendaz"
+      "lat": 46.17746,
+      "lng": 7.30782,
+      "address": "La Combe, 1997 Haute-Nendaz, Valais"
     },
     "practical": {
       "checkIn": "16:00",
       "checkOut": "10:00",
       "rules": {
-        "fr": "Non-fumeur. Animaux sur demande. Fêtes interdites.",
-        "en": "Non-smoking. Pets on request. No parties.",
-        "nl": "Niet-roken. Huisdieren op aanvraag. Geen feesten."
+        "fr": "Non-fumeur. Fêtes et événements non autorisés. Animaux sur demande. Merci de respecter la tranquillité du voisinage.",
+        "en": "No smoking. No parties or events. Pets on request. Please respect the peace and quiet of the neighbourhood.",
+        "nl": "Niet-roken. Feesten en evenementen niet toegestaan. Huisdieren op aanvraag. Respecteer de rust van de buurt."
       }
     }
   },
   {
-    "id": "apt-02",
-    "slug": "appartement-mont-fort",
+    "id": "apt-studio-in-alpes",
+    "slug": "studio-in-alpes",
     "title": {
-      "fr": "Appartement Mont-Fort — Skis aux pieds",
-      "en": "Mont-Fort Apartment — Ski-in ski-out",
-      "nl": "Appartement Mont-Fort — Ski-in ski-out"
+      "fr": "Studio In-Alpes",
+      "en": "Studio In-Alpes",
+      "nl": "Studio In-Alpes"
     },
     "summary": {
-      "fr": "Appartement 4 personnes au pied de la télécabine de Tracouet.",
-      "en": "4-person apartment at the foot of the Tracouet gondola.",
-      "nl": "4-persoons appartement aan de voet van de Tracouet-gondel."
+      "fr": "Studio de charme au niveau jardin d'un chalet de 1930 rénové, lit escamotable et terrasse avec vue de 48 km sur la vallée du Rhône.",
+      "en": "Charming studio on the garden level of a renovated 1930s chalet, with a fold-away bed and a terrace looking 48 km down the Rhône valley.",
+      "nl": "Sfeervolle studio op tuinniveau van een gerenoveerd chalet uit 1930, met opklapbed en terras met 48 km uitzicht over het Rhônedal."
     },
     "description": {
-      "fr": "Idéal pour un couple ou une petite famille. Cuisine équipée, salon avec balcon, chambre parents et coin nuit enfants.",
-      "en": "Ideal for a couple or small family. Fitted kitchen, living room with balcony, master bedroom and children's alcove.",
-      "nl": "Ideaal voor een koppel of klein gezin. Volledig uitgeruste keuken, woonkamer met balkon, ouderslaapkamer en kinderalkoof."
+      "fr": "Le Studio In-Alpes se situe juste à l'extérieur du centre de Haute-Nendaz, en pleine nature, au niveau inférieur d'un chalet de 1930 entièrement rénové en 2018. Son lit escamotable libère l'espace et vous réveille face à une vue de 48 km sur la vallée du Rhône.\n\nEn hiver, la cheminée et le chauffage au sol réchauffent le studio ; en été, la terrasse en pierre naturelle invite à contempler la vallée et les étoiles. D'environ 29 m², le logement est entièrement indépendant, avec son propre accès, sa salle de bain, sa cuisine et son coin couchage.\n\nÀ 1,5 km du télésiège de Tracouet et du centre. Les skieurs de randonnée peuvent rejoindre le domaine des 4 Vallées depuis le jardin ; en été, de nombreux sentiers et promenades le long des bisses partent des environs. Pneus d'hiver nécessaires de novembre à avril.",
+      "en": "Studio In-Alpes sits just outside the centre of Haute-Nendaz, surrounded by nature, on the lower level of a 1930 chalet fully renovated in 2018. Its fold-away bed frees up the space and wakes you to a 48 km view over the Rhône valley.\n\nIn winter the fireplace and underfloor heating keep the studio warm; in summer the natural-stone terrace invites you to gaze over the valley and the stars. At around 29 m², the studio is fully self-contained, with its own entrance, bathroom, kitchen and sleeping area.\n\nIt is 1.5 km from the Tracouet chairlift and the centre. Ski tourers can reach the 4 Vallées area straight from the garden; in summer, many trails and walks along the bisses start nearby. Winter tyres are required from November to April.",
+      "nl": "Studio In-Alpes ligt net buiten het centrum van Haute-Nendaz, midden in de natuur, op de benedenverdieping van een chalet uit 1930 dat in 2018 volledig werd gerenoveerd. Het opklapbed maakt ruimte vrij en u wordt wakker met een uitzicht van 48 km over het Rhônedal.\n\nIn de winter zorgen de open haard en vloerverwarming voor warmte; in de zomer nodigt het natuurstenen terras uit om te genieten van het dal en de sterren. Met ongeveer 29 m² is de studio volledig zelfstandig, met eigen ingang, badkamer, keuken en slaaphoek.\n\nOp 1,5 km van de stoeltjeslift van Tracouet en het centrum. Toerskiërs bereiken het gebied 4 Vallées vanuit de tuin; in de zomer starten er talrijke wandelpaden en wandelingen langs de bisses in de buurt. Winterbanden zijn verplicht van november tot april."
     },
-    "images": ["apt-2", "apt-3", "apt-1"],
-    "maxGuests": 4,
-    "bedrooms": 2,
-    "bathrooms": 1,
-    "surfaceM2": 65,
-    "floor": "3",
-    "amenities": ["wifi", "parking", "washer", "balcony", "mountainView", "skiStorage", "elevator"],
-    "pricePerNight": 195,
-    "location": {
-      "lat": 46.1795,
-      "lng": 7.3105,
-      "address": "Chemin des Ecluses 12, 1997 Haute-Nendaz"
-    },
-    "practical": {
-      "checkIn": "16:00",
-      "checkOut": "10:00",
-      "rules": {
-        "fr": "Non-fumeur. Pas d'animaux.",
-        "en": "Non-smoking. No pets.",
-        "nl": "Niet-roken. Geen huisdieren."
-      }
-    }
-  },
-  {
-    "id": "apt-03",
-    "slug": "studio-tracouet",
-    "title": {
-      "fr": "Studio Tracouet — Escapade cosy",
-      "en": "Tracouet Studio — Cosy escape",
-      "nl": "Studio Tracouet — Knus verblijf"
-    },
-    "summary": {
-      "fr": "Studio 2 personnes lumineux, parfait pour un weekend en amoureux.",
-      "en": "Bright 2-person studio, perfect for a romantic weekend.",
-      "nl": "Lichte studio voor 2 personen, perfect voor een romantisch weekend."
-    },
-    "description": {
-      "fr": "Studio récemment rénové au centre de Haute-Nendaz, à 2 minutes à pied des commerces et restaurants.",
-      "en": "Recently renovated studio in the heart of Haute-Nendaz, 2 min walk from shops and restaurants.",
-      "nl": "Recent gerenoveerde studio in het hart van Haute-Nendaz, op 2 min lopen van winkels en restaurants."
-    },
-    "images": ["apt-3", "apt-4", "apt-1"],
+    "images": [
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681676/in-alpes/apartments/studio-in-alpes/c9zu0d0xlpnekugxnhqn.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681677/in-alpes/apartments/studio-in-alpes/r7p5lfnxtolru2urs12o.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681677/in-alpes/apartments/studio-in-alpes/hn6p0j44vkeoq0sfz0bn.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681678/in-alpes/apartments/studio-in-alpes/cvabcs8t2zwsbcys2d4t.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681679/in-alpes/apartments/studio-in-alpes/rh56p1nbiciocfdww3in.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681679/in-alpes/apartments/studio-in-alpes/fupllvfvk8pkbkaaib6m.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681680/in-alpes/apartments/studio-in-alpes/zqd9in7udiyumrpqxrmb.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681681/in-alpes/apartments/studio-in-alpes/ouzu84x2mtefo3jlslna.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681682/in-alpes/apartments/studio-in-alpes/cmw2wag1v6fyxlyzksfg.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681682/in-alpes/apartments/studio-in-alpes/gqiayjl8ojowpvhozppw.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681683/in-alpes/apartments/studio-in-alpes/xiqinjwar1plfkj8zzgj.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681684/in-alpes/apartments/studio-in-alpes/un3j9rfbqhmdvv7zckfz.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681685/in-alpes/apartments/studio-in-alpes/cxl6x8fh6jmzgc9xfszo.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681686/in-alpes/apartments/studio-in-alpes/bff8tx9le6greae64znh.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681686/in-alpes/apartments/studio-in-alpes/edbtloxo0vamtof3li6y.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681690/in-alpes/apartments/studio-in-alpes/ubegl1t3syf1axoyuzui.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681691/in-alpes/apartments/studio-in-alpes/krboikzv8kv6pjmfavtx.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681692/in-alpes/apartments/studio-in-alpes/ud41wtyuso1f1xabgm3m.jpg"
+    ],
     "maxGuests": 2,
-    "bedrooms": 1,
+    "bedrooms": 0,
     "bathrooms": 1,
-    "surfaceM2": 32,
-    "floor": "2",
-    "amenities": ["wifi", "washer", "elevator", "mountainView"],
-    "pricePerNight": 115,
-    "location": { "lat": 46.177, "lng": 7.309, "address": "Rue du Village 5, 1997 Haute-Nendaz" },
+    "surfaceM2": 29,
+    "floor": "Niveau jardin",
+    "amenities": [
+      "wifi",
+      "fireplace",
+      "parking",
+      "balcony",
+      "mountainView"
+    ],
+    "pricePerNight": 0,
+    "location": {
+      "lat": 46.17794,
+      "lng": 7.31021,
+      "address": "1997 Haute-Nendaz, Valais"
+    },
     "practical": {
       "checkIn": "16:00",
       "checkOut": "10:00",
       "rules": {
-        "fr": "Non-fumeur. Silence après 22h.",
-        "en": "Non-smoking. Quiet after 10pm.",
-        "nl": "Niet-roken. Rust na 22u."
+        "fr": "Non-fumeur. Fêtes et événements non autorisés. Animaux sur demande. Merci de respecter la tranquillité du voisinage.",
+        "en": "No smoking. No parties or events. Pets on request. Please respect the peace and quiet of the neighbourhood.",
+        "nl": "Niet-roken. Feesten en evenementen niet toegestaan. Huisdieren op aanvraag. Respecteer de rust van de buurt."
+      }
+    }
+  },
+  {
+    "id": "apt-perce-neige-21",
+    "slug": "perce-neige-21",
+    "title": {
+      "fr": "Perce Neige 21",
+      "en": "Perce Neige 21",
+      "nl": "Perce Neige 21"
+    },
+    "summary": {
+      "fr": "Appartement de 65 m² au pied de la télécabine de Tracouet, jusqu'à 6 personnes, avec balcon privé et casier à ski.",
+      "en": "65 m² apartment at the foot of the Tracouet gondola, sleeping up to 6, with a private balcony and a ski locker.",
+      "nl": "Appartement van 65 m² aan de voet van de Tracouet-gondel, voor maximaal 6 personen, met privébalkon en skilocker."
+    },
+    "description": {
+      "fr": "Perce Neige 21 est un appartement de 65 m² récemment rénové, situé au pied des pistes et à 20 m du départ de la télécabine Tracouet / Nendaz, sans voiture ni bus.\n\nIl accueille jusqu'à 6 personnes : une chambre double, un lit double pliant dans le salon et deux lits superposés dans le couloir spacieux. La cuisine moderne entièrement équipée ouvre sur la salle à manger et un grand salon. La salle de bain dispose d'une douche à l'italienne, d'un lavabo et de WC ; un second WC séparé complète le logement.\n\nUn balcon privé avec table et chaises ainsi qu'un casier à ski sont à votre disposition.\n\nÀ noter : le linge de lit et deux serviettes par personne sont proposés en option (30 CHF/personne, à régler sur place). Merci de nous indiquer vos besoins lors de la réservation.",
+      "en": "Perce Neige 21 is a recently renovated 65 m² apartment at the foot of the slopes, just 20 m from the Tracouet / Nendaz gondola, with no car or bus needed.\n\nIt sleeps up to 6: a double bedroom, a folding double bed in the living room and two bunk beds in the spacious hallway. The fully equipped modern kitchen opens onto the dining area and a large living room. The bathroom has a walk-in shower, basin and WC; a second separate WC completes the apartment.\n\nA private balcony with table and chairs and a ski locker are at your disposal.\n\nPlease note: bed linen and two towels per person are available as an option (CHF 30/person, payable on site). Let us know your needs when booking.",
+      "nl": "Perce Neige 21 is een onlangs gerenoveerd appartement van 65 m² aan de voet van de pistes, op slechts 20 m van de gondel Tracouet / Nendaz, zonder auto of bus.\n\nHet biedt plaats aan maximaal 6 personen: een tweepersoonsslaapkamer, een opklapbaar tweepersoonsbed in de woonkamer en twee stapelbedden in de ruime gang. De volledig uitgeruste moderne keuken geeft uit op de eethoek en een grote woonkamer. De badkamer heeft een inloopdouche, wastafel en wc; een tweede aparte wc maakt het appartement compleet.\n\nEen privébalkon met tafel en stoelen en een skilocker staan tot uw beschikking.\n\nLet op: beddengoed en twee handdoeken per persoon zijn optioneel verkrijgbaar (CHF 30/persoon, ter plaatse te betalen). Laat ons uw wensen weten bij het boeken."
+    },
+    "images": [
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681693/in-alpes/apartments/perce-neige-21/e3oe797lvhhcbf9jncd4.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681694/in-alpes/apartments/perce-neige-21/qizwst6umdlt8bbjj4k3.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681695/in-alpes/apartments/perce-neige-21/wr53fhovhzhnrp7toknr.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681696/in-alpes/apartments/perce-neige-21/cafzit4n1qubtnqgrluk.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681697/in-alpes/apartments/perce-neige-21/yggixhpykhlkobrxkqt1.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681698/in-alpes/apartments/perce-neige-21/tniaxmvr9ta2ttxbiejc.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681700/in-alpes/apartments/perce-neige-21/zwmxol251l0mcl55460f.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681701/in-alpes/apartments/perce-neige-21/av7rtjupoczo8mhab4nr.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681702/in-alpes/apartments/perce-neige-21/mfikd7h064i4snjzhdfx.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681703/in-alpes/apartments/perce-neige-21/jkmfg062rpnsru20awrm.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681703/in-alpes/apartments/perce-neige-21/knhpa2b9cyr6dfip9p9n.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681704/in-alpes/apartments/perce-neige-21/m5djzzzbohnvawbvgx7z.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681705/in-alpes/apartments/perce-neige-21/it9khiike0xf33reoluh.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681706/in-alpes/apartments/perce-neige-21/vrqclbrbobianmfegi0n.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681706/in-alpes/apartments/perce-neige-21/szcjrt6qwbjqnv1wvap6.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681707/in-alpes/apartments/perce-neige-21/cdt2xnnbgci289jwwg8l.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681708/in-alpes/apartments/perce-neige-21/w71zm3ycilkgepehghso.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681709/in-alpes/apartments/perce-neige-21/oxuktb3dxn3pzvvattfu.jpg"
+    ],
+    "maxGuests": 6,
+    "bedrooms": 1,
+    "bathrooms": 2,
+    "surfaceM2": 65,
+    "floor": "",
+    "amenities": [
+      "wifi",
+      "balcony",
+      "skiStorage",
+      "dishwasher",
+      "mountainView"
+    ],
+    "pricePerNight": 0,
+    "location": {
+      "lat": 46.18092,
+      "lng": 7.29087,
+      "address": "Tracouet, 1997 Haute-Nendaz, Valais"
+    },
+    "practical": {
+      "checkIn": "16:00",
+      "checkOut": "10:00",
+      "rules": {
+        "fr": "Non-fumeur. Fêtes et événements non autorisés. Animaux sur demande. Merci de respecter la tranquillité du voisinage.",
+        "en": "No smoking. No parties or events. Pets on request. Please respect the peace and quiet of the neighbourhood.",
+        "nl": "Niet-roken. Feesten en evenementen niet toegestaan. Huisdieren op aanvraag. Respecteer de rust van de buurt."
+      }
+    }
+  },
+  {
+    "id": "apt-studio-la-petite-marmotte",
+    "slug": "studio-la-petite-marmotte",
+    "title": {
+      "fr": "Studio La petite marmotte",
+      "en": "Studio La petite marmotte",
+      "nl": "Studio La petite marmotte"
+    },
+    "summary": {
+      "fr": "Studio douillet pour deux au cœur de la station de Haute-Nendaz, à quelques pas des commerces et de la télécabine. Tout est inclus.",
+      "en": "Cosy studio for two in the heart of Haute-Nendaz, steps from the shops and the gondola. Everything is included.",
+      "nl": "Gezellige studio voor twee in het hart van Haute-Nendaz, op een steenworp van de winkels en de gondel. Alles is inbegrepen."
+    },
+    "description": {
+      "fr": "Nid douillet pour deux au centre de la station de Haute-Nendaz. Plutôt que d'entasser quatre personnes dans un studio, nous avons choisi un logement plus confortable pour deux.\n\nIl dispose d'un lit double escamotable électrique (140 cm), de deux fauteuils haut de gamme, d'une grande cuisine, d'une salle de bain avec baignoire et de nombreux rangements.\n\nPendant vos vacances, pas besoin de voiture : boulangerie et supermarché à 20 m, magasin de sport à 100 m et télécabine à 300 m.\n\nTout est inclus dans le prix : draps, serviettes et taxe de séjour, rien à payer sur place.",
+      "en": "A cosy nest for two in the centre of the Haute-Nendaz resort. Rather than squeezing four people into a studio, we chose a more comfortable space for two.\n\nIt has an electric fold-away double bed (140 cm), two high-end armchairs, a large kitchen, a bathroom with a bathtub and plenty of storage.\n\nDuring your holiday you won't need a car: a bakery and supermarket are 20 m away, a sports shop 100 m and the gondola 300 m.\n\nEverything is included in the price: bed linen, towels and the tourist tax, nothing to pay on site.",
+      "nl": "Een gezellig nest voor twee in het centrum van het resort Haute-Nendaz. In plaats van vier personen in een studio te proppen, kozen we voor een comfortabelere ruimte voor twee.\n\nDe studio heeft een elektrisch opklapbaar tweepersoonsbed (140 cm), twee hoogwaardige fauteuils, een grote keuken, een badkamer met ligbad en veel bergruimte.\n\nTijdens uw vakantie heeft u geen auto nodig: bakker en supermarkt op 20 m, sportwinkel op 100 m en de gondel op 300 m.\n\nAlles is inbegrepen in de prijs: beddengoed, handdoeken en toeristenbelasting, niets ter plaatse te betalen."
+    },
+    "images": [
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681710/in-alpes/apartments/studio-la-petite-marmotte/r2j5ljwyyt186xa668hd.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681710/in-alpes/apartments/studio-la-petite-marmotte/e46encvudfbvfrxtsvc7.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681713/in-alpes/apartments/studio-la-petite-marmotte/ofjbudmi4sv9d0l1edvo.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681716/in-alpes/apartments/studio-la-petite-marmotte/cfulqiuel2wwwjnu09xe.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681718/in-alpes/apartments/studio-la-petite-marmotte/vrdhoe4kgwflhuntcvgf.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681721/in-alpes/apartments/studio-la-petite-marmotte/f7oohvrsljabrobeqexr.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681723/in-alpes/apartments/studio-la-petite-marmotte/woeb4r5waxzef1q5exu3.jpg",
+      "https://res.cloudinary.com/crxvfdmr/image/upload/f_auto,q_auto/v1783681725/in-alpes/apartments/studio-la-petite-marmotte/rw9t0azvc0jribprultl.jpg"
+    ],
+    "maxGuests": 2,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "surfaceM2": 20,
+    "floor": "",
+    "amenities": [
+      "wifi",
+      "dishwasher"
+    ],
+    "pricePerNight": 0,
+    "location": {
+      "lat": 46.18109,
+      "lng": 7.29468,
+      "address": "Centre station, 1997 Haute-Nendaz, Valais"
+    },
+    "practical": {
+      "checkIn": "16:00",
+      "checkOut": "10:00",
+      "rules": {
+        "fr": "Non-fumeur. Fêtes et événements non autorisés. Animaux sur demande. Merci de respecter la tranquillité du voisinage.",
+        "en": "No smoking. No parties or events. Pets on request. Please respect the peace and quiet of the neighbourhood.",
+        "nl": "Niet-roken. Feesten en evenementen niet toegestaan. Huisdieren op aanvraag. Respecteer de rust van de buurt."
       }
     }
   }

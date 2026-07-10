@@ -19,10 +19,13 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { listApartments } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
+import { GLOBAL_RATING, HOME_REVIEWS, formatRating } from "@/content/reviews";
+import { SITE_IMAGES } from "@/content/media";
 import { ApartmentCard } from "@/components/site/ApartmentCard";
-import aptOwner from "@/assets/apt-2.jpg";
-import audImg from "@/assets/apt-3.jpg";
-import destinationImg from "@/assets/apt-4.jpg";
+
+const aptOwner = SITE_IMAGES.heroChalet;
+const audImg = SITE_IMAGES.valleyView;
+const destinationImg = SITE_IMAGES.skiFourValleys;
 
 export const Route = createFileRoute("/")({
   component: Home_,
@@ -40,7 +43,7 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
 const LOCAL_ICONS: LucideIcon[] = [CableCar, MountainSnow, CalendarHeart];
 
 function Home_() {
-  const { t } = useI18n();
+  const { t, tx, locale } = useI18n();
   const { data: apartments = [], isPending } = useQuery({
     queryKey: ["apartments"],
     queryFn: listApartments,
@@ -227,17 +230,15 @@ function Home_() {
                   <Star key={i} className="h-4 w-4 fill-current" />
                 ))}
               </div>
-              <span className="text-sm font-medium">4,95/5 · 596 avis · Airbnb</span>
+              <span className="text-sm font-medium">
+                {formatRating(GLOBAL_RATING.rating, locale)}/5 · {GLOBAL_RATING.count}{" "}
+                {t("reviews.word")} · Airbnb
+              </span>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {[1, 2].map((n) => (
-              <Testimonial
-                key={n}
-                quote={t(`review.${n}.quote`)}
-                author={t(`review.${n}.author`)}
-                meta={t(`review.${n}.meta`)}
-              />
+            {HOME_REVIEWS.map((r) => (
+              <Testimonial key={r.author} quote={tx(r.quote)} author={r.author} meta={tx(r.meta)} />
             ))}
           </div>
         </div>
