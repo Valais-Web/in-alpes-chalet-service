@@ -14,14 +14,10 @@
  * ⚠ price_per_night = 0 (placeholder — real nightly prices still owed by owner).
  * ⚠ studio-la-petite-marmotte size_m2 = 20 is an ESTIMATE (not on the listing).
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const SITE = process.env.SITE_URL;
 const PASSWORD = process.env.ADMIN_PASSWORD;
-if (!SITE || !PASSWORD) {
-  console.error("Missing SITE_URL / ADMIN_PASSWORD (source .env first)");
-  process.exit(1);
-}
 
 const cloud = JSON.parse(readFileSync(".scrape/cloudinary.json", "utf8"));
 
@@ -92,9 +88,9 @@ const APARTMENTS = [
       nl: "Appartement van 65 m² aan de voet van de Tracouet-gondel, voor maximaal 6 personen, met privébalkon en skilocker.",
     },
     description: {
-      fr: "Perce Neige 21 est un appartement de 65 m² récemment rénové, situé au pied des pistes et à 20 m du départ de la télécabine Tracouet / Nendaz — pas besoin de voiture ni de bus.\n\nIl accueille jusqu'à 6 personnes : une chambre double, un lit double pliant dans le salon et deux lits superposés dans le couloir spacieux. La cuisine moderne entièrement équipée ouvre sur la salle à manger et un grand salon. La salle de bain dispose d'une douche à l'italienne, d'un lavabo et de WC ; un second WC séparé complète le logement.\n\nUn balcon privé avec table et chaises ainsi qu'un casier à ski sont à votre disposition.\n\nÀ noter : le linge de lit et deux serviettes par personne sont proposés en option (30 CHF/personne, à régler sur place). Merci de nous indiquer vos besoins lors de la réservation.",
-      en: "Perce Neige 21 is a recently renovated 65 m² apartment at the foot of the slopes, just 20 m from the Tracouet / Nendaz gondola — no car or bus needed.\n\nIt sleeps up to 6: a double bedroom, a folding double bed in the living room and two bunk beds in the spacious hallway. The fully equipped modern kitchen opens onto the dining area and a large living room. The bathroom has a walk-in shower, basin and WC; a second separate WC completes the apartment.\n\nA private balcony with table and chairs and a ski locker are at your disposal.\n\nPlease note: bed linen and two towels per person are available as an option (CHF 30/person, payable on site). Let us know your needs when booking.",
-      nl: "Perce Neige 21 is een onlangs gerenoveerd appartement van 65 m² aan de voet van de pistes, op slechts 20 m van de gondel Tracouet / Nendaz — geen auto of bus nodig.\n\nHet biedt plaats aan maximaal 6 personen: een tweepersoonsslaapkamer, een opklapbaar tweepersoonsbed in de woonkamer en twee stapelbedden in de ruime gang. De volledig uitgeruste moderne keuken geeft uit op de eethoek en een grote woonkamer. De badkamer heeft een inloopdouche, wastafel en wc; een tweede aparte wc maakt het appartement compleet.\n\nEen privébalkon met tafel en stoelen en een skilocker staan tot uw beschikking.\n\nLet op: beddengoed en twee handdoeken per persoon zijn optioneel verkrijgbaar (CHF 30/persoon, ter plaatse te betalen). Laat ons uw wensen weten bij het boeken.",
+      fr: "Perce Neige 21 est un appartement de 65 m² récemment rénové, situé au pied des pistes et à 20 m du départ de la télécabine Tracouet / Nendaz, sans voiture ni bus.\n\nIl accueille jusqu'à 6 personnes : une chambre double, un lit double pliant dans le salon et deux lits superposés dans le couloir spacieux. La cuisine moderne entièrement équipée ouvre sur la salle à manger et un grand salon. La salle de bain dispose d'une douche à l'italienne, d'un lavabo et de WC ; un second WC séparé complète le logement.\n\nUn balcon privé avec table et chaises ainsi qu'un casier à ski sont à votre disposition.\n\nÀ noter : le linge de lit et deux serviettes par personne sont proposés en option (30 CHF/personne, à régler sur place). Merci de nous indiquer vos besoins lors de la réservation.",
+      en: "Perce Neige 21 is a recently renovated 65 m² apartment at the foot of the slopes, just 20 m from the Tracouet / Nendaz gondola, with no car or bus needed.\n\nIt sleeps up to 6: a double bedroom, a folding double bed in the living room and two bunk beds in the spacious hallway. The fully equipped modern kitchen opens onto the dining area and a large living room. The bathroom has a walk-in shower, basin and WC; a second separate WC completes the apartment.\n\nA private balcony with table and chairs and a ski locker are at your disposal.\n\nPlease note: bed linen and two towels per person are available as an option (CHF 30/person, payable on site). Let us know your needs when booking.",
+      nl: "Perce Neige 21 is een onlangs gerenoveerd appartement van 65 m² aan de voet van de pistes, op slechts 20 m van de gondel Tracouet / Nendaz, zonder auto of bus.\n\nHet biedt plaats aan maximaal 6 personen: een tweepersoonsslaapkamer, een opklapbaar tweepersoonsbed in de woonkamer en twee stapelbedden in de ruime gang. De volledig uitgeruste moderne keuken geeft uit op de eethoek en een grote woonkamer. De badkamer heeft een inloopdouche, wastafel en wc; een tweede aparte wc maakt het appartement compleet.\n\nEen privébalkon met tafel en stoelen en een skilocker staan tot uw beschikking.\n\nLet op: beddengoed en twee handdoeken per persoon zijn optioneel verkrijgbaar (CHF 30/persoon, ter plaatse te betalen). Laat ons uw wensen weten bij het boeken.",
     },
     maxGuests: 6,
     bedrooms: 1,
@@ -120,9 +116,9 @@ const APARTMENTS = [
       nl: "Gezellige studio voor twee in het hart van Haute-Nendaz, op een steenworp van de winkels en de gondel. Alles is inbegrepen.",
     },
     description: {
-      fr: "Nid douillet pour deux au centre de la station de Haute-Nendaz. Plutôt que d'entasser quatre personnes dans un studio, nous avons choisi un logement plus confortable pour deux.\n\nIl dispose d'un lit double escamotable électrique (140 cm), de deux fauteuils haut de gamme, d'une grande cuisine, d'une salle de bain avec baignoire et de nombreux rangements.\n\nPendant vos vacances, pas besoin de voiture : boulangerie et supermarché à 20 m, magasin de sport à 100 m et télécabine à 300 m.\n\nTout est inclus dans le prix : draps, serviettes et taxe de séjour — rien à payer sur place.",
-      en: "A cosy nest for two in the centre of the Haute-Nendaz resort. Rather than squeezing four people into a studio, we chose a more comfortable space for two.\n\nIt has an electric fold-away double bed (140 cm), two high-end armchairs, a large kitchen, a bathroom with a bathtub and plenty of storage.\n\nDuring your holiday you won't need a car: a bakery and supermarket are 20 m away, a sports shop 100 m and the gondola 300 m.\n\nEverything is included in the price: bed linen, towels and the tourist tax — nothing to pay on site.",
-      nl: "Een gezellig nest voor twee in het centrum van het resort Haute-Nendaz. In plaats van vier personen in een studio te proppen, kozen we voor een comfortabelere ruimte voor twee.\n\nDe studio heeft een elektrisch opklapbaar tweepersoonsbed (140 cm), twee hoogwaardige fauteuils, een grote keuken, een badkamer met ligbad en veel bergruimte.\n\nTijdens uw vakantie heeft u geen auto nodig: bakker en supermarkt op 20 m, sportwinkel op 100 m en de gondel op 300 m.\n\nAlles is inbegrepen in de prijs: beddengoed, handdoeken en toeristenbelasting — niets ter plaatse te betalen.",
+      fr: "Nid douillet pour deux au centre de la station de Haute-Nendaz. Plutôt que d'entasser quatre personnes dans un studio, nous avons choisi un logement plus confortable pour deux.\n\nIl dispose d'un lit double escamotable électrique (140 cm), de deux fauteuils haut de gamme, d'une grande cuisine, d'une salle de bain avec baignoire et de nombreux rangements.\n\nPendant vos vacances, pas besoin de voiture : boulangerie et supermarché à 20 m, magasin de sport à 100 m et télécabine à 300 m.\n\nTout est inclus dans le prix : draps, serviettes et taxe de séjour, rien à payer sur place.",
+      en: "A cosy nest for two in the centre of the Haute-Nendaz resort. Rather than squeezing four people into a studio, we chose a more comfortable space for two.\n\nIt has an electric fold-away double bed (140 cm), two high-end armchairs, a large kitchen, a bathroom with a bathtub and plenty of storage.\n\nDuring your holiday you won't need a car: a bakery and supermarket are 20 m away, a sports shop 100 m and the gondola 300 m.\n\nEverything is included in the price: bed linen, towels and the tourist tax, nothing to pay on site.",
+      nl: "Een gezellig nest voor twee in het centrum van het resort Haute-Nendaz. In plaats van vier personen in een studio te proppen, kozen we voor een comfortabelere ruimte voor twee.\n\nDe studio heeft een elektrisch opklapbaar tweepersoonsbed (140 cm), twee hoogwaardige fauteuils, een grote keuken, een badkamer met ligbad en veel bergruimte.\n\nTijdens uw vakantie heeft u geen auto nodig: bakker en supermarkt op 20 m, sportwinkel op 100 m en de gondel op 300 m.\n\nAlles is inbegrepen in de prijs: beddengoed, handdoeken en toeristenbelasting, niets ter plaatse te betalen.",
     },
     maxGuests: 2,
     bedrooms: 0,
@@ -157,7 +153,34 @@ function buildPayload(a) {
   };
 }
 
+/**
+ * Mirror the 4 real listings into the dev fixtures (src/data/*.json) so the
+ * in-memory fallback used by `netlify dev` / SSR matches prod — and so the
+ * bundle no longer references the AI-generated demo photos.
+ */
+function writeFixtures() {
+  const fixtures = APARTMENTS.map((a) => {
+    const { sortOrder, ...rest } = buildPayload(a); // fixture shape omits sortOrder
+    void sortOrder;
+    return rest;
+  });
+  writeFileSync("src/data/apartments.json", JSON.stringify(fixtures, null, 2) + "\n");
+  writeFileSync("src/data/availability.json", "[]\n"); // ids changed; start clean in dev
+  console.log("✅ wrote src/data/apartments.json + availability.json");
+}
+
 async function main() {
+  writeFixtures();
+  if (process.env.FIXTURES_ONLY) {
+    console.log("FIXTURES_ONLY set — skipping the prod import.");
+    return;
+  }
+
+  if (!SITE || !PASSWORD) {
+    console.error("Missing SITE_URL / ADMIN_PASSWORD (source .env first)");
+    process.exit(1);
+  }
+
   // 1. Login
   const loginRes = await fetch(`${SITE}/api/admin/login`, {
     method: "POST",

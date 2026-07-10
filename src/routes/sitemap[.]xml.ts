@@ -16,7 +16,12 @@ const STATIC: SitemapEntry[] = [
   { path: "/confidentialite", changefreq: "yearly", priority: "0.2" },
 ];
 
-const FALLBACK_SLUGS = ["chalet-arolle", "appartement-mont-fort", "studio-tracouet"];
+const FALLBACK_SLUGS = [
+  "le-combin",
+  "studio-in-alpes",
+  "perce-neige-21",
+  "studio-la-petite-marmotte",
+];
 
 /** Live apartment slugs from the published content; static fallback on failure. */
 async function apartmentSlugs(origin: string): Promise<string[]> {

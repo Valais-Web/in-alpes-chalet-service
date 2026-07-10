@@ -8,7 +8,7 @@ import { LogOut, LayoutDashboard, Home, CalendarRange, Inbox } from "lucide-reac
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [{ title: "Admin — In-Alpes" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Admin · In-Alpes" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: AdminLayout,
 });

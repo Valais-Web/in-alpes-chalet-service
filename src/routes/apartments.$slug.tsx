@@ -37,7 +37,7 @@ export const Route = createFileRoute("/apartments/$slug")({
     const img = loaderData ? resolveImage(loaderData.apartment.images[0]) : undefined;
     return {
       meta: [
-        { title: `${title} — In-Alpes` },
+        { title: `${title} · In-Alpes` },
         { name: "description", content: desc },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
@@ -107,7 +107,7 @@ function Detail() {
                 key={i}
                 type="button"
                 onClick={() => setCurrent(i)}
-                aria-label={`${tx(apartment.title)} — ${t("apt.photo")} ${i + 1}`}
+                aria-label={`${tx(apartment.title)} · ${t("apt.photo")} ${i + 1}`}
                 aria-current={i === current}
                 className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-secondary transition ${
                   i === current ? "ring-2 ring-accent" : "opacity-70 hover:opacity-100"
