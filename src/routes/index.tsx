@@ -26,7 +26,6 @@ import { AirbnbRating } from "@/components/site/AirbnbRating";
 import { Reveal } from "@/components/site/Reveal";
 import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 
-const aptOwner = SITE_IMAGES.heroChalet;
 const audImg = SITE_IMAGES.valleyView;
 const destinationImg = SITE_IMAGES.skiFourValleys;
 
@@ -47,6 +46,10 @@ const LOCAL_ICONS: LucideIcon[] = [CableCar, MountainSnow, CalendarHeart];
 
 function Home_() {
   const { t, locale } = useI18n();
+  // Seasonal hero: summer photo May–October, winter photo November–April.
+  const heroMonth = new Date().getMonth() + 1;
+  const heroImg =
+    heroMonth >= 5 && heroMonth <= 10 ? SITE_IMAGES.heroSummer : SITE_IMAGES.heroWinter;
   const { data: apartments = [], isPending } = useQuery({
     queryKey: ["apartments"],
     queryFn: listApartments,
@@ -58,7 +61,7 @@ function Home_() {
       <section className="relative -mt-16 w-full overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={aptOwner}
+            src={heroImg}
             alt=""
             aria-hidden
             className="h-full w-full animate-kenburns object-cover"
@@ -281,7 +284,7 @@ function Home_() {
                 </div>
                 <div className="absolute -bottom-6 -right-8 hidden aspect-square w-44 overflow-hidden border-4 border-background shadow-[var(--shadow-lift)] md:block">
                   <img
-                    src={SITE_IMAGES.valleyView}
+                    src={SITE_IMAGES.fourValleysHike}
                     alt=""
                     aria-hidden
                     className="h-full w-full object-cover"
