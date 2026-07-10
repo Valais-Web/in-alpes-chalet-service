@@ -56,6 +56,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Départ",
     "apt.rules": "Règles",
     "apt.from": "Dès",
+    "apt.priceOnRequest": "Prix sur demande",
     "apt.photo": "Photo",
     "apt.enlarge": "Agrandir",
     "apt.close": "Fermer",
@@ -348,6 +349,7 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "apt.usp.rating": "4,95/5 · 603 avis",
     "reviews.word": "avis",
+    "apt.reviews.title": "Avis des voyageurs",
     "apt.reviews.seeOnAirbnb": "Voir tous les avis sur Airbnb",
     "apt.usp.promo": "−10% dès 7 nuits",
     "apt.usp.flex": "Arrivée flexible",
@@ -406,6 +408,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Check-out",
     "apt.rules": "House rules",
     "apt.from": "From",
+    "apt.priceOnRequest": "Price on request",
     "apt.photo": "Photo",
     "apt.enlarge": "Enlarge",
     "apt.close": "Close",
@@ -688,6 +691,7 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "apt.usp.rating": "4.95/5 · 603 reviews",
     "reviews.word": "reviews",
+    "apt.reviews.title": "Guest reviews",
     "apt.reviews.seeOnAirbnb": "See all reviews on Airbnb",
     "apt.usp.promo": "−10% from 7 nights",
     "apt.usp.flex": "Flexible check-in",
@@ -746,6 +750,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.checkOut": "Check-out",
     "apt.rules": "Huisregels",
     "apt.from": "Vanaf",
+    "apt.priceOnRequest": "Prijs op aanvraag",
     "apt.photo": "Foto",
     "apt.enlarge": "Vergroten",
     "apt.close": "Sluiten",
@@ -1033,6 +1038,7 @@ export const dictionaries: Record<Locale, Dict> = {
 
     "apt.usp.rating": "4,95/5 · 603 beoordelingen",
     "reviews.word": "beoordelingen",
+    "apt.reviews.title": "Beoordelingen van gasten",
     "apt.reviews.seeOnAirbnb": "Bekijk alle beoordelingen op Airbnb",
     "apt.usp.promo": "−10% vanaf 7 nachten",
     "apt.usp.flex": "Flexibele aankomst",

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Star,
   ArrowRight,
   Check,
   Percent,
@@ -15,6 +14,7 @@ import {
   CableCar,
   MountainSnow,
   CalendarHeart,
+  ChevronDown,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { listApartments } from "@/data/api";
@@ -22,6 +22,9 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { GLOBAL_RATING, HOME_REVIEWS, formatRating } from "@/content/reviews";
 import { SITE_IMAGES } from "@/content/media";
 import { ApartmentCard } from "@/components/site/ApartmentCard";
+import { AirbnbRating } from "@/components/site/AirbnbRating";
+import { Reveal } from "@/components/site/Reveal";
+import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 
 const aptOwner = SITE_IMAGES.heroChalet;
 const audImg = SITE_IMAGES.valleyView;
@@ -43,7 +46,7 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
 const LOCAL_ICONS: LucideIcon[] = [CableCar, MountainSnow, CalendarHeart];
 
 function Home_() {
-  const { t, tx, locale } = useI18n();
+  const { t, locale } = useI18n();
   const { data: apartments = [], isPending } = useQuery({
     queryKey: ["apartments"],
     queryFn: listApartments,
@@ -51,50 +54,72 @@ function Home_() {
 
   return (
     <>
-      {/* HERO */}
-      <section className="bg-secondary">
-        <div className="container-page grid items-center gap-10 py-14 md:min-h-[560px] md:grid-cols-[1.05fr_0.95fr] md:py-20">
-          <div className="flex flex-col gap-7">
-            <RatingBadge t={t} />
-            <h1 className="text-4xl font-semibold leading-[1.04] md:text-6xl">{t("hero.title")}</h1>
-            <p className="max-w-md text-lg leading-relaxed text-muted-foreground">
+      {/* HERO — cinematic full-bleed */}
+      <section className="relative -mt-16 w-full overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={aptOwner}
+            alt=""
+            aria-hidden
+            className="h-full w-full animate-kenburns object-cover"
+          />
+          <div className="hero-scrim absolute inset-0" />
+        </div>
+        <div className="container-page relative flex min-h-[92svh] flex-col justify-end pb-16 pt-28 md:min-h-[90svh] md:justify-center md:pb-24 md:pt-24">
+          <div className="max-w-2xl">
+            <div className="rise-in">
+              <AirbnbRating
+                onDark
+                rating={formatRating(GLOBAL_RATING.rating, locale)}
+                count={GLOBAL_RATING.count}
+                label={t("reviews.word")}
+              />
+            </div>
+            <h1
+              className="rise-in mt-6 text-[2.6rem] font-semibold leading-[1.02] text-white md:text-6xl lg:text-[4.4rem]"
+              style={{ animationDelay: "90ms" }}
+            >
+              {t("hero.title")}
+            </h1>
+            <p
+              className="rise-in mt-5 max-w-xl text-lg leading-relaxed text-white/85 md:text-xl"
+              style={{ animationDelay: "170ms" }}
+            >
               {t("hero.subtitle")}
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div
+              className="rise-in mt-8 flex flex-wrap items-center gap-3"
+              style={{ animationDelay: "250ms" }}
+            >
               <Link
                 to="/apartments"
-                className="btn-base bg-accent-bright text-accent-foreground hover:bg-accent-bright-hover"
+                className="btn-base bg-accent-bright text-accent-foreground shadow-[var(--shadow-lift)] hover:bg-accent-bright-hover"
               >
                 {t("hero.cta.rent")} <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/services"
-                className="btn-base border-[1.5px] border-foreground text-foreground hover:bg-foreground hover:text-background"
+                className="btn-base border-[1.5px] border-white/85 text-white hover:bg-white hover:text-foreground"
               >
                 {t("hero.cta.manage")}
               </Link>
+              <span className="inline-flex items-center gap-2 border border-white/25 bg-white/10 px-3.5 py-2 text-sm font-medium text-white backdrop-blur-sm">
+                <Percent className="h-4 w-4 text-accent-bright" /> {t("hero.promo")}
+              </span>
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <div
+              className="rise-in mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75"
+              style={{ animationDelay: "330ms" }}
+            >
               {["hero.usp.1", "hero.usp.2", "hero.usp.3"].map((k) => (
                 <span key={k} className="inline-flex items-center gap-2">
-                  <Check className="h-4 w-4 text-accent" /> {t(k)}
+                  <Check className="h-4 w-4 text-accent-bright" /> {t(k)}
                 </span>
               ))}
             </div>
           </div>
-          <div className="relative">
-            <div className="aspect-[4/5] overflow-hidden shadow-[var(--shadow-lift)]">
-              <img
-                src={aptOwner}
-                alt="Chalet à Haute-Nendaz"
-                width={720}
-                height={900}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-4 -left-4 inline-flex items-center gap-2 bg-accent px-4 py-2.5 text-sm font-medium text-accent-foreground shadow-[var(--shadow-lift)]">
-              <Percent className="h-4 w-4" /> {t("hero.promo")}
-            </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 mx-auto hidden w-fit md:block">
+            <ChevronDown className="h-6 w-6 animate-bounce text-white/70" />
           </div>
         </div>
       </section>
@@ -140,7 +165,7 @@ function Home_() {
               {t("cta.viewAll")} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Reveal className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {isPending
               ? Array.from({ length: 3 }).map((_, i) => (
                   <div
@@ -149,7 +174,7 @@ function Home_() {
                   />
                 ))
               : apartments.slice(0, 3).map((a) => <ApartmentCard key={a.id} apartment={a} />)}
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -221,56 +246,63 @@ function Home_() {
 
       {/* REVIEWS */}
       <section className="section-y bg-secondary">
-        <div className="container-page grid items-center gap-10 md:grid-cols-[0.7fr_1.3fr]">
-          <div className="flex flex-col items-start gap-5">
-            <SectionHead eyebrow={t("home.rev.eyebrow")} title={t("home.rev.title")} />
-            <div className="inline-flex items-center gap-3 border border-border bg-background px-4 py-3">
-              <div className="flex text-foreground">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} className="h-4 w-4 fill-current" />
-                ))}
-              </div>
-              <span className="text-sm font-medium">
-                {formatRating(GLOBAL_RATING.rating, locale)}/5 · {GLOBAL_RATING.count}{" "}
-                {t("reviews.word")} · Airbnb
-              </span>
+        <div className="container-page">
+          <Reveal>
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+              <SectionHead eyebrow={t("home.rev.eyebrow")} title={t("home.rev.title")} />
+              <AirbnbRating
+                rating={formatRating(GLOBAL_RATING.rating, locale)}
+                count={GLOBAL_RATING.count}
+                label={t("reviews.word")}
+              />
             </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {HOME_REVIEWS.map((r) => (
-              <Testimonial key={r.author} quote={tx(r.quote)} author={r.author} meta={tx(r.meta)} />
-            ))}
-          </div>
+          </Reveal>
+          <Reveal className="mt-10">
+            <ReviewsCarousel reviews={HOME_REVIEWS} />
+          </Reveal>
         </div>
       </section>
 
       {/* DESTINATION / LOCAL */}
       <section className="section-y">
         <div className="container-page">
-          <div className="grid items-center gap-10 md:grid-cols-2">
-            <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-secondary">
-              <img
-                src={destinationImg}
-                alt="Haute-Nendaz, 4 Vallées"
-                className="h-full w-full object-cover"
-                width={1280}
-                height={960}
-                loading="lazy"
-              />
+          <Reveal>
+            <div className="grid items-center gap-10 md:grid-cols-2">
+              <div className="relative">
+                <div className="aspect-[4/3] overflow-hidden bg-secondary">
+                  <img
+                    src={destinationImg}
+                    alt="Haute-Nendaz, 4 Vallées"
+                    className="h-full w-full object-cover"
+                    width={1280}
+                    height={960}
+                    loading="lazy"
+                  />
+                </div>
+                <div className="absolute -bottom-6 -right-8 hidden aspect-square w-44 overflow-hidden border-4 border-background shadow-[var(--shadow-lift)] md:block">
+                  <img
+                    src={SITE_IMAGES.valleyView}
+                    alt=""
+                    aria-hidden
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="eyebrow">{t("home.local.eyebrow")}</div>
+                <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
+                  {t("home.local.title")}
+                </h2>
+                <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+                  {t("home.local.lead")}
+                </p>
+                <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                  {t("home.local.body")}
+                </p>
+              </div>
             </div>
-            <div>
-              <div className="eyebrow">{t("home.local.eyebrow")}</div>
-              <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
-                {t("home.local.title")}
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                {t("home.local.lead")}
-              </p>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-                {t("home.local.body")}
-              </p>
-            </div>
-          </div>
+          </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[1, 2, 3].map((n) => {
               const Icon = LOCAL_ICONS[n - 1];
@@ -317,19 +349,6 @@ function Home_() {
   );
 }
 
-function RatingBadge({ t }: { t: (k: string) => string }) {
-  return (
-    <div className="inline-flex w-fit items-center gap-2.5 border border-border bg-background px-3.5 py-2">
-      <div className="flex text-foreground">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <Star key={i} className="h-3.5 w-3.5 fill-current" />
-        ))}
-      </div>
-      <span className="text-sm font-medium">{t("hero.proof")}</span>
-    </div>
-  );
-}
-
 function SectionHead({
   eyebrow,
   title,
@@ -369,26 +388,6 @@ function ServiceCard({
       </h3>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
     </div>
-  );
-}
-
-function Testimonial({ quote, author, meta }: { quote: string; author: string; meta: string }) {
-  return (
-    <figure className="flex flex-col gap-4 border border-border bg-background p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex text-foreground">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <Star key={i} className="h-4 w-4 fill-current" />
-          ))}
-        </div>
-        <span className="text-xs text-muted-foreground">Airbnb</span>
-      </div>
-      <blockquote className="text-sm leading-relaxed">« {quote} »</blockquote>
-      <figcaption className="mt-auto text-sm">
-        <span className="font-[family-name:var(--font-display)] font-semibold">{author}</span>
-        <span className="text-muted-foreground"> · {meta}</span>
-      </figcaption>
-    </figure>
   );
 }
 
