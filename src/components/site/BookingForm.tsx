@@ -34,6 +34,7 @@ export function BookingForm({
     email: "",
     phone: "",
     message: "",
+    company: "", // honeypot — must stay empty; bots that fill it are dropped
   });
 
   const onChange =
@@ -100,6 +101,19 @@ export function BookingForm({
 
   return (
     <form onSubmit={onSubmit} className="card-soft space-y-4 p-6">
+      {/* Honeypot: hidden from real users, tempting to bots. */}
+      <div aria-hidden className="pointer-events-none absolute left-[-9999px] top-[-9999px]">
+        <label>
+          Company
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.company}
+            onChange={onChange("company")}
+          />
+        </label>
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <label className="space-y-1">
           <span className={label}>{t("form.arrival")}</span>

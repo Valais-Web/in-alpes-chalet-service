@@ -28,7 +28,7 @@ function Contact() {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", company: "" });
 
   const set =
     (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -120,6 +120,22 @@ function Contact() {
             </div>
           ) : (
             <form className="space-y-4" onSubmit={onSubmit}>
+              {/* Honeypot: hidden from real users, tempting to bots. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-[-9999px] top-[-9999px]"
+              >
+                <label>
+                  Company
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.company}
+                    onChange={set("company")}
+                  />
+                </label>
+              </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <label>
                   <span className={label}>{t("form.name")}</span>
