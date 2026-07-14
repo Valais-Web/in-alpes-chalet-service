@@ -182,7 +182,7 @@ function Detail() {
       )}
 
       {/* Title + facts */}
-      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
           <div className="eyebrow flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
