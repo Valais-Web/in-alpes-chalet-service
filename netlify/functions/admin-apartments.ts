@@ -12,7 +12,7 @@ import { repo } from "../lib/db";
 import { requireOwner } from "../lib/auth";
 import { publishApartments } from "../lib/publish";
 import { apartmentInputSchema } from "../lib/validation";
-import { json, readJson, requireMethod, toErrorResponse, HttpError } from "../lib/http";
+import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 import type { Apartment } from "../lib/types";
 
 export default async (req: Request): Promise<Response> => {
@@ -21,7 +21,7 @@ export default async (req: Request): Promise<Response> => {
     await requireOwner(req);
 
     if (req.method === "GET") {
-      return json(await repo.listApartments());
+      return json(await repo.listApartments(), 200, NO_STORE);
     }
 
     if (req.method === "POST") {
@@ -35,7 +35,7 @@ export default async (req: Request): Promise<Response> => {
       const apartment: Apartment = { ...parsed.data, id: parsed.data.id ?? `apt-${randomUUID()}` };
       const saved = await repo.upsertApartment(apartment);
       await publishApartments();
-      return json({ ok: true, apartment: saved });
+      return json({ ok: true, apartment: saved }, 200, NO_STORE);
     }
 
     // DELETE
@@ -43,7 +43,7 @@ export default async (req: Request): Promise<Response> => {
     if (!id) throw new HttpError(400, "missing_id");
     await repo.deleteApartment(id);
     await publishApartments();
-    return json({ ok: true });
+    return json({ ok: true }, 200, NO_STORE);
   } catch (err) {
     return toErrorResponse(err);
   }

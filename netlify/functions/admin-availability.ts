@@ -8,7 +8,7 @@ import { repo } from "../lib/db";
 import { requireOwner } from "../lib/auth";
 import { publishAvailability } from "../lib/publish";
 import { availabilityInputSchema, availabilityClearSchema } from "../lib/validation";
-import { json, readJson, requireMethod, toErrorResponse, HttpError } from "../lib/http";
+import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 
 export default async (req: Request): Promise<Response> => {
   try {
@@ -17,7 +17,7 @@ export default async (req: Request): Promise<Response> => {
 
     if (req.method === "GET") {
       const apartmentId = new URL(req.url).searchParams.get("apartmentId") ?? undefined;
-      return json(await repo.listAvailability(apartmentId));
+      return json(await repo.listAvailability(apartmentId), 200, NO_STORE);
     }
 
     if (req.method === "POST") {
@@ -30,7 +30,7 @@ export default async (req: Request): Promise<Response> => {
       }
       await repo.setAvailability(parsed.data);
       await publishAvailability();
-      return json({ ok: true });
+      return json({ ok: true }, 200, NO_STORE);
     }
 
     // DELETE
@@ -40,7 +40,7 @@ export default async (req: Request): Promise<Response> => {
     }
     await repo.clearAvailability(parsed.data.apartmentId, parsed.data.start, parsed.data.end);
     await publishAvailability();
-    return json({ ok: true });
+    return json({ ok: true }, 200, NO_STORE);
   } catch (err) {
     return toErrorResponse(err);
   }

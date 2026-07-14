@@ -14,7 +14,7 @@
  */
 import { neon } from "@neondatabase/serverless";
 import { randomUUID } from "node:crypto";
-import { env, flags } from "./env";
+import { env, flags, assertProductionSecrets } from "./env";
 import type {
   Apartment,
   AvailabilityRange,
@@ -357,5 +357,8 @@ function neonRepo(): Repo {
     },
   };
 }
+
+// Fail fast rather than silently serving from the in-memory repo in production.
+assertProductionSecrets();
 
 export const repo: Repo = flags.hasNeon ? neonRepo() : memoryRepo();
