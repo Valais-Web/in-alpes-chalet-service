@@ -43,6 +43,10 @@ export const env = {
   // How long a public pre-reservation (soft hold) survives before the client
   // treats it as free again. 48h per CLAUDE.md §5.
   PREBOOKING_TTL_HOURS: Number(process.env.PREBOOKING_TTL_HOURS ?? "48"),
+
+  // Booking PII (name/email/phone/message) is anonymised this many months after
+  // the stay's departure by the retention scheduled function. nLPD/RGPD.
+  RETENTION_MONTHS: Number(process.env.RETENTION_MONTHS ?? "12"),
 } as const;
 
 export const flags = {

@@ -77,6 +77,13 @@ export interface Repo {
    * AvailabilityConflictError if that would overlap another confirmed range.
    */
   decideBooking(d: BookingDecision): Promise<void>;
+
+  // Maintenance (retention scheduled function) --------------------------------
+  /** Strip PII from bookings whose departure is before `cutoffDate` (ISO). Keeps
+   * the row (dates/apartment/status) for business records. Returns the count. */
+  anonymizeBookingsBefore(cutoffDate: string): Promise<number>;
+  /** Delete expired pre-reservation holds. Returns the count removed. */
+  purgeExpiredHolds(): Promise<number>;
 }
 
 /** Do two inclusive `[start,end]` day ranges overlap? */
@@ -235,6 +242,28 @@ function memoryRepo(): Repo {
           { apartmentId, start: arrival, end: lastNight, status: "booked" },
         ];
       }
+    },
+
+    async anonymizeBookingsBefore(cutoffDate) {
+      let n = 0;
+      for (const b of bookings) {
+        if (b.departure < cutoffDate && b.email !== "") {
+          b.name = "[removed]";
+          b.email = "";
+          b.phone = "";
+          b.message = "";
+          n++;
+        }
+      }
+      return n;
+    },
+    async purgeExpiredHolds() {
+      const now = new Date();
+      const before = availability.length;
+      availability = availability.filter(
+        (r) => !(r.status === "prebooked" && r.expiresAt && new Date(r.expiresAt) < now),
+      );
+      return before - availability.length;
     },
   };
 }
@@ -456,6 +485,24 @@ function neonRepo(): Repo {
         if (isOverlapViolation(err)) throw new AvailabilityConflictError();
         throw err;
       }
+    },
+
+    async anonymizeBookingsBefore(cutoffDate) {
+      const rows = await sql`
+        UPDATE booking_requests
+        SET guest_name = '[removed]', email = '', phone = NULL, message = NULL
+        WHERE departure < ${cutoffDate} AND email <> ''
+        RETURNING id
+      `;
+      return rows.length;
+    },
+    async purgeExpiredHolds() {
+      const rows = await sql`
+        DELETE FROM availability
+        WHERE status = 'prebooked' AND expires_at IS NOT NULL AND expires_at < now()
+        RETURNING id
+      `;
+      return rows.length;
     },
   };
 }
