@@ -36,6 +36,14 @@ function esc(s: string): string {
   return s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c]!);
 }
 
+// The company inbox always receives owner-facing notifications (booking requests
+// + contact messages), on top of any custom OWNER_NOTIFICATION_EMAIL. Deduped so
+// it isn't sent twice when they're the same address.
+const BUSINESS_INBOX = "info@in-alpes.ch";
+function ownerRecipients(): string[] {
+  return Array.from(new Set([env.OWNER_NOTIFICATION_EMAIL, BUSINESS_INBOX].filter(Boolean)));
+}
+
 // --- reusable building blocks ----------------------------------------------
 
 function layout(heading: string, content: string): string {
@@ -215,7 +223,7 @@ export async function sendBookingEmails({
   );
 
   if (!flags.hasResend) {
-    console.info("[email] (dev, not sent) owner →", env.OWNER_NOTIFICATION_EMAIL, {
+    console.info("[email] (dev, not sent) owner →", ownerRecipients(), {
       subject: `Nouvelle demande — ${apartmentName}`,
     });
     console.info("[email] (dev, not sent) guest →", booking.email, { subject: g.subject });
@@ -226,7 +234,7 @@ export async function sendBookingEmails({
   await Promise.all([
     resend.emails.send({
       from: env.EMAIL_FROM,
-      to: env.OWNER_NOTIFICATION_EMAIL,
+      to: ownerRecipients(),
       replyTo: booking.email,
       subject: `Nouvelle demande — ${apartmentName} (${booking.arrival} → ${booking.departure})`,
       html: ownerHtml,
@@ -261,7 +269,7 @@ export async function sendContactEmail(input: ContactMessage): Promise<void> {
   );
 
   if (!flags.hasResend) {
-    console.info("[email] (dev, not sent) contact →", env.OWNER_NOTIFICATION_EMAIL, {
+    console.info("[email] (dev, not sent) contact →", ownerRecipients(), {
       from: input.email,
     });
     return;
@@ -270,7 +278,7 @@ export async function sendContactEmail(input: ContactMessage): Promise<void> {
   const resend = new Resend(env.RESEND_API_KEY);
   await resend.emails.send({
     from: env.EMAIL_FROM,
-    to: env.OWNER_NOTIFICATION_EMAIL,
+    to: ownerRecipients(),
     replyTo: input.email,
     subject: `Nouveau message de contact — ${input.name}`,
     html,
