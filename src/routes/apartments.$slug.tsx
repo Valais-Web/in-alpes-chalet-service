@@ -60,6 +60,7 @@ function Detail() {
   const images = apartment.images;
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  const [showMap, setShowMap] = useState(false); // OSM loads only after consent
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
@@ -314,12 +315,25 @@ function Detail() {
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
               <div className="mt-3 aspect-video overflow-hidden border border-border">
-                <iframe
-                  title="map"
-                  className="h-full w-full"
-                  loading="lazy"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${apartment.location.lng - 0.01}%2C${apartment.location.lat - 0.005}%2C${apartment.location.lng + 0.01}%2C${apartment.location.lat + 0.005}&layer=mapnik&marker=${apartment.location.lat}%2C${apartment.location.lng}`}
-                />
+                {showMap ? (
+                  <iframe
+                    title="map"
+                    className="h-full w-full"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${apartment.location.lng - 0.01}%2C${apartment.location.lat - 0.005}%2C${apartment.location.lng + 0.01}%2C${apartment.location.lat + 0.005}&layer=mapnik&marker=${apartment.location.lat}%2C${apartment.location.lng}`}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowMap(true)}
+                    className="flex h-full w-full flex-col items-center justify-center gap-2 bg-secondary p-4 text-center hover:bg-secondary/70"
+                  >
+                    <MapPin className="h-5 w-5 text-accent" />
+                    <span className="text-sm font-medium text-foreground">{t("apt.showMap")}</span>
+                    <span className="text-xs text-muted-foreground">{t("apt.mapConsent")}</span>
+                  </button>
+                )}
               </div>
             </div>
           </section>
