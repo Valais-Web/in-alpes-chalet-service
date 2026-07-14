@@ -60,6 +60,7 @@ function AdminApartments() {
   const emptyApt = (): Apartment => ({
     id: `apt-${Date.now()}`,
     slug: `nouveau-${Date.now()}`,
+    sortOrder: 0,
     title: { fr: "", en: "", nl: "" },
     summary: { fr: "", en: "", nl: "" },
     description: { fr: "", en: "", nl: "" },

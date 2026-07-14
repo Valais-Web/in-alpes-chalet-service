@@ -18,7 +18,7 @@
 [functions]
   # Bundle the shared lib + JSON fixtures imported by the functions.
   node_bundler = "esbuild"
-  included_files = ["netlify/lib/**", "src/data/*.json"]
+  included_files = ["netlify/lib/**", "shared/**", "src/data/*.json"]
 
 [dev]
   framework = "vite"
