@@ -36,6 +36,15 @@ export class AvailabilityConflictError extends Error {
   }
 }
 
+/** Thrown when deleting an apartment is blocked because booking records still
+ * reference it (FK is ON DELETE RESTRICT). Maps to HTTP 409. */
+export class ApartmentHasBookingsError extends Error {
+  constructor() {
+    super("apartment_has_bookings");
+    this.name = "ApartmentHasBookingsError";
+  }
+}
+
 /** New booking + the range it occupies (`[arrival, holdEnd]` inclusive nights). */
 export interface NewBooking {
   input: Omit<BookingRequest, "id" | "status" | "createdAt">;
@@ -78,6 +87,11 @@ function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: strin
 /** Postgres exclusion-constraint violation (availability_no_overlap). */
 function isOverlapViolation(err: unknown): boolean {
   return typeof err === "object" && err !== null && (err as { code?: string }).code === "23P01";
+}
+
+/** Postgres foreign-key violation (e.g. delete blocked by ON DELETE RESTRICT). */
+function isForeignKeyViolation(err: unknown): boolean {
+  return typeof err === "object" && err !== null && (err as { code?: string }).code === "23503";
 }
 
 /** An owner's decision on a booking request + the range it covers. */
@@ -124,6 +138,7 @@ function memoryRepo(): Repo {
       return a;
     },
     async deleteApartment(id) {
+      if (bookings.some((b) => b.apartmentId === id)) throw new ApartmentHasBookingsError();
       apartments = apartments.filter((a) => a.id !== id);
       availability = availability.filter((r) => r.apartmentId !== id);
     },
@@ -343,7 +358,12 @@ function neonRepo(): Repo {
       return a;
     },
     async deleteApartment(id) {
-      await sql`DELETE FROM apartments WHERE id = ${id}`;
+      try {
+        await sql`DELETE FROM apartments WHERE id = ${id}`;
+      } catch (err) {
+        if (isForeignKeyViolation(err)) throw new ApartmentHasBookingsError();
+        throw err;
+      }
     },
 
     async listAvailability(apartmentId) {
