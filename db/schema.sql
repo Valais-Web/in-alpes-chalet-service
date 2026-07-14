@@ -52,7 +52,12 @@ CREATE TABLE IF NOT EXISTS apartments (
   gallery_image_urls jsonb NOT NULL DEFAULT '[]'::jsonb,
 
   created_at         timestamptz NOT NULL DEFAULT now(),
-  updated_at         timestamptz NOT NULL DEFAULT now()
+  updated_at         timestamptz NOT NULL DEFAULT now(),
+
+  CONSTRAINT apartments_lat_bounds   CHECK (lat BETWEEN -90 AND 90),
+  CONSTRAINT apartments_lng_bounds   CHECK (lng BETWEEN -180 AND 180),
+  CONSTRAINT apartments_guests_pos   CHECK (guests >= 1),
+  CONSTRAINT apartments_price_nonneg CHECK (price_per_night >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS availability (
@@ -63,6 +68,7 @@ CREATE TABLE IF NOT EXISTS availability (
   status        text NOT NULL CHECK (status IN ('free','booked','prebooked','blocked')),
   expires_at    timestamptz,                            -- non-null only for 'prebooked'
   CHECK (end_date >= start_date),
+  CONSTRAINT availability_prebooked_expiry CHECK (status <> 'prebooked' OR expires_at IS NOT NULL),
   -- No two CONFIRMED-unavailable ranges (booked/blocked) for the same apartment
   -- may overlap: the source of truth preventing double-bookings under
   -- concurrency, enforced when the owner confirms a request. Soft 'prebooked'
@@ -89,7 +95,9 @@ CREATE TABLE IF NOT EXISTS booking_requests (
   message       text,
   status        text NOT NULL DEFAULT 'pending'
                 CHECK (status IN ('pending','accepted','declined','archived')),
-  created_at    timestamptz NOT NULL DEFAULT now()
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT booking_departure_after_arrival CHECK (departure > arrival),
+  CONSTRAINT booking_guests_pos CHECK (guests >= 1)
 );
 CREATE INDEX IF NOT EXISTS booking_requests_status_idx ON booking_requests (status, created_at DESC);
 
