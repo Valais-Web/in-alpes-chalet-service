@@ -46,9 +46,9 @@ export function Header() {
           <img
             src={dark ? logoWhite : logoInk}
             alt=""
-            width={44}
-            height={44}
-            className="h-11 w-11 object-contain transition-transform duration-300 group-hover:scale-105"
+            width={56}
+            height={56}
+            className="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-105"
           />
           <div className="leading-tight">
             <div

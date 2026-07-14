@@ -116,7 +116,7 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
 function Legend({ swatch, label }: { swatch: string; label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <span className={`h-3 w-3 rounded ${swatch}`} />
+      <span className={`h-3 w-3 ${swatch}`} />
       {label}
     </span>
   );
@@ -164,7 +164,7 @@ function MonthView({
   };
 
   return (
-    <div className="rounded-2xl border border-border p-4">
+    <div className="border border-border p-4">
       <div className="mb-3 text-sm font-medium capitalize">{monthLabel}</div>
       <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-wide text-muted-foreground">
         {dow.map((d) => (
@@ -185,7 +185,7 @@ function MonthView({
               onMouseDown={editable ? () => onDown(iso) : undefined}
               onMouseEnter={editable ? () => onEnter(iso) : undefined}
               className={
-                "aspect-square rounded-md text-xs transition-colors " +
+                "aspect-square text-xs transition-colors " +
                 STATUS_CLASS[s] +
                 (selected ? " ring-2 ring-accent" : "")
               }
