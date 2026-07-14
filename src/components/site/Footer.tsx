@@ -1,12 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/i18n/I18nProvider";
+import logoInk from "@/assets/logo-ink.png";
 
 export function Footer() {
   const { t } = useI18n();
   return (
-    <footer className="mt-24 border-t border-border bg-secondary/40">
+    <footer className="border-t border-border bg-secondary/40">
       <div className="container-page grid gap-8 py-12 md:grid-cols-4">
         <div>
+          <img
+            src={logoInk}
+            alt=""
+            width={48}
+            height={48}
+            className="mb-3 h-12 w-12 object-contain"
+          />
           <div className="font-[family-name:var(--font-display)] text-sm font-semibold uppercase tracking-[0.14em]">
             {t("brand")}
           </div>

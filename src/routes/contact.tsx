@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
 import { submitContact } from "@/data/api";
-import { CheckCircle2, Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { CheckCircle2, Mail, Phone, MapPin, Loader2, ArrowRight } from "lucide-react";
+import { SITE_IMAGES } from "@/content/media";
+
+const panelImg = SITE_IMAGES.fourValleysHike;
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -46,78 +49,122 @@ function Contact() {
   };
 
   const input =
-    "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none ring-ring focus:ring-2";
+    "w-full border border-border bg-background px-3.5 py-2.5 text-sm outline-none ring-ring transition focus:border-accent focus:ring-2";
   const label = "mb-1 block text-xs font-medium text-muted-foreground";
 
-  return (
-    <div className="container-page py-12">
-      <h1 className="text-3xl font-semibold md:text-4xl">{t("contact.title")}</h1>
-      <p className="mt-2 text-sm text-muted-foreground">{t("contact.sub")}</p>
+  const contactLinks = [
+    { icon: Phone, value: t("contact.phone"), href: `tel:${t("contact.phone")}` },
+    { icon: Mail, value: t("contact.email"), href: `mailto:${t("contact.email")}` },
+    { icon: MapPin, value: t("contact.address"), href: undefined },
+  ];
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_380px]">
-        {sent ? (
-          <div className="card-soft p-8 text-center">
-            <CheckCircle2 className="mx-auto h-10 w-10 text-accent" />
-            <h2 className="mt-3 text-lg font-semibold">{t("contact.sent.title")}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{t("contact.sent.body")}</p>
+  return (
+    <div className="container-page py-12 md:py-16">
+      <div className="grid overflow-hidden border border-border shadow-[var(--shadow-soft)] lg:grid-cols-[0.85fr_1fr]">
+        {/* IMAGE + INFO PANEL */}
+        <div className="relative min-h-[360px] overflow-hidden bg-foreground text-background lg:min-h-full">
+          <img src={panelImg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, oklch(0.14 0 0 / 0.92) 0%, oklch(0.14 0 0 / 0.62) 46%, oklch(0.14 0 0 / 0.45) 100%)",
+            }}
+          />
+          <div className="relative flex h-full flex-col justify-between gap-10 p-8 md:p-10">
+            <div>
+              <div className="eyebrow text-accent-bright">{t("brand.tagline")}</div>
+              <h1 className="mt-4 text-4xl font-semibold leading-[1.05] text-background md:text-5xl">
+                {t("contact.title")}
+              </h1>
+              <p className="mt-4 max-w-sm leading-relaxed text-background/80">{t("contact.sub")}</p>
+            </div>
+            <ul className="space-y-4">
+              {contactLinks.map(({ icon: Icon, value, href }) => {
+                const body = (
+                  <>
+                    <span className="grid h-9 w-9 shrink-0 place-items-center border border-background/25 bg-background/10 text-accent-bright">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="text-sm leading-snug text-background/90">{value}</span>
+                  </>
+                );
+                return (
+                  <li key={value}>
+                    {href ? (
+                      <a
+                        href={href}
+                        className="flex items-center gap-3 transition-opacity hover:opacity-80"
+                      >
+                        {body}
+                      </a>
+                    ) : (
+                      <div className="flex items-center gap-3">{body}</div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        ) : (
-          <form className="card-soft space-y-4 p-6" onSubmit={onSubmit}>
-            <div className="grid gap-3 sm:grid-cols-2">
+        </div>
+
+        {/* FORM PANEL */}
+        <div className="bg-background p-6 md:p-10">
+          {sent ? (
+            <div className="flex h-full flex-col items-center justify-center py-12 text-center">
+              <CheckCircle2 className="h-12 w-12 text-accent" />
+              <h2 className="mt-4 text-xl font-semibold">{t("contact.sent.title")}</h2>
+              <p className="mt-2 max-w-xs text-sm text-muted-foreground">
+                {t("contact.sent.body")}
+              </p>
+            </div>
+          ) : (
+            <form className="space-y-4" onSubmit={onSubmit}>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label>
+                  <span className={label}>{t("form.name")}</span>
+                  <input required value={form.name} onChange={set("name")} className={input} />
+                </label>
+                <label>
+                  <span className={label}>{t("form.email")}</span>
+                  <input
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={set("email")}
+                    className={input}
+                  />
+                </label>
+              </div>
               <label>
-                <span className={label}>{t("form.name")}</span>
-                <input required value={form.name} onChange={set("name")} className={input} />
+                <span className={label}>{t("form.phone")}</span>
+                <input type="tel" value={form.phone} onChange={set("phone")} className={input} />
               </label>
               <label>
-                <span className={label}>{t("form.email")}</span>
-                <input
+                <span className={label}>{t("form.message")}</span>
+                <textarea
+                  rows={7}
                   required
-                  type="email"
-                  value={form.email}
-                  onChange={set("email")}
+                  value={form.message}
+                  onChange={set("message")}
                   className={input}
                 />
               </label>
-            </div>
-            <label>
-              <span className={label}>{t("form.phone")}</span>
-              <input type="tel" value={form.phone} onChange={set("phone")} className={input} />
-            </label>
-            <label>
-              <span className={label}>{t("form.message")}</span>
-              <textarea
-                rows={6}
-                required
-                value={form.message}
-                onChange={set("message")}
-                className={input}
-              />
-            </label>
-            {error && <p className="text-sm text-accent">{t("contact.error")}</p>}
-            <button
-              disabled={submitting}
-              className="btn-base flex w-full items-center justify-center gap-2 bg-primary text-primary-foreground disabled:opacity-60"
-            >
-              {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-              {submitting ? t("contact.sending") : t("cta.send")}
-            </button>
-          </form>
-        )}
-
-        <aside className="card-soft space-y-3 p-6 text-sm">
-          <div className="flex items-start gap-3">
-            <MapPin className="mt-0.5 h-4 w-4 text-accent" />
-            <span>{t("contact.address")}</span>
-          </div>
-          <div className="flex items-start gap-3">
-            <Phone className="mt-0.5 h-4 w-4 text-accent" />
-            <a href={`tel:${t("contact.phone")}`}>{t("contact.phone")}</a>
-          </div>
-          <div className="flex items-start gap-3">
-            <Mail className="mt-0.5 h-4 w-4 text-accent" />
-            <a href={`mailto:${t("contact.email")}`}>{t("contact.email")}</a>
-          </div>
-        </aside>
+              {error && <p className="text-sm text-accent">{t("contact.error")}</p>}
+              <button
+                disabled={submitting}
+                className="btn-base flex w-full items-center justify-center gap-2 bg-primary text-primary-foreground disabled:opacity-60"
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArrowRight className="h-4 w-4" />
+                )}
+                {submitting ? t("contact.sending") : t("cta.send")}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );

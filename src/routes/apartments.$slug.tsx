@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getApartmentBySlug, listAvailability, resolveImage } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { APARTMENT_REVIEWS, formatRating } from "@/content/reviews";
+import { AirbnbRating } from "@/components/site/AirbnbRating";
+import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
 import { BookingForm } from "@/components/site/BookingForm";
 import {
@@ -86,7 +88,7 @@ function Detail() {
           type="button"
           onClick={() => setLightbox(true)}
           aria-label={t("apt.enlarge")}
-          className="group relative block aspect-[16/9] w-full overflow-hidden rounded-3xl bg-secondary"
+          className="group relative block aspect-[16/9] w-full overflow-hidden bg-secondary"
         >
           <img
             src={resolveImage(images[current])}
@@ -109,7 +111,7 @@ function Detail() {
                 onClick={() => setCurrent(i)}
                 aria-label={`${tx(apartment.title)} · ${t("apt.photo")} ${i + 1}`}
                 aria-current={i === current}
-                className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-secondary transition ${
+                className={`h-20 w-28 shrink-0 overflow-hidden bg-secondary transition ${
                   i === current ? "ring-2 ring-accent" : "opacity-70 hover:opacity-100"
                 }`}
               >
@@ -180,7 +182,7 @@ function Detail() {
       )}
 
       {/* Title + facts */}
-      <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_380px]">
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
           <div className="eyebrow flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
@@ -257,11 +259,15 @@ function Detail() {
 
           {reviews && (
             <section className="mt-10">
-              <div className="flex items-center justify-between gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-semibold">
-                  <Star className="h-4 w-4 fill-current" />
-                  {formatRating(reviews.rating, locale)}/5 · {reviews.count} {t("reviews.word")}
-                </h2>
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="text-lg font-semibold">{t("apt.reviews.title")}</h2>
+                  <AirbnbRating
+                    rating={formatRating(reviews.rating, locale)}
+                    count={reviews.count}
+                    label={t("reviews.word")}
+                  />
+                </div>
                 <a
                   href={reviews.airbnbUrl}
                   target="_blank"
@@ -271,16 +277,8 @@ function Detail() {
                   {t("apt.reviews.seeOnAirbnb")}
                 </a>
               </div>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                {reviews.reviews.map((r) => (
-                  <figure key={r.author} className="flex flex-col gap-3 border border-border p-5">
-                    <blockquote className="text-sm leading-relaxed">« {tx(r.quote)} »</blockquote>
-                    <figcaption className="mt-auto text-sm">
-                      <span className="font-semibold">{r.author}</span>
-                      <span className="text-muted-foreground"> · {tx(r.meta)}</span>
-                    </figcaption>
-                  </figure>
-                ))}
+              <div className="mt-6">
+                <ReviewsCarousel reviews={reviews.reviews} />
               </div>
             </section>
           )}
@@ -315,7 +313,7 @@ function Detail() {
               <p className="mt-2 flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
-              <div className="mt-3 aspect-video overflow-hidden rounded-xl border border-border">
+              <div className="mt-3 aspect-video overflow-hidden border border-border">
                 <iframe
                   title="map"
                   className="h-full w-full"
@@ -329,9 +327,15 @@ function Detail() {
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <div className="mb-4 flex items-baseline gap-1">
-            <span className="text-xs text-muted-foreground">{t("apt.from")}</span>
-            <span className="text-2xl font-semibold">CHF {apartment.pricePerNight}</span>
-            <span className="text-xs text-muted-foreground">{t("apt.night")}</span>
+            {apartment.pricePerNight > 0 ? (
+              <>
+                <span className="text-xs text-muted-foreground">{t("apt.from")}</span>
+                <span className="text-2xl font-semibold">CHF {apartment.pricePerNight}</span>
+                <span className="text-xs text-muted-foreground">{t("apt.night")}</span>
+              </>
+            ) : (
+              <span className="text-2xl font-semibold">{t("apt.priceOnRequest")}</span>
+            )}
           </div>
           <BookingForm apartment={apartment} ranges={ranges} />
         </aside>
