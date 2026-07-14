@@ -8,6 +8,7 @@
 import { verifyPassword, createSessionCookie, clearSessionCookie } from "../lib/auth";
 import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 import { flags, allowDevOpenAuth } from "../lib/env";
+import { hitRateLimit, resetRateLimit, clientIp } from "../lib/ratelimit";
 
 export default async (req: Request): Promise<Response> => {
   try {
@@ -25,10 +26,21 @@ export default async (req: Request): Promise<Response> => {
       return json({ ok: true, devOpen: true }, 200, NO_STORE);
     }
 
+    // Throttle brute-force attempts per IP: 8 tries / 15 min, reset on success.
+    const rlKey = `login:${clientIp(req)}`;
+    const rl = await hitRateLimit(rlKey, { max: 8, windowSec: 900 });
+    if (rl.limited) {
+      return json({ error: "too_many_attempts" }, 429, {
+        ...NO_STORE,
+        "retry-after": String(rl.retryAfterSec),
+      });
+    }
+
     const { password } = await readJson<{ password?: string }>(req);
     if (!password || !verifyPassword(password)) {
       throw new HttpError(401, "invalid_password");
     }
+    await resetRateLimit(rlKey);
     return json({ ok: true }, 200, { ...NO_STORE, "set-cookie": createSessionCookie() });
   } catch (err) {
     return toErrorResponse(err);

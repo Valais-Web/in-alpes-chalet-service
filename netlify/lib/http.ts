@@ -7,6 +7,18 @@ const JSON_HEADERS = { "content-type": "application/json; charset=utf-8" };
 /** Responses that must never be cached (login + private admin data). */
 export const NO_STORE = { "cache-control": "no-store" } as const;
 
+/** Hidden honeypot field name — must match the hidden input in the forms
+ * (src/components/site/BookingForm.tsx, src/routes/contact.tsx). Real users
+ * leave it empty; bots that fill every field trip it. */
+export const HONEYPOT_FIELD = "company";
+
+/** True when the honeypot field was filled — treat as a bot and silently drop. */
+export function honeypotTripped(body: unknown): boolean {
+  if (typeof body !== "object" || body === null) return false;
+  const v = (body as Record<string, unknown>)[HONEYPOT_FIELD];
+  return typeof v === "string" && v.trim() !== "";
+}
+
 export function json(data: unknown, status = 200, headers: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(data), {
     status,
