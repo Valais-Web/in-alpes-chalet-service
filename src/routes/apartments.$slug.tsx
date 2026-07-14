@@ -61,6 +61,11 @@ function Detail() {
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const [showMap, setShowMap] = useState(false); // OSM loads only after consent
+  const [mapExpanded, setMapExpanded] = useState(false);
+
+  const { lat, lng } = apartment.location;
+  const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.005}%2C${lng + 0.01}%2C${lat + 0.005}&layer=mapnik&marker=${lat}%2C${lng}`;
+  const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
@@ -80,6 +85,15 @@ function Detail() {
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightbox, images.length]);
+
+  useEffect(() => {
+    if (!mapExpanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMapExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mapExpanded]);
 
   return (
     <div className="container-page py-8">
@@ -178,6 +192,49 @@ function Detail() {
           )}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-background/80">
             {current + 1} / {images.length}
+          </div>
+        </div>
+      )}
+
+      {/* Expanded map */}
+      {mapExpanded && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col gap-3 bg-foreground/90 p-4"
+          onClick={() => setMapExpanded(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="mx-auto flex w-full max-w-5xl items-center justify-between text-background"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <a
+              href={osmLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm underline-offset-4 hover:underline"
+            >
+              {t("apt.openMap")}
+            </a>
+            <button
+              type="button"
+              onClick={() => setMapExpanded(false)}
+              aria-label={t("apt.close")}
+              className="grid h-10 w-10 place-items-center text-background hover:bg-background/10"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          <div
+            className="mx-auto w-full max-w-5xl flex-1 overflow-hidden border border-background/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              title="map-large"
+              className="h-full w-full"
+              referrerPolicy="no-referrer"
+              src={osmEmbed}
+            />
           </div>
         </div>
       )}
@@ -314,15 +371,25 @@ function Detail() {
               <p className="mt-2 flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
-              <div className="mt-3 aspect-video overflow-hidden border border-border">
+              <div className="relative mt-3 aspect-video overflow-hidden border border-border">
                 {showMap ? (
-                  <iframe
-                    title="map"
-                    className="h-full w-full"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${apartment.location.lng - 0.01}%2C${apartment.location.lat - 0.005}%2C${apartment.location.lng + 0.01}%2C${apartment.location.lat + 0.005}&layer=mapnik&marker=${apartment.location.lat}%2C${apartment.location.lng}`}
-                  />
+                  <>
+                    <iframe
+                      title="map"
+                      className="h-full w-full"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      src={osmEmbed}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setMapExpanded(true)}
+                      aria-label={t("apt.enlarge")}
+                      className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 border border-border bg-background/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-[var(--shadow-soft)] hover:bg-background"
+                    >
+                      <Expand className="h-3.5 w-3.5" /> {t("apt.enlarge")}
+                    </button>
+                  </>
                 ) : (
                   <button
                     type="button"
