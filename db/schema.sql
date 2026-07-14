@@ -7,6 +7,10 @@
 --     this is what the frontend and published JSON already consume.
 --   * `apartments` adds price_per_night + lat/lng/address, required by the UI.
 
+-- Needed for the availability exclusion constraint (GiST index over the text
+-- apartment_id + daterange).
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
 CREATE TABLE IF NOT EXISTS apartments (
   id                 text PRIMARY KEY,
   slug               text UNIQUE NOT NULL,
@@ -55,10 +59,21 @@ CREATE TABLE IF NOT EXISTS availability (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   apartment_id  text NOT NULL REFERENCES apartments(id) ON DELETE CASCADE,
   start_date    date NOT NULL,
-  end_date      date NOT NULL,                          -- inclusive
+  end_date      date NOT NULL,                          -- inclusive (occupied nights)
   status        text NOT NULL CHECK (status IN ('free','booked','prebooked','blocked')),
   expires_at    timestamptz,                            -- non-null only for 'prebooked'
-  CHECK (end_date >= start_date)
+  CHECK (end_date >= start_date),
+  -- No two CONFIRMED-unavailable ranges (booked/blocked) for the same apartment
+  -- may overlap: the source of truth preventing double-bookings under
+  -- concurrency, enforced when the owner confirms a request. Soft 'prebooked'
+  -- holds are intentionally excluded (CLAUDE.md §5: a pending hold does not
+  -- block, guests may still request the same dates). Inclusive daterange '[]'
+  -- means a range ending on day D and one starting on D+1 do NOT overlap, so
+  -- same-day turnover is allowed (a stay occupies [arrival, departure-1]).
+  CONSTRAINT availability_no_overlap EXCLUDE USING gist (
+    apartment_id WITH =,
+    (daterange(start_date, end_date, '[]')) WITH &&
+  ) WHERE (status IN ('booked','blocked'))
 );
 CREATE INDEX IF NOT EXISTS availability_apartment_idx ON availability (apartment_id, start_date);
 
@@ -78,4 +93,6 @@ CREATE TABLE IF NOT EXISTS booking_requests (
 );
 CREATE INDEX IF NOT EXISTS booking_requests_status_idx ON booking_requests (status, created_at DESC);
 
--- Owner accounts are managed by Neon Auth (Better Auth); a single 'owner'.
+-- No accounts table: admin auth is a single shared password (ADMIN_PASSWORD)
+-- issued as an HMAC-signed session cookie (SESSION_SECRET). See netlify/lib/auth.ts
+-- and CLAUDE.md §2. (Supersedes the earlier Neon Auth plan.)

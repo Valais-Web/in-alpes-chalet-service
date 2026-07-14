@@ -7,6 +7,13 @@ import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
+/** Add whole days to a YYYY-MM-DD string, UTC-safe. */
+const addDaysISO = (iso: string, days: number) => {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+};
+
 export function BookingForm({
   apartment,
   ranges = [],
@@ -36,12 +43,15 @@ export function BookingForm({
     };
 
   // Availability check for the selected range (only when both dates are set).
+  // The stay occupies nights [arrival, departure-1] inclusive, so the checkout
+  // day never conflicts with a range starting that day — hence `> r.start`
+  // rather than `>=`, matching the server's same-day-turnover rule.
   const datesChosen = form.arrival && form.departure && form.departure > form.arrival;
   const conflicts = datesChosen
     ? ranges
         .map((r) => ({ r, s: effectiveStatus(r) }))
         .filter(({ s }) => s !== "free")
-        .filter(({ r }) => form.arrival <= r.end && form.departure >= r.start)
+        .filter(({ r }) => form.arrival <= r.end && form.departure > r.start)
     : [];
   const hardBlock = conflicts.some(({ s }) => s === "booked" || s === "blocked");
   const preWarn = !hardBlock && conflicts.some(({ s }) => s === "prebooked");
@@ -60,7 +70,8 @@ export function BookingForm({
         {
           apartmentId: apartment.id,
           start: form.arrival,
-          end: form.departure,
+          // Hold ends the night before departure so the checkout day reads free.
+          end: addDaysISO(form.departure, -1),
           status: "prebooked",
           expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
         },

@@ -26,6 +26,23 @@ import type {
 import seedApartments from "../../src/data/apartments.json";
 import seedAvailability from "../../src/data/availability.json";
 
+/** Thrown when a hold/booking would overlap an existing non-free range. Maps to
+ * HTTP 409 at the boundary. Raised by the DB exclusion constraint (code 23P01)
+ * or the in-memory overlap check. */
+export class AvailabilityConflictError extends Error {
+  constructor() {
+    super("availability_conflict");
+    this.name = "AvailabilityConflictError";
+  }
+}
+
+/** New booking + the range it occupies (`[arrival, holdEnd]` inclusive nights). */
+export interface NewBooking {
+  input: Omit<BookingRequest, "id" | "status" | "createdAt">;
+  holdEnd: string; // last occupied night = departure - 1 day
+  expiresAt: string;
+}
+
 export interface Repo {
   listApartments(): Promise<Apartment[]>;
   getApartment(idOrSlug: string): Promise<Apartment | null>;
@@ -37,9 +54,24 @@ export interface Repo {
   clearAvailability(apartmentId: string, start: string, end: string): Promise<void>;
 
   listBookings(): Promise<BookingRequest[]>;
-  insertBooking(b: Omit<BookingRequest, "id" | "status" | "createdAt">): Promise<BookingRequest>;
+  /**
+   * Atomically: purge this apartment's expired holds, insert the request, and
+   * lay the pre-reservation hold — in one transaction. Throws
+   * AvailabilityConflictError if the hold overlaps a live booked/blocked/valid
+   * pre-reserved range. Replaces the old non-transactional insert+hold pair.
+   */
+  createBooking(b: NewBooking): Promise<BookingRequest>;
   updateBookingStatus(id: string, status: BookingStatus): Promise<void>;
 }
+
+/** Do two inclusive `[start,end]` day ranges overlap? */
+function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string): boolean {
+  return aStart <= bEnd && bStart <= aEnd;
+}
+
+/** Confirmed-unavailable statuses. A soft `prebooked` hold does NOT block a new
+ * request (CLAUDE.md §5) — only these do. */
+const BLOCKING: readonly string[] = ["booked", "blocked"];
 
 // ---------------------------------------------------------------------------
 // In-memory implementation (dev fallback)
@@ -90,7 +122,28 @@ function memoryRepo(): Repo {
     async listBookings() {
       return [...bookings].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     },
-    async insertBooking(input) {
+    async createBooking({ input, holdEnd, expiresAt }) {
+      const now = new Date();
+      // Purge this apartment's expired holds, mirroring the Neon transaction.
+      availability = availability.filter(
+        (r) =>
+          !(
+            r.apartmentId === input.apartmentId &&
+            r.status === "prebooked" &&
+            r.expiresAt &&
+            new Date(r.expiresAt) < now
+          ),
+      );
+      // Reject only overlaps with a CONFIRMED-unavailable range (booked/blocked);
+      // soft pre-reservations may overlap (CLAUDE.md §5).
+      const clash = availability.some(
+        (r) =>
+          r.apartmentId === input.apartmentId &&
+          BLOCKING.includes(r.status) &&
+          rangesOverlap(input.arrival, holdEnd, r.start, r.end),
+      );
+      if (clash) throw new AvailabilityConflictError();
+
       const b: BookingRequest = {
         ...input,
         id: `req-${randomUUID()}`,
@@ -98,6 +151,16 @@ function memoryRepo(): Repo {
         createdAt: new Date().toISOString(),
       };
       bookings.unshift(b);
+      availability = [
+        ...availability,
+        {
+          apartmentId: input.apartmentId,
+          start: input.arrival,
+          end: holdEnd,
+          status: "prebooked",
+          expiresAt,
+        },
+      ];
       return b;
     },
     async updateBookingStatus(id, status) {
@@ -249,14 +312,45 @@ function neonRepo(): Repo {
       const rows = await sql`SELECT * FROM booking_requests ORDER BY created_at DESC`;
       return rows.map(rowToBooking);
     },
-    async insertBooking(input) {
-      const id = `req-${randomUUID()}`;
-      const rows = await sql`
-        INSERT INTO booking_requests (id, apartment_id, guest_name, email, phone, arrival, departure, guests, message, status)
-        VALUES (${id}, ${input.apartmentId}, ${input.name}, ${input.email}, ${input.phone}, ${input.arrival}, ${input.departure}, ${input.guests}, ${input.message}, 'pending')
-        RETURNING *
+    async createBooking({ input, holdEnd, expiresAt }) {
+      // Reject if the requested nights overlap a CONFIRMED-unavailable range.
+      // (The soft hold we insert is 'prebooked', which the exclusion constraint
+      // deliberately ignores, so this explicit check is what enforces it.
+      // booked/blocked only ever change via owner confirmation, so the tiny
+      // read-then-write window here is immaterial; the constraint still makes it
+      // impossible for the owner to confirm two overlapping bookings.)
+      const clash = await sql`
+        SELECT 1 FROM availability
+        WHERE apartment_id = ${input.apartmentId}
+          AND status IN ('booked','blocked')
+          AND daterange(start_date, end_date, '[]') && daterange(${input.arrival}, ${holdEnd}, '[]')
+        LIMIT 1
       `;
-      return rowToBooking(rows[0]);
+      if (clash.length) throw new AvailabilityConflictError();
+
+      const id = `req-${randomUUID()}`;
+      // One atomic transaction: purge this apartment's expired holds → insert
+      // the request → lay the new hold. Either all commit or none, so a failure
+      // can never leave a request without its hold.
+      const results = await sql.transaction([
+        sql`
+          DELETE FROM availability
+          WHERE apartment_id = ${input.apartmentId}
+            AND status = 'prebooked'
+            AND expires_at IS NOT NULL
+            AND expires_at < now()
+        `,
+        sql`
+          INSERT INTO booking_requests (id, apartment_id, guest_name, email, phone, arrival, departure, guests, message, status)
+          VALUES (${id}, ${input.apartmentId}, ${input.name}, ${input.email}, ${input.phone}, ${input.arrival}, ${input.departure}, ${input.guests}, ${input.message}, 'pending')
+          RETURNING *
+        `,
+        sql`
+          INSERT INTO availability (id, apartment_id, start_date, end_date, status, expires_at)
+          VALUES (${randomUUID()}, ${input.apartmentId}, ${input.arrival}, ${holdEnd}, 'prebooked', ${expiresAt})
+        `,
+      ]);
+      return rowToBooking((results[1] as Row[])[0]);
     },
     async updateBookingStatus(id, status) {
       await sql`UPDATE booking_requests SET status = ${status} WHERE id = ${id}`;

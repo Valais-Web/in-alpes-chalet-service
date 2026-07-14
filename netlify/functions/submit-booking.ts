@@ -2,21 +2,23 @@
  * POST /api/submit-booking  (public)
  *
  * The one write the public site performs. Flow (CLAUDE.md §5):
- *   1. validate with Zod
- *   2. insert the request (status = new)
- *   3. lay a 48h pre-reservation (status = prebooked, expires_at = now + TTL)
- *   4. republish availability.json to Blobs
- *   5. email the owner + acknowledge the guest (a REQUEST, not a confirmation)
+ *   1. validate with Zod + per-apartment capacity
+ *   2. atomically insert the request (status = pending) AND lay a 48h
+ *      pre-reservation (status = prebooked, expires_at = now + TTL); the DB
+ *      exclusion constraint rejects any overlap → HTTP 409
+ *   3. republish availability.json to Blobs
+ *   4. email the owner + acknowledge the guest (a REQUEST, not a confirmation)
  *
- * Steps 4–5 are best-effort: the guest must still get a success response even if
+ * Steps 3–4 are best-effort: the guest must still get a success response even if
  * Blobs/Resend hiccup, because the request is already safely persisted in Neon.
  */
-import { repo } from "../lib/db";
+import { repo, AvailabilityConflictError } from "../lib/db";
 import { publishAvailability } from "../lib/publish";
 import { sendBookingEmails } from "../lib/email";
 import { bookingInputSchema } from "../lib/validation";
 import { json, readJson, requireMethod, toErrorResponse, HttpError } from "../lib/http";
 import { env, logMode } from "../lib/env";
+import { lastNightISO } from "../lib/dates";
 
 export default async (req: Request): Promise<Response> => {
   logMode();
@@ -32,18 +34,27 @@ export default async (req: Request): Promise<Response> => {
     const apartment = await repo.getApartment(input.apartmentId);
     if (!apartment) throw new HttpError(404, "apartment_not_found");
 
-    // 2. persist the request
-    const booking = await repo.insertBooking(input);
+    // Capacity check against the specific apartment (the Zod cap is only a
+    // sanity bound; the real limit is per-apartment).
+    if (input.guests > apartment.maxGuests) throw new HttpError(400, "too_many_guests");
 
-    // 3. soft-hold the range for 48h
+    // 2 + 3. persist the request AND lay the 48h hold in one atomic transaction.
+    // The checkout day stays free (hold ends the night before departure); a
+    // conflicting range is rejected by the DB exclusion constraint → 409.
     const expiresAt = new Date(Date.now() + env.PREBOOKING_TTL_HOURS * 3600 * 1000).toISOString();
-    await repo.setAvailability({
-      apartmentId: input.apartmentId,
-      start: input.arrival,
-      end: input.departure,
-      status: "prebooked",
-      expiresAt,
-    });
+    let booking;
+    try {
+      booking = await repo.createBooking({
+        input,
+        holdEnd: lastNightISO(input.departure),
+        expiresAt,
+      });
+    } catch (err) {
+      if (err instanceof AvailabilityConflictError) {
+        throw new HttpError(409, "dates_unavailable");
+      }
+      throw err;
+    }
 
     // 4 + 5. best-effort side effects — never fail the guest for these
     await Promise.allSettled([
