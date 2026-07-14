@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getApartmentBySlug, listAvailability, resolveImage } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { APARTMENT_REVIEWS, formatRating } from "@/content/reviews";
+import { googleMapsLink } from "@/content/maps";
 import { AirbnbRating } from "@/components/site/AirbnbRating";
 import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
@@ -23,6 +24,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Navigation,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -60,6 +62,12 @@ function Detail() {
   const images = apartment.images;
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  const [mapExpanded, setMapExpanded] = useState(false);
+
+  const { lat, lng } = apartment.location;
+  const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.005}%2C${lng + 0.01}%2C${lat + 0.005}&layer=mapnik&marker=${lat}%2C${lng}`;
+  const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
+  const gmapsLink = googleMapsLink(apartment.slug, lat, lng);
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
@@ -79,6 +87,15 @@ function Detail() {
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightbox, images.length]);
+
+  useEffect(() => {
+    if (!mapExpanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMapExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mapExpanded]);
 
   return (
     <div className="container-page py-8">
@@ -181,12 +198,70 @@ function Detail() {
         </div>
       )}
 
+      {/* Expanded map */}
+      {mapExpanded && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col gap-3 bg-foreground/90 p-4"
+          onClick={() => setMapExpanded(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 text-background"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+              <a
+                href={gmapsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
+              >
+                <Navigation className="h-4 w-4" /> {t("apt.openGoogleMaps")}
+              </a>
+              <a
+                href={osmLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 hover:underline"
+              >
+                {t("apt.openMap")}
+              </a>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMapExpanded(false)}
+              aria-label={t("apt.close")}
+              className="grid h-10 w-10 shrink-0 place-items-center text-background hover:bg-background/10"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          <div
+            className="mx-auto w-full max-w-5xl flex-1 overflow-hidden border border-background/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              title="map-large"
+              className="h-full w-full"
+              referrerPolicy="no-referrer"
+              src={osmEmbed}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Title + facts */}
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
-          <div className="eyebrow flex items-center gap-1.5">
+          <a
+            href={gmapsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="eyebrow inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
+          >
             <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
-          </div>
+          </a>
           <h1 className="mt-3 text-3xl font-semibold md:text-4xl">{tx(apartment.title)}</h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
             {tx(apartment.summary)}
@@ -313,13 +388,22 @@ function Detail() {
               <p className="mt-2 flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
-              <div className="mt-3 aspect-video overflow-hidden border border-border">
+              <div className="relative mt-3 aspect-video overflow-hidden border border-border">
                 <iframe
                   title="map"
                   className="h-full w-full"
                   loading="lazy"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${apartment.location.lng - 0.01}%2C${apartment.location.lat - 0.005}%2C${apartment.location.lng + 0.01}%2C${apartment.location.lat + 0.005}&layer=mapnik&marker=${apartment.location.lat}%2C${apartment.location.lng}`}
+                  referrerPolicy="no-referrer"
+                  src={osmEmbed}
                 />
+                <button
+                  type="button"
+                  onClick={() => setMapExpanded(true)}
+                  aria-label={t("apt.enlarge")}
+                  className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 border border-border bg-background/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-[var(--shadow-soft)] hover:bg-background"
+                >
+                  <Expand className="h-3.5 w-3.5" /> {t("apt.enlarge")}
+                </button>
               </div>
             </div>
           </section>

@@ -6,8 +6,9 @@
  * ALLOW_DEV_OPEN_AUTH=1, non-production) login succeeds so the admin is reachable locally.
  */
 import { verifyPassword, createSessionCookie, clearSessionCookie } from "../lib/auth";
-import { json, readJson, requireMethod, toErrorResponse, HttpError } from "../lib/http";
+import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 import { flags, allowDevOpenAuth } from "../lib/env";
+import { hitRateLimit, resetRateLimit, clientIp } from "../lib/ratelimit";
 
 export default async (req: Request): Promise<Response> => {
   try {
@@ -15,21 +16,32 @@ export default async (req: Request): Promise<Response> => {
     const isLogout = new URL(req.url).pathname.endsWith("/logout");
 
     if (isLogout) {
-      return json({ ok: true }, 200, { "set-cookie": clearSessionCookie() });
+      return json({ ok: true }, 200, { ...NO_STORE, "set-cookie": clearSessionCookie() });
     }
 
     // No auth configured. Grant open access ONLY with the explicit non-production
     // opt-in; otherwise fail closed so a missing secret never opens the admin.
     if (!flags.hasPasswordAuth) {
       if (!allowDevOpenAuth) throw new HttpError(503, "auth_not_configured");
-      return json({ ok: true, devOpen: true });
+      return json({ ok: true, devOpen: true }, 200, NO_STORE);
+    }
+
+    // Throttle brute-force attempts per IP: 8 tries / 15 min, reset on success.
+    const rlKey = `login:${clientIp(req)}`;
+    const rl = await hitRateLimit(rlKey, { max: 8, windowSec: 900 });
+    if (rl.limited) {
+      return json({ error: "too_many_attempts" }, 429, {
+        ...NO_STORE,
+        "retry-after": String(rl.retryAfterSec),
+      });
     }
 
     const { password } = await readJson<{ password?: string }>(req);
     if (!password || !verifyPassword(password)) {
       throw new HttpError(401, "invalid_password");
     }
-    return json({ ok: true }, 200, { "set-cookie": createSessionCookie() });
+    await resetRateLimit(rlKey);
+    return json({ ok: true }, 200, { ...NO_STORE, "set-cookie": createSessionCookie() });
   } catch (err) {
     return toErrorResponse(err);
   }

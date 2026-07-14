@@ -4,6 +4,21 @@
 
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8" };
 
+/** Responses that must never be cached (login + private admin data). */
+export const NO_STORE = { "cache-control": "no-store" } as const;
+
+/** Hidden honeypot field name — must match the hidden input in the forms
+ * (src/components/site/BookingForm.tsx, src/routes/contact.tsx). Real users
+ * leave it empty; bots that fill every field trip it. */
+export const HONEYPOT_FIELD = "company";
+
+/** True when the honeypot field was filled — treat as a bot and silently drop. */
+export function honeypotTripped(body: unknown): boolean {
+  if (typeof body !== "object" || body === null) return false;
+  const v = (body as Record<string, unknown>)[HONEYPOT_FIELD];
+  return typeof v === "string" && v.trim() !== "";
+}
+
 export function json(data: unknown, status = 200, headers: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(data), {
     status,
@@ -41,4 +56,26 @@ export async function readJson<T>(req: Request): Promise<T> {
   } catch {
     throw new HttpError(400, "invalid_json_body");
   }
+}
+
+/**
+ * CSRF defence-in-depth for state-changing requests: the Origin (if the browser
+ * sends one) must match the request's own Host. A cross-site form auto-submit
+ * carries the attacker's Origin against our Host → 403. Comparing against Host
+ * (not a fixed env URL) keeps this correct behind a custom domain. Non-browser
+ * clients send no Origin and carry no ambient session cookie, so they are not a
+ * CSRF vector. Complements the SameSite=Lax session cookie.
+ */
+export function requireSameOrigin(req: Request): void {
+  if (req.method === "GET" || req.method === "HEAD") return;
+  const origin = req.headers.get("origin");
+  if (!origin) return;
+  const host = req.headers.get("host");
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    throw new HttpError(403, "bad_origin");
+  }
+  if (!host || originHost !== host) throw new HttpError(403, "cross_origin_forbidden");
 }

@@ -43,6 +43,10 @@ export const env = {
   // How long a public pre-reservation (soft hold) survives before the client
   // treats it as free again. 48h per CLAUDE.md §5.
   PREBOOKING_TTL_HOURS: Number(process.env.PREBOOKING_TTL_HOURS ?? "48"),
+
+  // Booking PII (name/email/phone/message) is anonymised this many months after
+  // the stay's departure by the retention scheduled function. nLPD/RGPD.
+  RETENTION_MONTHS: Number(process.env.RETENTION_MONTHS ?? "12"),
 } as const;
 
 export const flags = {
@@ -65,6 +69,29 @@ export const isProduction =
  * disable authentication.
  */
 export const allowDevOpenAuth = env.ALLOW_DEV_OPEN_AUTH && !isProduction;
+
+/**
+ * Fail fast on a misconfigured production deployment. Without this, a missing
+ * NEON_DATABASE_URL silently degrades to the in-memory repo and a weak/absent
+ * password/secret silently weakens auth. Imported (and therefore run) by db.ts
+ * and auth.ts at cold start — both are only pulled in by sensitive functions,
+ * never by the public content read path.
+ */
+export function assertProductionSecrets(): void {
+  if (!isProduction) return;
+  const problems: string[] = [];
+  if (!env.NEON_DATABASE_URL) problems.push("NEON_DATABASE_URL is missing");
+  if (!env.ADMIN_PASSWORD) problems.push("ADMIN_PASSWORD is missing");
+  else if (env.ADMIN_PASSWORD.length < 12) problems.push("ADMIN_PASSWORD is too short (min 12)");
+  if (!env.SESSION_SECRET) problems.push("SESSION_SECRET is missing");
+  else if (env.SESSION_SECRET.length < 24) problems.push("SESSION_SECRET is too weak (min 24)");
+  if (!(env.PREBOOKING_TTL_HOURS > 0 && env.PREBOOKING_TTL_HOURS <= 24 * 30)) {
+    problems.push("PREBOOKING_TTL_HOURS must be between 1 and 720");
+  }
+  if (problems.length) {
+    throw new Error(`[in-alpes] invalid production configuration: ${problems.join("; ")}`);
+  }
+}
 
 /** Log the active runtime mode once, at cold start, to aid debugging. */
 export function logMode(): void {
