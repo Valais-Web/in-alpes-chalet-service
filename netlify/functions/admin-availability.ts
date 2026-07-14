@@ -4,7 +4,7 @@
  *   POST   { apartmentId, start, end, status }  → set a range, republish
  *   DELETE { apartmentId, start, end }      → clear a range, republish
  */
-import { repo } from "../lib/db";
+import { repo, AvailabilityConflictError } from "../lib/db";
 import { requireOwner } from "../lib/auth";
 import { publishAvailability } from "../lib/publish";
 import { availabilityInputSchema, availabilityClearSchema } from "../lib/validation";
@@ -28,7 +28,14 @@ export default async (req: Request): Promise<Response> => {
           `validation_error: ${parsed.error.issues[0]?.message ?? "invalid"}`,
         );
       }
-      await repo.setAvailability(parsed.data);
+      try {
+        await repo.setAvailability(parsed.data);
+      } catch (err) {
+        if (err instanceof AvailabilityConflictError) {
+          throw new HttpError(409, "range_conflict");
+        }
+        throw err;
+      }
       await publishAvailability();
       return json({ ok: true }, 200, NO_STORE);
     }

@@ -61,12 +61,33 @@ export interface Repo {
    * pre-reserved range. Replaces the old non-transactional insert+hold pair.
    */
   createBooking(b: NewBooking): Promise<BookingRequest>;
-  updateBookingStatus(id: string, status: BookingStatus): Promise<void>;
+  /**
+   * Apply an owner decision atomically: set the request status and, for
+   * confirm/decline, update availability in the same transaction. `confirm`
+   * replaces the soft hold with a firm `booked` range and throws
+   * AvailabilityConflictError if that would overlap another confirmed range.
+   */
+  decideBooking(d: BookingDecision): Promise<void>;
 }
 
 /** Do two inclusive `[start,end]` day ranges overlap? */
 function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string): boolean {
   return aStart <= bEnd && bStart <= aEnd;
+}
+
+/** Postgres exclusion-constraint violation (availability_no_overlap). */
+function isOverlapViolation(err: unknown): boolean {
+  return typeof err === "object" && err !== null && (err as { code?: string }).code === "23P01";
+}
+
+/** An owner's decision on a booking request + the range it covers. */
+export interface BookingDecision {
+  id: string;
+  status: BookingStatus;
+  apartmentId: string;
+  arrival: string;
+  lastNight: string; // departure - 1 (checkout day stays free)
+  action: "confirm" | "decline" | "none";
 }
 
 /** Confirmed-unavailable statuses. A soft `prebooked` hold does NOT block a new
@@ -111,6 +132,15 @@ function memoryRepo(): Repo {
       return availability.filter((r) => !apartmentId || r.apartmentId === apartmentId);
     },
     async setAvailability(r) {
+      if (BLOCKING.includes(r.status)) {
+        const clash = availability.some(
+          (x) =>
+            x.apartmentId === r.apartmentId &&
+            BLOCKING.includes(x.status) &&
+            rangesOverlap(r.start, r.end, x.start, x.end),
+        );
+        if (clash) throw new AvailabilityConflictError();
+      }
       availability = [...availability, r];
     },
     async clearAvailability(apartmentId, start, end) {
@@ -163,9 +193,33 @@ function memoryRepo(): Repo {
       ];
       return b;
     },
-    async updateBookingStatus(id, status) {
+    async decideBooking({ id, status, apartmentId, arrival, lastNight, action }) {
       const b = bookings.find((x) => x.id === id);
       if (b) b.status = status;
+      if (action === "confirm" || action === "decline") {
+        // Free any soft hold overlapping this stay.
+        availability = availability.filter(
+          (r) =>
+            !(
+              r.apartmentId === apartmentId &&
+              r.status === "prebooked" &&
+              rangesOverlap(arrival, lastNight, r.start, r.end)
+            ),
+        );
+      }
+      if (action === "confirm") {
+        const clash = availability.some(
+          (r) =>
+            r.apartmentId === apartmentId &&
+            BLOCKING.includes(r.status) &&
+            rangesOverlap(arrival, lastNight, r.start, r.end),
+        );
+        if (clash) throw new AvailabilityConflictError();
+        availability = [
+          ...availability,
+          { apartmentId, start: arrival, end: lastNight, status: "booked" },
+        ];
+      }
     },
   };
 }
@@ -299,10 +353,15 @@ function neonRepo(): Repo {
       return rows.map(rowToRange);
     },
     async setAvailability(r) {
-      await sql`
-        INSERT INTO availability (id, apartment_id, start_date, end_date, status, expires_at)
-        VALUES (${randomUUID()}, ${r.apartmentId}, ${r.start}, ${r.end}, ${r.status}, ${r.expiresAt ?? null})
-      `;
+      try {
+        await sql`
+          INSERT INTO availability (id, apartment_id, start_date, end_date, status, expires_at)
+          VALUES (${randomUUID()}, ${r.apartmentId}, ${r.start}, ${r.end}, ${r.status}, ${r.expiresAt ?? null})
+        `;
+      } catch (err) {
+        if (isOverlapViolation(err)) throw new AvailabilityConflictError();
+        throw err;
+      }
     },
     async clearAvailability(apartmentId, start, end) {
       await sql`DELETE FROM availability WHERE apartment_id = ${apartmentId} AND start_date = ${start} AND end_date = ${end}`;
@@ -352,8 +411,31 @@ function neonRepo(): Repo {
       ]);
       return rowToBooking((results[1] as Row[])[0]);
     },
-    async updateBookingStatus(id, status) {
-      await sql`UPDATE booking_requests SET status = ${status} WHERE id = ${id}`;
+    async decideBooking({ id, status, apartmentId, arrival, lastNight, action }) {
+      const stmts = [sql`UPDATE booking_requests SET status = ${status} WHERE id = ${id}`];
+      if (action === "confirm" || action === "decline") {
+        // Free any soft hold overlapping this stay.
+        stmts.push(sql`
+          DELETE FROM availability
+          WHERE apartment_id = ${apartmentId}
+            AND status = 'prebooked'
+            AND daterange(start_date, end_date, '[]') && daterange(${arrival}, ${lastNight}, '[]')
+        `);
+      }
+      if (action === "confirm") {
+        // Lay the firm booked range; the exclusion constraint rejects an overlap
+        // with another confirmed range, rolling back the whole decision.
+        stmts.push(sql`
+          INSERT INTO availability (id, apartment_id, start_date, end_date, status)
+          VALUES (${randomUUID()}, ${apartmentId}, ${arrival}, ${lastNight}, 'booked')
+        `);
+      }
+      try {
+        await sql.transaction(stmts);
+      } catch (err) {
+        if (isOverlapViolation(err)) throw new AvailabilityConflictError();
+        throw err;
+      }
     },
   };
 }
