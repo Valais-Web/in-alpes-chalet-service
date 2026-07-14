@@ -24,7 +24,7 @@ import {
 import { SITE_IMAGES } from "@/content/media";
 
 const servicesHero = SITE_IMAGES.cosyLiving;
-const presentationImg = SITE_IMAGES.brightLiving;
+const presentationImg = SITE_IMAGES.valleyView;
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -113,7 +113,7 @@ function Services() {
               {t("services.intro.body2")}
             </p>
           </div>
-          <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-secondary">
+          <div className="aspect-[4/3] overflow-hidden border border-border bg-secondary">
             <img
               src={presentationImg}
               alt=""

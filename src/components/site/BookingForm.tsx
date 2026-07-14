@@ -84,7 +84,7 @@ export function BookingForm({
   }
 
   const input =
-    "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none ring-ring focus:ring-2";
+    "w-full border border-border bg-background px-3 py-2.5 text-sm outline-none ring-ring transition focus:border-accent focus:ring-2";
   const label = "text-xs font-medium text-muted-foreground";
 
   return (

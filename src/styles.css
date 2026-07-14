@@ -220,14 +220,32 @@
   transform: none;
 }
 
-/* Dark gradient scrim so ink-on-photo text in the hero stays legible. */
+/* Dark gradient scrim so white-on-photo text in the hero stays legible.
+   Two stacked directional gradients anchored to the copy, which sits in the
+   left column and is vertically centered on desktop but bottom-anchored on
+   mobile. The left-to-right layer keeps a dark base under the text at any
+   vertical position; the bottom-up layer covers the mobile case and grounds
+   the photo. The right side of the image stays largely clear. */
 .hero-scrim {
-  background: linear-gradient(
-    to top,
-    oklch(0.14 0 0 / 0.74) 0%,
-    oklch(0.14 0 0 / 0.34) 44%,
-    oklch(0.14 0 0 / 0) 72%
-  );
+  background:
+    linear-gradient(
+      to right,
+      oklch(0.14 0 0 / 0.82) 0%,
+      oklch(0.14 0 0 / 0.6) 40%,
+      oklch(0.14 0 0 / 0.2) 72%,
+      oklch(0.14 0 0 / 0.04) 100%
+    ),
+    linear-gradient(
+      to top,
+      oklch(0.14 0 0 / 0.62) 0%,
+      oklch(0.14 0 0 / 0.24) 42%,
+      oklch(0.14 0 0 / 0) 78%
+    );
+}
+
+/* Soft shadow so the headline holds up over bright patches of the photo. */
+.hero-copy {
+  text-shadow: 0 1px 24px oklch(0.14 0 0 / 0.4);
 }
 
 @media (prefers-reduced-motion: reduce) {

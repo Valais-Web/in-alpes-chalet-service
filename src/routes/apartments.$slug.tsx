@@ -88,7 +88,7 @@ function Detail() {
           type="button"
           onClick={() => setLightbox(true)}
           aria-label={t("apt.enlarge")}
-          className="group relative block aspect-[16/9] w-full overflow-hidden rounded-3xl bg-secondary"
+          className="group relative block aspect-[16/9] w-full overflow-hidden bg-secondary"
         >
           <img
             src={resolveImage(images[current])}
@@ -111,7 +111,7 @@ function Detail() {
                 onClick={() => setCurrent(i)}
                 aria-label={`${tx(apartment.title)} · ${t("apt.photo")} ${i + 1}`}
                 aria-current={i === current}
-                className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-secondary transition ${
+                className={`h-20 w-28 shrink-0 overflow-hidden bg-secondary transition ${
                   i === current ? "ring-2 ring-accent" : "opacity-70 hover:opacity-100"
                 }`}
               >
@@ -182,7 +182,7 @@ function Detail() {
       )}
 
       {/* Title + facts */}
-      <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_380px]">
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
           <div className="eyebrow flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
@@ -313,7 +313,7 @@ function Detail() {
               <p className="mt-2 flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
-              <div className="mt-3 aspect-video overflow-hidden rounded-xl border border-border">
+              <div className="mt-3 aspect-video overflow-hidden border border-border">
                 <iframe
                   title="map"
                   className="h-full w-full"

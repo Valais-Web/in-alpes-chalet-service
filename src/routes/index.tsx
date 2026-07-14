@@ -69,7 +69,7 @@ function Home_() {
           <div className="hero-scrim absolute inset-0" />
         </div>
         <div className="container-page relative flex min-h-[92svh] flex-col justify-end pb-16 pt-28 md:min-h-[90svh] md:justify-center md:pb-24 md:pt-24">
-          <div className="max-w-2xl">
+          <div className="hero-copy max-w-2xl">
             <div className="rise-in">
               <AirbnbRating
                 onDark
@@ -85,7 +85,7 @@ function Home_() {
               {t("hero.title")}
             </h1>
             <p
-              className="rise-in mt-5 max-w-xl text-lg leading-relaxed text-white/85 md:text-xl"
+              className="rise-in mt-5 max-w-xl text-lg leading-relaxed text-white/90 md:text-xl"
               style={{ animationDelay: "170ms" }}
             >
               {t("hero.subtitle")}
@@ -111,7 +111,7 @@ function Home_() {
               </span>
             </div>
             <div
-              className="rise-in mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75"
+              className="rise-in mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/85"
               style={{ animationDelay: "330ms" }}
             >
               {["hero.usp.1", "hero.usp.2", "hero.usp.3"].map((k) => (

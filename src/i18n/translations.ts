@@ -70,6 +70,33 @@ export const dictionaries: Record<Locale, Dict> = {
     "state.error": "Une erreur est survenue. Réessayez plus tard.",
     "apt.empty": "Aucun logement disponible pour le moment.",
 
+    "apt.banner.eyebrow": "Locations · Haute-Nendaz",
+    "apt.banner.title": "Nos logements au cœur des 4 Vallées",
+    "apt.banner.sub":
+      "Des chalets et appartements soigneusement préparés, lits faits et ménage impeccable, à quelques minutes des pistes et des sentiers.",
+
+    "apt.faq.eyebrow": "Bon à savoir",
+    "apt.faq.title": "Questions fréquentes",
+    "apt.faq.lead": "Tout ce qu'il faut savoir avant de réserver votre séjour à Haute-Nendaz.",
+    "apt.faq.1.q": "Comment réserver un logement ?",
+    "apt.faq.1.a":
+      "Choisissez votre logement, sélectionnez vos dates d'arrivée et de départ, puis envoyez-nous une demande via le formulaire de la page. Vous recevez une première réponse sous 24 h ouvrées, avec la confirmation des disponibilités, le détail du prix au forfait et, le cas échéant, notre offre pour les longs séjours. À ce stade, il s'agit d'une demande et non d'une confirmation définitive : la réservation n'est validée qu'après notre accord et le paiement. Cette étape nous permet de vérifier chaque disponibilité et de préparer votre séjour dans les meilleures conditions.",
+    "apt.faq.2.q": "Y a-t-il une réduction pour les longs séjours ?",
+    "apt.faq.2.a":
+      "Oui. À partir de 7 nuits, nous appliquons automatiquement 10 % de réduction sur le montant de la location. L'offre est valable toute l'année, aussi bien en hiver qu'en été, et se combine avec nos tarifs au forfait déjà annoncés. C'est la formule idéale pour une semaine au ski, des vacances en famille ou un télétravail prolongé à la montagne. La réduction apparaît directement dans l'offre que nous vous envoyons après votre demande.",
+    "apt.faq.3.q": "Les draps et le ménage sont-ils inclus ?",
+    "apt.faq.3.a":
+      "Oui, systématiquement. Chaque logement est remis dans un état impeccable avant votre arrivée : lits faits avec des draps frais, linge de bain fourni, cuisine et salle de bain nettoyées avec soin. Le ménage de fin de séjour est également compris dans le prix, vous n'avez donc rien à prévoir de ce côté. Nous appliquons des standards de propreté proches de l'hôtellerie, un point sur lequel nos voyageurs reviennent le plus souvent dans leurs avis.",
+    "apt.faq.4.q": "Quels sont les horaires d'arrivée et de départ ?",
+    "apt.faq.4.a":
+      "L'arrivée se fait en personne et de manière flexible : nous convenons ensemble d'un horaire qui vous arrange, y compris en soirée ou après un long trajet. Un membre de l'équipe vous accueille sur place, vous remet les clés et vous donne les informations utiles sur le logement et la région. Les horaires indicatifs sont un check-in en après-midi et un check-out en fin de matinée, mais nous nous adaptons autant que possible à votre programme.",
+    "apt.faq.5.q": "Y a-t-il des frais cachés ?",
+    "apt.faq.5.a":
+      "Non. Nos prix sont annoncés au forfait et communiqués clairement dès le départ, sans surprise au moment de payer. Le ménage, le linge et l'accueil sur place sont compris dans le tarif indiqué. Seule la taxe de séjour communale, le cas échéant, peut s'ajouter selon la réglementation en vigueur ; elle vous est toujours indiquée à l'avance. Notre objectif est une tarification transparente, l'un de nos engagements envers les voyageurs.",
+    "apt.faq.6.q": "Où se situent les logements ?",
+    "apt.faq.6.a":
+      "Nos logements se trouvent à Haute-Nendaz, dans le Valais, au cœur du domaine skiable des 4 Vallées, l'un des plus grands de Suisse. Vous êtes à quelques minutes des remontées mécaniques, des commerces, des restaurants et des sentiers de randonnée. En hiver, le ski est accessible facilement ; en été, la région offre randonnées, VTT, lac et activités en montagne. L'adresse exacte et les indications d'accès vous sont communiquées à la confirmation de votre réservation.",
+
     "form.arrival": "Date d'arrivée",
     "form.departure": "Date de départ",
     "form.guests": "Nombre de voyageurs",
@@ -422,6 +449,33 @@ export const dictionaries: Record<Locale, Dict> = {
     "state.error": "Something went wrong. Please try again later.",
     "apt.empty": "No rentals available right now.",
 
+    "apt.banner.eyebrow": "Rentals · Haute-Nendaz",
+    "apt.banner.title": "Our homes in the heart of the 4 Vallées",
+    "apt.banner.sub":
+      "Carefully prepared chalets and apartments, beds made and spotlessly cleaned, just minutes from the slopes and the trails.",
+
+    "apt.faq.eyebrow": "Good to know",
+    "apt.faq.title": "Frequently asked questions",
+    "apt.faq.lead": "Everything you need to know before booking your stay in Haute-Nendaz.",
+    "apt.faq.1.q": "How do I book a rental?",
+    "apt.faq.1.a":
+      "Pick your home, choose your arrival and departure dates, then send us a request through the form on the page. You will get a first reply within 24 working hours, with confirmation of availability, a full breakdown of the all-inclusive price and, where relevant, our offer for longer stays. At this stage it is a request and not a final confirmation: the booking is only validated once we have agreed and payment is made. This step lets us check every date and prepare your stay under the best conditions.",
+    "apt.faq.2.q": "Is there a discount for longer stays?",
+    "apt.faq.2.a":
+      "Yes. From 7 nights onwards, we automatically apply a 10% discount on the rental amount. The offer is valid all year round, in winter as well as summer, and combines with our already-stated all-inclusive rates. It is ideal for a week of skiing, a family holiday or an extended remote-work stay in the mountains. The discount appears directly in the offer we send you after your request.",
+    "apt.faq.3.q": "Are linen and cleaning included?",
+    "apt.faq.3.a":
+      "Yes, every time. Each home is handed over spotless before you arrive: beds made with fresh linen, bath towels provided, kitchen and bathroom carefully cleaned. The end-of-stay cleaning is also included in the price, so there is nothing for you to arrange. We keep to hotel-level cleanliness standards, something our guests mention most often in their reviews.",
+    "apt.faq.4.q": "What are the check-in and check-out times?",
+    "apt.faq.4.a":
+      "Check-in is in person and flexible: we agree together on a time that suits you, including in the evening or after a long journey. A member of the team welcomes you on site, hands over the keys and shares useful information about the home and the area. Indicative times are an afternoon check-in and a late-morning check-out, but we adapt to your schedule as much as we can.",
+    "apt.faq.5.q": "Are there any hidden fees?",
+    "apt.faq.5.a":
+      "No. Our prices are quoted as all-inclusive packages and stated clearly from the start, with no surprises at payment. Cleaning, linen and the on-site welcome are included in the quoted rate. Only the local tourist tax, where applicable, may be added according to current regulations, and it is always shown to you in advance. Our aim is transparent pricing, one of our commitments to travellers.",
+    "apt.faq.6.q": "Where are the homes located?",
+    "apt.faq.6.a":
+      "Our homes are in Haute-Nendaz, in Valais, in the heart of the 4 Vallées ski area, one of the largest in Switzerland. You are just minutes from the lifts, shops, restaurants and hiking trails. In winter, skiing is within easy reach; in summer, the region offers hiking, mountain biking, a lake and mountain activities. The exact address and access details are shared with you once your booking is confirmed.",
+
     "form.arrival": "Arrival date",
     "form.departure": "Departure date",
     "form.guests": "Number of guests",
@@ -763,6 +817,33 @@ export const dictionaries: Record<Locale, Dict> = {
     "state.loading": "Laden…",
     "state.error": "Er ging iets mis. Probeer het later opnieuw.",
     "apt.empty": "Momenteel geen woningen beschikbaar.",
+
+    "apt.banner.eyebrow": "Verhuur · Haute-Nendaz",
+    "apt.banner.title": "Onze woningen in het hart van de 4 Vallées",
+    "apt.banner.sub":
+      "Zorgvuldig voorbereide chalets en appartementen, bedden opgemaakt en onberispelijk schoon, op enkele minuten van de pistes en de wandelpaden.",
+
+    "apt.faq.eyebrow": "Goed om te weten",
+    "apt.faq.title": "Veelgestelde vragen",
+    "apt.faq.lead": "Alles wat u moet weten voordat u uw verblijf in Haute-Nendaz boekt.",
+    "apt.faq.1.q": "Hoe boek ik een woning?",
+    "apt.faq.1.a":
+      "Kies uw woning, selecteer uw aankomst- en vertrekdata en stuur ons een aanvraag via het formulier op de pagina. U ontvangt binnen 24 werkuren een eerste antwoord, met bevestiging van de beschikbaarheid, een volledig overzicht van de all-in prijs en, indien van toepassing, ons aanbod voor langere verblijven. In dit stadium gaat het om een aanvraag en niet om een definitieve bevestiging: de boeking wordt pas bevestigd nadat wij akkoord zijn en de betaling is gedaan. Zo kunnen wij elke datum controleren en uw verblijf optimaal voorbereiden.",
+    "apt.faq.2.q": "Is er korting voor langere verblijven?",
+    "apt.faq.2.a":
+      "Ja. Vanaf 7 nachten passen wij automatisch 10% korting toe op het huurbedrag. Het aanbod geldt het hele jaar door, zowel in de winter als in de zomer, en is combineerbaar met onze reeds vermelde all-in tarieven. Ideaal voor een skiweek, een gezinsvakantie of een langer verblijf met thuiswerk in de bergen. De korting verschijnt rechtstreeks in het aanbod dat wij u na uw aanvraag sturen.",
+    "apt.faq.3.q": "Zijn linnengoed en schoonmaak inbegrepen?",
+    "apt.faq.3.a":
+      "Ja, altijd. Elke woning wordt onberispelijk opgeleverd voor uw aankomst: bedden opgemaakt met vers linnen, badlinnen voorzien, keuken en badkamer zorgvuldig gereinigd. De eindschoonmaak is eveneens in de prijs inbegrepen, u hoeft daar dus niets voor te regelen. Wij hanteren hotelwaardige hygiënenormen, iets waar onze gasten in hun beoordelingen het vaakst op terugkomen.",
+    "apt.faq.4.q": "Wat zijn de aankomst- en vertrektijden?",
+    "apt.faq.4.a":
+      "De aankomst gebeurt persoonlijk en flexibel: we spreken samen een tijdstip af dat u schikt, ook 's avonds of na een lange reis. Een teamlid verwelkomt u ter plaatse, overhandigt de sleutels en geeft nuttige informatie over de woning en de streek. Indicatieve tijden zijn een check-in in de namiddag en een check-out in de late ochtend, maar we passen ons zoveel mogelijk aan uw programma aan.",
+    "apt.faq.5.q": "Zijn er verborgen kosten?",
+    "apt.faq.5.a":
+      "Nee. Onze prijzen zijn all-in pakketten en worden vanaf het begin duidelijk vermeld, zonder verrassingen bij het betalen. Schoonmaak, linnen en de ontvangst ter plaatse zijn in het vermelde tarief inbegrepen. Alleen de gemeentelijke verblijfsbelasting kan, indien van toepassing, volgens de geldende regelgeving worden toegevoegd, en die wordt altijd vooraf aan u meegedeeld. Ons doel is transparante prijzen, een van onze verbintenissen tegenover reizigers.",
+    "apt.faq.6.q": "Waar liggen de woningen?",
+    "apt.faq.6.a":
+      "Onze woningen liggen in Haute-Nendaz, in Wallis, in het hart van het skigebied 4 Vallées, een van de grootste van Zwitserland. U bent op enkele minuten van de liften, winkels, restaurants en wandelpaden. In de winter is skiën vlot bereikbaar; in de zomer biedt de streek wandelingen, mountainbike, een meer en bergactiviteiten. Het exacte adres en de toegangsinformatie worden u meegedeeld zodra uw boeking is bevestigd.",
 
     "form.arrival": "Aankomstdatum",
     "form.departure": "Vertrekdatum",
