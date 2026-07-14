@@ -12,8 +12,11 @@
  * production/deployed context.
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { env, flags, allowDevOpenAuth } from "./env";
-import { HttpError } from "./http";
+import { env, flags, allowDevOpenAuth, assertProductionSecrets } from "./env";
+import { HttpError, requireSameOrigin } from "./http";
+
+// Fail fast on a misconfigured production deployment (weak/missing secrets).
+assertProductionSecrets();
 
 const COOKIE = "inalpes_session";
 const MAX_AGE_SEC = 60 * 60 * 12; // 12h
@@ -21,6 +24,7 @@ const MAX_AGE_SEC = 60 * 60 * 12; // 12h
 export interface Session {
   sub: string; // "owner"
   exp: number; // epoch seconds
+  pv: string; // password version — invalidates sessions when the password rotates
 }
 
 function b64url(input: string): string {
@@ -29,6 +33,16 @@ function b64url(input: string): string {
 
 function sign(payload: string): string {
   return createHmac("sha256", env.SESSION_SECRET).update(payload).digest("base64url");
+}
+
+/** A short tag derived from the current password. Baking it into the session
+ * means rotating ADMIN_PASSWORD invalidates every live cookie (rotating
+ * SESSION_SECRET already does, via the signature). */
+function passwordTag(): string {
+  return createHmac("sha256", env.SESSION_SECRET)
+    .update(`pv:${env.ADMIN_PASSWORD}`)
+    .digest("base64url")
+    .slice(0, 16);
 }
 
 function safeEqual(a: string, b: string): boolean {
@@ -45,7 +59,11 @@ export function verifyPassword(password: string): boolean {
 }
 
 export function createSessionCookie(): string {
-  const session: Session = { sub: "owner", exp: Math.floor(Date.now() / 1000) + MAX_AGE_SEC };
+  const session: Session = {
+    sub: "owner",
+    exp: Math.floor(Date.now() / 1000) + MAX_AGE_SEC,
+    pv: passwordTag(),
+  };
   const payload = b64url(JSON.stringify(session));
   const token = `${payload}.${sign(payload)}`;
   return `${COOKIE}=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${MAX_AGE_SEC}`;
@@ -74,6 +92,7 @@ function verifyCookieSession(req: Request): Session | null {
   try {
     const session = JSON.parse(Buffer.from(payload, "base64url").toString()) as Session;
     if (session.exp < Math.floor(Date.now() / 1000)) return null;
+    if (session.pv !== passwordTag()) return null; // password rotated → stale cookie
     return session;
   } catch {
     return null;
@@ -82,8 +101,11 @@ function verifyCookieSession(req: Request): Session | null {
 
 // --- guard ------------------------------------------------------------------
 
-/** Throws 401 unless the request carries a valid owner session. */
+/** Throws 401 unless the request carries a valid owner session; 403 on a
+ * cross-origin state-changing request. */
 export async function requireOwner(req: Request): Promise<Session> {
+  requireSameOrigin(req); // CSRF defence-in-depth on mutations (no-op for GET)
+
   const viaCookie = verifyCookieSession(req);
   if (viaCookie) return viaCookie;
 
@@ -95,7 +117,7 @@ export async function requireOwner(req: Request): Promise<Session> {
       "[auth] DEV-OPEN: admin write allowed WITHOUT authentication " +
         "(ALLOW_DEV_OPEN_AUTH=1, non-production only). Never enable this in production.",
     );
-    return { sub: "owner", exp: Math.floor(Date.now() / 1000) + MAX_AGE_SEC };
+    return { sub: "owner", exp: Math.floor(Date.now() / 1000) + MAX_AGE_SEC, pv: "" };
   }
 
   throw new HttpError(401, "unauthorized");

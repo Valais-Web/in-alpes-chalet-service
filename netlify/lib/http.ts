@@ -4,6 +4,9 @@
 
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8" };
 
+/** Responses that must never be cached (login + private admin data). */
+export const NO_STORE = { "cache-control": "no-store" } as const;
+
 export function json(data: unknown, status = 200, headers: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(data), {
     status,
@@ -41,4 +44,26 @@ export async function readJson<T>(req: Request): Promise<T> {
   } catch {
     throw new HttpError(400, "invalid_json_body");
   }
+}
+
+/**
+ * CSRF defence-in-depth for state-changing requests: the Origin (if the browser
+ * sends one) must match the request's own Host. A cross-site form auto-submit
+ * carries the attacker's Origin against our Host → 403. Comparing against Host
+ * (not a fixed env URL) keeps this correct behind a custom domain. Non-browser
+ * clients send no Origin and carry no ambient session cookie, so they are not a
+ * CSRF vector. Complements the SameSite=Lax session cookie.
+ */
+export function requireSameOrigin(req: Request): void {
+  if (req.method === "GET" || req.method === "HEAD") return;
+  const origin = req.headers.get("origin");
+  if (!origin) return;
+  const host = req.headers.get("host");
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    throw new HttpError(403, "bad_origin");
+  }
+  if (!host || originHost !== host) throw new HttpError(403, "cross_origin_forbidden");
 }

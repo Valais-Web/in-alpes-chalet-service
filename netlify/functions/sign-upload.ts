@@ -7,13 +7,13 @@
  */
 import { requireOwner } from "../lib/auth";
 import { signUpload } from "../lib/cloudinary";
-import { json, requireMethod, toErrorResponse } from "../lib/http";
+import { json, requireMethod, toErrorResponse, NO_STORE } from "../lib/http";
 
 export default async (req: Request): Promise<Response> => {
   try {
     requireMethod(req, "POST");
     await requireOwner(req);
-    return json(signUpload());
+    return json(signUpload(), 200, NO_STORE);
   } catch (err) {
     return toErrorResponse(err);
   }
