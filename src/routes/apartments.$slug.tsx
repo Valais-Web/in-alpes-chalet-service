@@ -23,6 +23,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Navigation,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -60,12 +61,12 @@ function Detail() {
   const images = apartment.images;
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
-  const [showMap, setShowMap] = useState(false); // OSM loads only after consent
   const [mapExpanded, setMapExpanded] = useState(false);
 
   const { lat, lng } = apartment.location;
   const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.005}%2C${lng + 0.01}%2C${lat + 0.005}&layer=mapnik&marker=${lat}%2C${lng}`;
   const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
+  const gmapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat}%2C${lng}`;
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
@@ -205,22 +206,32 @@ function Detail() {
           aria-modal="true"
         >
           <div
-            className="mx-auto flex w-full max-w-5xl items-center justify-between text-background"
+            className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 text-background"
             onClick={(e) => e.stopPropagation()}
           >
-            <a
-              href={osmLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm underline-offset-4 hover:underline"
-            >
-              {t("apt.openMap")}
-            </a>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+              <a
+                href={gmapsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
+              >
+                <Navigation className="h-4 w-4" /> {t("apt.openGoogleMaps")}
+              </a>
+              <a
+                href={osmLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 hover:underline"
+              >
+                {t("apt.openMap")}
+              </a>
+            </div>
             <button
               type="button"
               onClick={() => setMapExpanded(false)}
               aria-label={t("apt.close")}
-              className="grid h-10 w-10 place-items-center text-background hover:bg-background/10"
+              className="grid h-10 w-10 shrink-0 place-items-center text-background hover:bg-background/10"
             >
               <X className="h-6 w-6" />
             </button>
@@ -372,35 +383,21 @@ function Detail() {
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
               <div className="relative mt-3 aspect-video overflow-hidden border border-border">
-                {showMap ? (
-                  <>
-                    <iframe
-                      title="map"
-                      className="h-full w-full"
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      src={osmEmbed}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setMapExpanded(true)}
-                      aria-label={t("apt.enlarge")}
-                      className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 border border-border bg-background/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-[var(--shadow-soft)] hover:bg-background"
-                    >
-                      <Expand className="h-3.5 w-3.5" /> {t("apt.enlarge")}
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setShowMap(true)}
-                    className="flex h-full w-full flex-col items-center justify-center gap-2 bg-secondary p-4 text-center hover:bg-secondary/70"
-                  >
-                    <MapPin className="h-5 w-5 text-accent" />
-                    <span className="text-sm font-medium text-foreground">{t("apt.showMap")}</span>
-                    <span className="text-xs text-muted-foreground">{t("apt.mapConsent")}</span>
-                  </button>
-                )}
+                <iframe
+                  title="map"
+                  className="h-full w-full"
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  src={osmEmbed}
+                />
+                <button
+                  type="button"
+                  onClick={() => setMapExpanded(true)}
+                  aria-label={t("apt.enlarge")}
+                  className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 border border-border bg-background/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-[var(--shadow-soft)] hover:bg-background"
+                >
+                  <Expand className="h-3.5 w-3.5" /> {t("apt.enlarge")}
+                </button>
               </div>
             </div>
           </section>
