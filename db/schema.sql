@@ -85,7 +85,10 @@ CREATE INDEX IF NOT EXISTS availability_apartment_idx ON availability (apartment
 
 CREATE TABLE IF NOT EXISTS booking_requests (
   id            text PRIMARY KEY,
-  apartment_id  text NOT NULL REFERENCES apartments(id) ON DELETE CASCADE,
+  -- RESTRICT, not CASCADE: booking requests are business/PII records and must
+  -- not be silently erased when an apartment is deleted. The admin must archive
+  -- the apartment (or handle its bookings) instead of hard-deleting it.
+  apartment_id  text NOT NULL REFERENCES apartments(id) ON DELETE RESTRICT,
   guest_name    text NOT NULL,
   email         text NOT NULL,
   phone         text,

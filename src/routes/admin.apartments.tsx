@@ -47,8 +47,14 @@ function AdminApartments() {
     setEditing(null);
   };
   const onDelete = async (id: string) => {
-    await deleteApartment(id);
-    qc.invalidateQueries({ queryKey: ["apartments"] });
+    if (!window.confirm(t("admin.apartments.deleteConfirm"))) return;
+    try {
+      await deleteApartment(id);
+      qc.invalidateQueries({ queryKey: ["apartments"] });
+    } catch (err) {
+      const blocked = err instanceof Error && err.message.includes("apartment_has_bookings");
+      window.alert(t(blocked ? "admin.apartments.deleteBlocked" : "admin.apartments.deleteError"));
+    }
   };
 
   const emptyApt = (): Apartment => ({

@@ -161,6 +161,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.decline": "Décliner",
     "admin.requests.archive": "Archiver",
     "admin.requests.actionError": "L'action a échoué. Vérifiez votre connexion et réessayez.",
+    "admin.apartments.deleteConfirm": "Supprimer ce logement ? Cette action est irréversible.",
+    "admin.apartments.deleteBlocked":
+      "Suppression impossible : des demandes de réservation sont liées à ce logement. Archivez-le plutôt.",
+    "admin.apartments.deleteError": "La suppression a échoué. Réessayez.",
     "admin.requests.all": "Toutes",
     "admin.requests.refresh": "Actualiser",
     "admin.requests.status.pending": "En attente",
@@ -538,6 +542,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.decline": "Decline",
     "admin.requests.archive": "Archive",
     "admin.requests.actionError": "The action failed. Check your connection and try again.",
+    "admin.apartments.deleteConfirm": "Delete this rental? This cannot be undone.",
+    "admin.apartments.deleteBlocked":
+      "Cannot delete: booking requests are linked to this rental. Archive it instead.",
+    "admin.apartments.deleteError": "Delete failed. Please try again.",
     "admin.requests.all": "All",
     "admin.requests.refresh": "Refresh",
     "admin.requests.status.pending": "Pending",
@@ -908,6 +916,11 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.archive": "Archiveren",
     "admin.requests.actionError":
       "De actie is mislukt. Controleer uw verbinding en probeer opnieuw.",
+    "admin.apartments.deleteConfirm":
+      "Deze woning verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "admin.apartments.deleteBlocked":
+      "Verwijderen niet mogelijk: er zijn reserveringsaanvragen aan deze woning gekoppeld. Archiveer ze in plaats daarvan.",
+    "admin.apartments.deleteError": "Verwijderen mislukt. Probeer opnieuw.",
     "admin.requests.all": "Alle",
     "admin.requests.refresh": "Vernieuwen",
     "admin.requests.status.pending": "In afwachting",
