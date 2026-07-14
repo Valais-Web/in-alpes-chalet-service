@@ -203,12 +203,16 @@ export async function submitBookingRequest(
     createdAt: new Date().toISOString(),
   };
   bookings = [req, ...bookings];
+  const holdEnd = new Date(new Date(`${input.departure}T00:00:00Z`).getTime() - 86400000)
+    .toISOString()
+    .slice(0, 10);
   availability = [
     ...availability,
     {
       apartmentId: input.apartmentId,
       start: input.arrival,
-      end: input.departure,
+      // Hold ends the night before departure so the checkout day reads free.
+      end: holdEnd,
       status: "prebooked",
       expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
     },
