@@ -125,11 +125,22 @@ export const availabilityClearSchema = z.object({
   end: isoDate,
 });
 
-/** Admin: booking status transition + resulting availability action. */
-export const requestUpdateSchema = z.object({
-  id: z.string().min(1),
-  status: z.enum(["pending", "accepted", "declined", "archived"]),
-  /** confirm → block the range; decline → free it. */
-  action: z.enum(["confirm", "decline", "none"]).default("none"),
-});
+/** Admin: booking status transition + resulting availability action.
+ * The status and action must be consistent so the request status can never
+ * disagree with the calendar (e.g. a declined request that also books dates):
+ *   accepted ⇔ confirm,  declined ⇔ decline,  pending/archived ⇔ none. */
+export const requestUpdateSchema = z
+  .object({
+    id: z.string().min(1).max(120),
+    status: z.enum(["pending", "accepted", "declined", "archived"]),
+    action: z.enum(["confirm", "decline", "none"]).default("none"),
+  })
+  .refine(
+    (v) => {
+      if (v.status === "accepted") return v.action === "confirm";
+      if (v.status === "declined") return v.action === "decline";
+      return v.action === "none"; // pending, archived
+    },
+    { message: "invalid_status_action_combo", path: ["action"] },
+  );
 export type RequestUpdate = z.infer<typeof requestUpdateSchema>;
