@@ -66,7 +66,7 @@ function Detail() {
   const { lat, lng } = apartment.location;
   const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.005}%2C${lng + 0.01}%2C${lat + 0.005}&layer=mapnik&marker=${lat}%2C${lng}`;
   const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
-  const gmapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat}%2C${lng}`;
+  const gmapsLink = `https://www.google.com/maps/search/?api=1&query=${lat}%2C${lng}`;
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
