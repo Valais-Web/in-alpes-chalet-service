@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getApartmentBySlug, listAvailability, resolveImage } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { APARTMENT_REVIEWS, formatRating } from "@/content/reviews";
+import { googleMapsLink } from "@/content/maps";
 import { AirbnbRating } from "@/components/site/AirbnbRating";
 import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
@@ -66,7 +67,7 @@ function Detail() {
   const { lat, lng } = apartment.location;
   const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.005}%2C${lng + 0.01}%2C${lat + 0.005}&layer=mapnik&marker=${lat}%2C${lng}`;
   const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
-  const gmapsLink = `https://www.google.com/maps/search/?api=1&query=${lat}%2C${lng}`;
+  const gmapsLink = googleMapsLink(apartment.slug, lat, lng);
   const { data: ranges = [] } = useQuery({
     queryKey: ["availability", apartment.id],
     queryFn: () => listAvailability(apartment.id),
@@ -253,9 +254,14 @@ function Detail() {
       {/* Title + facts */}
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
-          <div className="eyebrow flex items-center gap-1.5">
+          <a
+            href={gmapsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="eyebrow inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
+          >
             <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
-          </div>
+          </a>
           <h1 className="mt-3 text-3xl font-semibold md:text-4xl">{tx(apartment.title)}</h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
             {tx(apartment.summary)}
