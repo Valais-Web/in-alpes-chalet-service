@@ -50,7 +50,7 @@ describe("createBooking overlap rules", () => {
       apartmentId: apt,
       arrival: "2035-03-10",
       lastNight: "2035-03-14",
-      action: "confirm",
+      op: "book",
     });
 
     // Overlapping the booked nights [10..14] → rejected.
@@ -89,7 +89,7 @@ describe("createBooking overlap rules", () => {
       apartmentId: apt,
       arrival: "2035-04-10",
       lastNight: "2035-04-14",
-      action: "confirm",
+      op: "book",
     });
     await expect(
       repo.decideBooking({
@@ -98,9 +98,105 @@ describe("createBooking overlap rules", () => {
         apartmentId: apt,
         arrival: "2035-04-12",
         lastNight: "2035-04-17",
-        action: "confirm",
+        op: "book",
       }),
     ).rejects.toBeInstanceOf(AvailabilityConflictError);
+  });
+});
+
+describe("hold ownership (decisions act only on the request's own range)", () => {
+  it("declining one request keeps another guest's overlapping soft hold", async () => {
+    const apt = "t-own-decline";
+    const alice = await repo.createBooking({
+      input: booking(apt, "2036-01-10", "2036-01-15"),
+      holdEnd: "2036-01-14",
+      expiresAt: future,
+    });
+    const bob = await repo.createBooking({
+      input: booking(apt, "2036-01-12", "2036-01-17"),
+      holdEnd: "2036-01-16",
+      expiresAt: future,
+    });
+
+    // Both holds are live; overlapping soft holds are allowed (CLAUDE.md §5).
+    let holds = (await repo.listAvailability(apt)).filter((r) => r.status === "prebooked");
+    expect(holds.length).toBe(2);
+
+    // Decline Alice → only Alice's hold disappears; Bob's survives.
+    await repo.decideBooking({
+      id: alice.id,
+      status: "declined",
+      apartmentId: apt,
+      arrival: "2036-01-10",
+      lastNight: "2036-01-14",
+      op: "release_hold",
+    });
+    holds = (await repo.listAvailability(apt)).filter((r) => r.status === "prebooked");
+    expect(holds.length).toBe(1);
+    expect(holds[0].start).toBe("2036-01-12"); // Bob's
+
+    // Bob can still be confirmed.
+    await repo.decideBooking({
+      id: bob.id,
+      status: "accepted",
+      apartmentId: apt,
+      arrival: "2036-01-12",
+      lastNight: "2036-01-16",
+      op: "book",
+    });
+    const booked = (await repo.listAvailability(apt)).filter((r) => r.status === "booked");
+    expect(booked.length).toBe(1);
+  });
+
+  it("reversing an accepted booking (unbook) removes its confirmed range", async () => {
+    const apt = "t-own-unbook";
+    const b = await repo.createBooking({
+      input: booking(apt, "2036-02-10", "2036-02-15"),
+      holdEnd: "2036-02-14",
+      expiresAt: future,
+    });
+    await repo.decideBooking({
+      id: b.id,
+      status: "accepted",
+      apartmentId: apt,
+      arrival: "2036-02-10",
+      lastNight: "2036-02-14",
+      op: "book",
+    });
+    expect((await repo.listAvailability(apt)).some((r) => r.status === "booked")).toBe(true);
+
+    // accepted → declined must free the calendar, not leave a phantom booking.
+    await repo.decideBooking({
+      id: b.id,
+      status: "declined",
+      apartmentId: apt,
+      arrival: "2036-02-10",
+      lastNight: "2036-02-14",
+      op: "unbook",
+    });
+    const ranges = await repo.listAvailability(apt);
+    expect(ranges.some((r) => r.status === "booked")).toBe(false);
+
+    // The freed nights are now bookable again.
+    const rebook = await repo.createBooking({
+      input: booking(apt, "2036-02-10", "2036-02-15"),
+      holdEnd: "2036-02-14",
+      expiresAt: future,
+    });
+    expect(rebook.id).toBeTruthy();
+  });
+
+  it("does not leak the internal owner id into published ranges", async () => {
+    const apt = "t-own-leak";
+    await repo.createBooking({
+      input: booking(apt, "2036-03-10", "2036-03-15"),
+      holdEnd: "2036-03-14",
+      expiresAt: future,
+    });
+    const ranges = await repo.listAvailability(apt);
+    for (const r of ranges) {
+      expect(Object.prototype.hasOwnProperty.call(r, "bookingRequestId")).toBe(false);
+    }
   });
 });
 

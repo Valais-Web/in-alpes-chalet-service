@@ -73,11 +73,25 @@ export default async (req: Request): Promise<Response> => {
       throw err;
     }
 
-    // 4 + 5. best-effort side effects — never fail the guest for these
-    await Promise.allSettled([
+    // 4 + 5. best-effort side effects — never fail the guest for these, but log
+    // any failure explicitly so a stale calendar or a lost notification is
+    // visible in the function logs instead of vanishing silently.
+    const [published, emailed] = await Promise.allSettled([
       publishAvailability(),
       sendBookingEmails({ booking, apartmentName: apartment.title.fr, locale }),
     ]);
+    if (published.status === "rejected") {
+      console.error(
+        `[submit-booking] availability publish failed for ${booking.id}:`,
+        published.reason,
+      );
+    }
+    if (emailed.status === "rejected") {
+      console.error(
+        `[submit-booking] notification emails failed for ${booking.id}:`,
+        emailed.reason,
+      );
+    }
 
     return json({ ok: true, id: booking.id });
   } catch (err) {

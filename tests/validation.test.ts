@@ -80,6 +80,17 @@ describe("availabilityInputSchema", () => {
     });
     expect(ok.success).toBe(true);
   });
+
+  it("rejects expiresAt on a non-prebooked range", () => {
+    const r = availabilityInputSchema.safeParse({
+      apartmentId: "a",
+      start: "2030-01-01",
+      end: "2030-01-02",
+      status: "blocked",
+      expiresAt: "2030-01-01T00:00:00.000Z",
+    });
+    expect(r.success).toBe(false);
+  });
 });
 
 describe("apartmentInputSchema", () => {
