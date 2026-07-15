@@ -115,6 +115,12 @@ export const availabilityInputSchema = z
   .refine((v) => v.status !== "prebooked" || Boolean(v.expiresAt), {
     message: "prebooked_requires_expiresAt",
     path: ["expiresAt"],
+  })
+  // Only a soft hold carries an expiry — reject a stray expiresAt on a
+  // free/booked/blocked range rather than silently ignoring it.
+  .refine((v) => v.status === "prebooked" || v.expiresAt === undefined, {
+    message: "expiresAt_only_for_prebooked",
+    path: ["expiresAt"],
   });
 export type AvailabilityInput = z.infer<typeof availabilityInputSchema>;
 

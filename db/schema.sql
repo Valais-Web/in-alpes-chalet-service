@@ -67,6 +67,12 @@ CREATE TABLE IF NOT EXISTS availability (
   end_date      date NOT NULL,                          -- inclusive (occupied nights)
   status        text NOT NULL CHECK (status IN ('free','booked','prebooked','blocked')),
   expires_at    timestamptz,                            -- non-null only for 'prebooked'
+  -- Which booking request owns this row (the hold it laid, and the booked range
+  -- it becomes once confirmed). NULL for owner-set manual blocks. Lets an owner
+  -- decision act on exactly its own range, never another guest's overlapping
+  -- soft hold (CLAUDE.md §5). The FK is added after booking_requests exists
+  -- (below) since that table is declared later in this file.
+  booking_request_id text,
   CHECK (end_date >= start_date),
   CONSTRAINT availability_prebooked_expiry CHECK (status <> 'prebooked' OR expires_at IS NOT NULL),
   -- No two CONFIRMED-unavailable ranges (booked/blocked) for the same apartment
@@ -103,6 +109,16 @@ CREATE TABLE IF NOT EXISTS booking_requests (
   CONSTRAINT booking_guests_pos CHECK (guests >= 1)
 );
 CREATE INDEX IF NOT EXISTS booking_requests_status_idx ON booking_requests (status, created_at DESC);
+
+-- Hold/booked ownership FK (declared here because availability precedes
+-- booking_requests above). CASCADE: purging a request removes its rows.
+ALTER TABLE availability
+  DROP CONSTRAINT IF EXISTS availability_booking_request_fk;
+ALTER TABLE availability
+  ADD CONSTRAINT availability_booking_request_fk
+  FOREIGN KEY (booking_request_id) REFERENCES booking_requests(id) ON DELETE CASCADE;
+CREATE INDEX IF NOT EXISTS availability_booking_request_idx
+  ON availability (booking_request_id) WHERE booking_request_id IS NOT NULL;
 
 -- No accounts table: admin auth is a single shared password (ADMIN_PASSWORD)
 -- issued as an HMAC-signed session cookie (SESSION_SECRET). See netlify/lib/auth.ts

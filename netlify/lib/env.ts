@@ -88,6 +88,11 @@ export function assertProductionSecrets(): void {
   if (!(env.PREBOOKING_TTL_HOURS > 0 && env.PREBOOKING_TTL_HOURS <= 24 * 30)) {
     problems.push("PREBOOKING_TTL_HOURS must be between 1 and 720");
   }
+  // A NaN / zero / negative value would break the retention job or anonymise
+  // records earlier than intended.
+  if (!(Number.isFinite(env.RETENTION_MONTHS) && env.RETENTION_MONTHS >= 1)) {
+    problems.push("RETENTION_MONTHS must be a positive number of months");
+  }
   if (problems.length) {
     throw new Error(`[in-alpes] invalid production configuration: ${problems.join("; ")}`);
   }

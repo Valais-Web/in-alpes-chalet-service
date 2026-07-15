@@ -15,6 +15,7 @@ import { publishAvailability } from "../lib/publish";
 import { requestUpdateSchema } from "../lib/validation";
 import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 import { lastNightISO } from "../lib/dates";
+import { resolveDecision } from "../lib/bookingTransitions";
 
 export default async (req: Request): Promise<Response> => {
   try {
@@ -30,13 +31,21 @@ export default async (req: Request): Promise<Response> => {
     if (!parsed.success) {
       throw new HttpError(400, `validation_error: ${parsed.error.issues[0]?.message ?? "invalid"}`);
     }
-    const { id, status, action } = parsed.data;
+    const { id, status } = parsed.data;
 
     // Verify the request exists BEFORE mutating anything.
     const booking = (await repo.listBookings()).find((b) => b.id === id);
     if (!booking) throw new HttpError(404, "booking_not_found");
 
-    // Status + availability move together in one transaction. `confirm` books
+    // The calendar op is derived server-side from the request's CURRENT status
+    // + the target status — the client's `action` is only a consistency hint.
+    // This rejects illegal moves (e.g. archived → pending) and makes a reversal
+    // (accepted → declined) actually remove the confirmed range, rather than
+    // leaving the calendar disagreeing with the request status.
+    const decision = resolveDecision(booking.status, status);
+    if (!decision) throw new HttpError(400, "invalid_status_transition");
+
+    // Status + availability move together in one transaction. `book` occupies
     // the stay's nights [arrival, departure-1] (checkout day stays free) and is
     // rejected if that overlaps another confirmed range.
     try {
@@ -46,14 +55,14 @@ export default async (req: Request): Promise<Response> => {
         apartmentId: booking.apartmentId,
         arrival: booking.arrival,
         lastNight: lastNightISO(booking.departure),
-        action,
+        op: decision.op,
       });
     } catch (err) {
       if (err instanceof AvailabilityConflictError) throw new HttpError(409, "already_booked");
       throw err;
     }
 
-    if (action !== "none") await publishAvailability();
+    if (decision.op !== "none") await publishAvailability();
 
     return json({ ok: true }, 200, NO_STORE);
   } catch (err) {
