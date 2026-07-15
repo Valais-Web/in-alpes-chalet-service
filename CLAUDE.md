@@ -199,14 +199,16 @@ Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `
 
 ```
 NEON_DATABASE_URL
-ADMIN_PASSWORD          # mot de passe admin partagé
-SESSION_SECRET          # signe le cookie de session (chaîne aléatoire longue)
+ADMIN_PASSWORD          # mot de passe admin partagé (≥12 caractères exigé en prod)
+SESSION_SECRET          # signe le cookie de session (≥24 caractères exigé en prod)
 CLOUDINARY_CLOUD_NAME
 CLOUDINARY_API_KEY
 CLOUDINARY_API_SECRET
 RESEND_API_KEY
-OWNER_NOTIFICATION_EMAIL # info@in-alpes.ch
+OWNER_NOTIFICATION_EMAIL # info@in-alpes.ch (info@in-alpes.ch reçoit toujours une copie)
 NETLIFY_BLOBS_*          # selon config
+PREBOOKING_TTL_HOURS     # durée d'un hold public, défaut 48
+RETENTION_MONTHS         # anonymisation du PII après le départ, défaut 12
 ```
 
 Aucun secret côté client. Uniquement les clés publiques nécessaires (ex. cloud name Cloudinary, clé de widget upload signé côté serveur).
@@ -230,3 +232,23 @@ Aucun secret côté client. Uniquement les clés publiques nécessaires (ex. clo
 - Le contenu rédactionnel FR/EN/NL n'existe pas encore ; prévoir des placeholders et un plan de rédaction.
 - L'adresse postale exacte du client est à confirmer (saisie douteuse dans le brief).
 - Confirmer qui, en pratique, ajoute un nouvel appartement (le propriétaire, via l'admin) et à quelle fréquence, pour calibrer l'effort mis dans le CRUD d'ajout.
+
+---
+
+## 15. Sécurité & intégrité (implémenté, 2026-07)
+
+Durci suite à une revue de sécurité, testé avec **vitest** (`npm test`). Détail dans `netlify/lib/` et `db/`.
+
+- **Anti-double-réservation en base** : contrainte d'exclusion `availability_no_overlap` (btree_gist) interdit tout chevauchement de plages `booked`/`blocked` d'un même logement, même sous concurrence. Les `prebooked` (soft holds) ne bloquent pas et peuvent se chevaucher (§5). Un séjour occupe les nuits **`[arrivée, départ-1]`** (le jour du départ reste libre → rotation le même jour permise). Helpers dans `netlify/lib/dates.ts`.
+- **Réservation transactionnelle** : `submit-booking` vérifie la dispo côté serveur (chevauchement `booked`/`blocked`, capacité vs `maxGuests`) puis insère demande + hold en une transaction (`sql.transaction`) ; renvoie 409/400. La confirmation admin passe la plage en `booked` de façon atomique et refuse un chevauchement. Transitions de statut validées serveur (accepté⇔confirm, refusé⇔decline).
+- **Public ne requête jamais Neon** (§3, désormais appliqué) : `content.ts` sans fallback Neon (sert une liste vide si Blob absent) ; `putJson` remonte l'échec en prod (fallback mémoire = dev uniquement).
+- **Auth** : cold-start exige des secrets forts en prod sinon échec ; session liée au mot de passe (rotation ⇒ invalidation) ; vérification d'`Origin` sur les mutations ; `Cache-Control: no-store` sur login/admin.
+- **Anti-bot** : honeypot (champ `company`) sur formulaires publics + throttling best-effort par IP (Netlify Blobs) sur login/contact/réservation. Pas de service tiers.
+- **En-têtes** : CSP + HSTS + nosniff + Referrer/Permissions-Policy dans `netlify.toml`.
+- **Suppression logement = RESTRICT** : impossible de supprimer un logement lié à des demandes (l'admin archive à la place).
+- **Rétention nLPD/RGPD** : Scheduled Function quotidienne (`retention.ts`) anonymise le PII des réservations `RETENTION_MONTHS` (défaut 12) après le départ et purge les holds expirés (l'expiration côté public reste paresseuse, §5).
+- **Validation** (`netlify/lib/validation.ts`) : dates calendaires réelles, pas d'arrivée passée, bornes lat/lng, images = URLs Cloudinary HTTPS ; contraintes CHECK miroir en base.
+- **Types partagés** : `shared/domain.ts` importé par le client et le serveur (fin de la duplication).
+
+Migrations DB appliquées : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`.
+Gestionnaire de paquets : **npm** (bun retiré). Cartes Google Maps par logement dans `src/content/maps.ts`.
