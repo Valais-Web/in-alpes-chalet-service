@@ -142,7 +142,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "contact.error": "L'envoi a échoué. Réessayez ou écrivez-nous directement.",
     "contact.sent.title": "Message envoyé",
     "contact.sent.body": "Merci ! Nous vous répondons sous 24 h ouvrées.",
-    "contact.address": "Route de Nendaz 100, 1997 Haute-Nendaz, Suisse",
+    "contact.address": "Chemin de Sofleu 31, 1997 Haute-Nendaz, Suisse",
     "contact.phone": "+41 77 511 59 09",
     "contact.email": "info@in-alpes.ch",
 
@@ -527,7 +527,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "contact.error": "Sending failed. Please try again or email us directly.",
     "contact.sent.title": "Message sent",
     "contact.sent.body": "Thank you! We reply within 1 business day.",
-    "contact.address": "Route de Nendaz 100, 1997 Haute-Nendaz, Switzerland",
+    "contact.address": "Chemin de Sofleu 31, 1997 Haute-Nendaz, Switzerland",
     "contact.phone": "+41 77 511 59 09",
     "contact.email": "info@in-alpes.ch",
 
@@ -904,7 +904,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "contact.error": "Verzenden mislukt. Probeer opnieuw of mail ons rechtstreeks.",
     "contact.sent.title": "Bericht verzonden",
     "contact.sent.body": "Bedankt! We reageren binnen 1 werkdag.",
-    "contact.address": "Route de Nendaz 100, 1997 Haute-Nendaz, Zwitserland",
+    "contact.address": "Chemin de Sofleu 31, 1997 Haute-Nendaz, Zwitserland",
     "contact.phone": "+41 77 511 59 09",
     "contact.email": "info@in-alpes.ch",
 
