@@ -150,3 +150,20 @@ export const requestUpdateSchema = z
     { message: "invalid_status_action_combo", path: ["action"] },
   );
 export type RequestUpdate = z.infer<typeof requestUpdateSchema>;
+
+/** Admin: Airbnb calendar sync — set/clear an apartment's Airbnb iCal URL, or
+ * run the sync now. The URL host/path is checked again by isAirbnbIcalUrl. */
+export const calendarSyncInputSchema = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("save"),
+    apartmentId: z.string().min(1).max(120),
+    importUrl: z
+      .string()
+      .max(500)
+      .transform((s) => s.trim()),
+  }),
+  z.object({
+    action: z.literal("sync"),
+    apartmentId: z.string().min(1).max(120),
+  }),
+]);

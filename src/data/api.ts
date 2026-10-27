@@ -19,6 +19,7 @@ import type {
   AvailabilityStatus,
   BookingRequest,
   BookingStatus,
+  CalendarSyncStatus,
 } from "./types";
 
 import { SITE_IMAGES } from "@/content/media";
@@ -191,6 +192,22 @@ export async function clearAvailability(
   availability = availability.filter(
     (r) => !(r.apartmentId === apartmentId && r.start === start && r.end === end),
   );
+}
+
+/** Admin: Airbnb calendar sync status per apartment (LIVE only). */
+export async function listCalendarSync(): Promise<CalendarSyncStatus[]> {
+  if (!LIVE) return [];
+  return apiGet<CalendarSyncStatus[]>("/api/admin/calendar-sync");
+}
+
+/** Admin: set ("" = turn off) an apartment's Airbnb iCal URL, or sync it now. */
+export async function updateCalendarSync(
+  input:
+    | { action: "save"; apartmentId: string; importUrl: string }
+    | { action: "sync"; apartmentId: string },
+): Promise<CalendarSyncStatus[]> {
+  if (!LIVE) throw new Error("calendar_sync_unavailable");
+  return apiSend<CalendarSyncStatus[]>("POST", "/api/admin/calendar-sync", input);
 }
 
 // ---------------------------------------------------------------------------

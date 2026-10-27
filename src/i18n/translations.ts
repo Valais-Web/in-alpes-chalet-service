@@ -234,6 +234,33 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.avail.clear": "Effacer la sélection",
     "admin.avail.existing": "Plages définies",
     "admin.avail.none": "Aucune plage pour ce logement",
+    "admin.sync.title": "Synchronisation Airbnb",
+    "admin.sync.intro":
+      "Relie ce logement à son annonce Airbnb, dans les deux sens. Les réservations Airbnb bloquent ce calendrier (vérification toutes les 30 minutes). Les réservations confirmées et les blocages faits ici sont envoyés à Airbnb. Les demandes en attente ne le sont pas.",
+    "admin.sync.importLabel": "1. Lien d'export du calendrier Airbnb",
+    "admin.sync.importHelp":
+      "Sur Airbnb : Calendrier → Disponibilités → Connecter des calendriers → Connecter à un autre site web. Copiez le lien « Lien Airbnb » (.ics) et collez-le ici.",
+    "admin.sync.importPlaceholder": "https://www.airbnb.ch/calendar/ical/….ics?s=…",
+    "admin.sync.save": "Enregistrer",
+    "admin.sync.disable": "Désactiver",
+    "admin.sync.syncNow": "Synchroniser maintenant",
+    "admin.sync.exportLabel": "2. Lien à coller dans Airbnb",
+    "admin.sync.exportHelp":
+      "Sur la même page Airbnb, collez ce lien comme calendrier à importer (nom : In-Alpes). Airbnb le relit environ toutes les 2 à 3 heures.",
+    "admin.sync.copy": "Copier",
+    "admin.sync.copied": "Copié",
+    "admin.sync.lastSync": "Dernière vérification :",
+    "admin.sync.never": "jamais",
+    "admin.sync.off": "Synchronisation désactivée pour ce logement.",
+    "admin.sync.error": "Erreur lors de la dernière vérification :",
+    "admin.sync.conflicts":
+      "Double réservation possible (réservation Airbnb sur une réservation du site) :",
+    "admin.sync.invalidUrl":
+      "Lien invalide : collez le lien d'export du calendrier Airbnb (…/calendar/ical/….ics).",
+    "admin.sync.failed": "L'opération a échoué. Réessayez.",
+    "admin.sync.unavailable": "Indisponible en mode démo.",
+    "admin.sync.airbnb": "Airbnb",
+    "admin.sync.readonly": "Synchronisé depuis Airbnb : à modifier sur Airbnb.",
     "admin.avail.delete": "Supprimer la plage",
 
     "amenity.wifi": "Wi-Fi",
@@ -635,6 +662,32 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.avail.clear": "Clear selection",
     "admin.avail.existing": "Defined ranges",
     "admin.avail.none": "No ranges for this rental",
+    "admin.sync.title": "Airbnb sync",
+    "admin.sync.intro":
+      "Links this rental to its Airbnb listing, both ways. Airbnb bookings block this calendar (checked every 30 minutes). Confirmed bookings and blocks made here are sent to Airbnb. Pending requests are not.",
+    "admin.sync.importLabel": "1. Airbnb calendar export link",
+    "admin.sync.importHelp":
+      "On Airbnb: Calendar → Availability → Connect calendars → Connect to another website. Copy the “Airbnb link” (.ics) and paste it here.",
+    "admin.sync.importPlaceholder": "https://www.airbnb.com/calendar/ical/….ics?s=…",
+    "admin.sync.save": "Save",
+    "admin.sync.disable": "Turn off",
+    "admin.sync.syncNow": "Sync now",
+    "admin.sync.exportLabel": "2. Link to paste into Airbnb",
+    "admin.sync.exportHelp":
+      "On the same Airbnb page, paste this link as a calendar to import (name: In-Alpes). Airbnb re-reads it roughly every 2 to 3 hours.",
+    "admin.sync.copy": "Copy",
+    "admin.sync.copied": "Copied",
+    "admin.sync.lastSync": "Last check:",
+    "admin.sync.never": "never",
+    "admin.sync.off": "Sync is off for this rental.",
+    "admin.sync.error": "Error during the last check:",
+    "admin.sync.conflicts": "Possible double booking (Airbnb booking over a site booking):",
+    "admin.sync.invalidUrl":
+      "Invalid link: paste the Airbnb calendar export link (…/calendar/ical/….ics).",
+    "admin.sync.failed": "That didn't work. Please try again.",
+    "admin.sync.unavailable": "Unavailable in demo mode.",
+    "admin.sync.airbnb": "Airbnb",
+    "admin.sync.readonly": "Synced from Airbnb: change it on Airbnb.",
     "admin.avail.delete": "Delete range",
 
     "amenity.wifi": "Wi-Fi",
@@ -1031,6 +1084,33 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.avail.clear": "Selectie wissen",
     "admin.avail.existing": "Ingestelde periodes",
     "admin.avail.none": "Geen periodes voor deze woning",
+    "admin.sync.title": "Airbnb-synchronisatie",
+    "admin.sync.intro":
+      "Koppelt deze woning in beide richtingen aan de Airbnb-advertentie. Airbnb-boekingen blokkeren deze kalender (elke 30 minuten gecontroleerd). Bevestigde boekingen en blokkeringen van hier worden naar Airbnb gestuurd. Openstaande aanvragen niet.",
+    "admin.sync.importLabel": "1. Exportlink van de Airbnb-kalender",
+    "admin.sync.importHelp":
+      "Op Airbnb: Kalender → Beschikbaarheid → Kalenders koppelen → Koppelen aan een andere website. Kopieer de “Airbnb-link” (.ics) en plak die hier.",
+    "admin.sync.importPlaceholder": "https://www.airbnb.nl/calendar/ical/….ics?s=…",
+    "admin.sync.save": "Opslaan",
+    "admin.sync.disable": "Uitschakelen",
+    "admin.sync.syncNow": "Nu synchroniseren",
+    "admin.sync.exportLabel": "2. Link om in Airbnb te plakken",
+    "admin.sync.exportHelp":
+      "Plak deze link op dezelfde Airbnb-pagina als te importeren kalender (naam: In-Alpes). Airbnb leest hem ongeveer elke 2 à 3 uur opnieuw.",
+    "admin.sync.copy": "Kopiëren",
+    "admin.sync.copied": "Gekopieerd",
+    "admin.sync.lastSync": "Laatste controle:",
+    "admin.sync.never": "nooit",
+    "admin.sync.off": "Synchronisatie staat uit voor deze woning.",
+    "admin.sync.error": "Fout bij de laatste controle:",
+    "admin.sync.conflicts":
+      "Mogelijke dubbele boeking (Airbnb-boeking over een boeking van de site):",
+    "admin.sync.invalidUrl":
+      "Ongeldige link: plak de exportlink van de Airbnb-kalender (…/calendar/ical/….ics).",
+    "admin.sync.failed": "Dat is mislukt. Probeer het opnieuw.",
+    "admin.sync.unavailable": "Niet beschikbaar in demomodus.",
+    "admin.sync.airbnb": "Airbnb",
+    "admin.sync.readonly": "Gesynchroniseerd vanaf Airbnb: wijzig het op Airbnb.",
     "admin.avail.delete": "Periode verwijderen",
 
     "amenity.wifi": "Wi-Fi",

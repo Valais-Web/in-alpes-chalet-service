@@ -36,6 +36,7 @@ export interface AvailabilityRange {
   end: string; // ISO date YYYY-MM-DD (inclusive)
   status: AvailabilityStatus;
   expiresAt?: string; // ISO datetime, only for `prebooked`
+  source?: "airbnb"; // written by the Airbnb calendar sync — read-only in the admin
 }
 
 export type BookingStatus = "pending" | "accepted" | "declined" | "archived";
@@ -71,4 +72,13 @@ export interface AirbnbImport {
   amenities: string[];
   location: { lat: number; lng: number; address: string };
   warnings: string[]; // fields that could not be read and need a manual check
+}
+
+/** Admin view of one apartment's Airbnb calendar sync (GET /api/admin/calendar-sync). */
+export interface CalendarSyncStatus {
+  apartmentId: string;
+  importUrl: string; // Airbnb iCal export URL ("" = sync off)
+  lastSyncedAt: string | null; // ISO datetime of the last successful feed check
+  lastError: string | null;
+  conflicts: { start: string; end: string }[]; // Airbnb reservations overlapping a site booking
 }

@@ -84,6 +84,10 @@ booking_requests(
 - **Admin édite les disponibilités** → écrit Neon → régénère `availability.json` vers Blobs.
 - **Soumission d'une demande (public)** → Netlify Function `submit-booking` : valide (Zod), insère la demande (`status = nouvelle`), pose une pré-réservation (`status = pending`, `expires_at = now + 48h`), régénère `availability.json`, envoie deux emails via Resend (propriétaire + demandeur), retourne le succès.
 - **Lecture publique** → le site lit `apartments.json` et `availability.json` depuis Blobs. Jamais Neon.
+- **Synchronisation Airbnb (iCal, bidirectionnelle)** — `netlify/lib/calendarSync.ts`. Airbnb n'a pas d'API pour les particuliers : on passe par ses calendriers iCal.
+  - **Airbnb → site** : Scheduled Function `calendar-sync` (toutes les 30 min) lit le lien d'export iCal Airbnb de chaque logement (table `calendar_sync`, recopiée dans un blob privé) et réécrit les lignes `availability.source = 'airbnb'` (`Reserved` → `booked`, sinon `blocked`). Les lignes du site priment toujours (soustraction, la contrainte d'exclusion ne se déclenche jamais). Une réservation Airbnb sur une réservation du site = conflit → email au propriétaire. **Pas un keep-alive** : l'empreinte des dates futures de chaque flux est gardée dans un blob privé ; Neon n'est réveillé que si un calendrier Airbnb a changé.
+  - **Site → Airbnb** : `/api/calendar/<slug>.ics` (public, lit les Blobs, jamais Neon) expose les réservations confirmées et blocages manuels — **jamais** les pré-réservations (anti-gel §5) ni les lignes venues d'Airbnb (pas de boucle). Bart colle ce lien dans Airbnb (« Connecter des calendriers »).
+  - Les lignes `airbnb` sont en lecture seule dans l'admin. Limite : Airbnb ne relit un calendrier importé que toutes les ~2-3 h (non réglable) ; la confirmation d'une demande est refusée si Airbnb a déjà pris les dates.
 
 ### Expiration des pré-réservations (48h)
 
@@ -254,5 +258,5 @@ Durci suite à une revue de sécurité, testé avec **vitest** (`npm test`). Dé
 
 **Limites connues (acceptées, pré-lancement mono-admin)** : la fenêtre lecture-puis-écriture entre la vérif de dispo publique et l'insert du hold reste théorique (le hold n'est que `prebooked` soft ; la contrainte d'exclusion empêche toujours de confirmer un vrai double booking) — non corrigée car le driver Neon HTTP n'offre pas de transaction interactive `FOR UPDATE`. Le throttling de login est best-effort (Blobs, pas de compteur atomique) : une vraie protection brute-force = règle firewall Netlify. CSP autorise encore `'unsafe-inline'` (hydratation SSR ; nonce = durcissement futur).
 
-Migrations DB appliquées : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`, `db/add-hold-ownership.mjs`.
+Migrations DB appliquées : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`, `db/add-hold-ownership.mjs`. **À appliquer avant déploiement de la synchro Airbnb** : `db/add-calendar-sync.mjs`.
 Gestionnaire de paquets : **npm** (bun retiré). Cartes Google Maps par logement dans `src/content/maps.ts`.
