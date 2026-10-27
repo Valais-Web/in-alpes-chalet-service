@@ -13,6 +13,7 @@
 import apartmentsJson from "./apartments.json";
 import availabilityJson from "./availability.json";
 import type {
+  AirbnbImport,
   Apartment,
   AvailabilityRange,
   AvailabilityStatus,
@@ -142,6 +143,13 @@ export async function deleteApartment(id: string): Promise<void> {
   }
   await delay();
   apartments = apartments.filter((a) => a.id !== id);
+}
+
+/** Admin: read a public Airbnb listing into a draft for the "new apartment"
+ * form. Best-effort scraping (netlify/lib/airbnb.ts) — LIVE mode only. */
+export async function importFromAirbnb(url: string): Promise<AirbnbImport> {
+  if (!LIVE) throw new Error("airbnb_import_unavailable");
+  return apiSend<AirbnbImport>("POST", "/api/admin/airbnb-import", { url });
 }
 
 // ---------------------------------------------------------------------------

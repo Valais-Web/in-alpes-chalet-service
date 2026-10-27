@@ -33,7 +33,17 @@ async function getSignature(): Promise<SignedUpload> {
 }
 
 /** Upload one file to Cloudinary; resolves to its secure URL. */
-export async function uploadImage(file: File): Promise<string> {
+export function uploadImage(file: File): Promise<string> {
+  return upload(file);
+}
+
+/** Re-host a remote image (e.g. an Airbnb photo): Cloudinary fetches the URL
+ * itself, nothing transits through the browser. Resolves to its secure URL. */
+export function uploadImageFromUrl(url: string): Promise<string> {
+  return upload(url);
+}
+
+async function upload(file: File | string): Promise<string> {
   const sig = await getSignature();
 
   const form = new FormData();

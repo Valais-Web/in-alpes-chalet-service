@@ -178,6 +178,23 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.showArchived": "Afficher les archivées",
     "admin.requests.hideArchived": "Masquer les archivées",
     "admin.apt.add": "Ajouter un logement",
+    "admin.apt.airbnb.title": "Importer depuis Airbnb",
+    "admin.apt.airbnb.hint":
+      "Collez le lien d'une annonce Airbnb pour pré-remplir le formulaire : textes FR/EN/NL, photos, capacité, équipements et emplacement. Le prix n'est pas importé. Relisez tout avant d'enregistrer.",
+    "admin.apt.airbnb.warning":
+      "Fonction expérimentale : elle lit la page publique de l'annonce et peut cesser de fonctionner si Airbnb modifie la structure de ses pages. Le formulaire ci-dessous reste toujours utilisable à la main.",
+    "admin.apt.airbnb.placeholder": "https://www.airbnb.ch/rooms/…",
+    "admin.apt.airbnb.button": "Importer",
+    "admin.apt.airbnb.fetching": "Lecture de l'annonce…",
+    "admin.apt.airbnb.photos": "Copie des photos {done}/{total}…",
+    "admin.apt.airbnb.done":
+      "Annonce importée. Vérifiez les champs et renseignez le prix par nuit.",
+    "admin.apt.airbnb.check": "À vérifier (non lu sur Airbnb) :",
+    "admin.apt.airbnb.photosFailed": "{n} photo(s) n'ont pas pu être copiées.",
+    "admin.apt.airbnb.invalidUrl":
+      "Lien Airbnb invalide. Format attendu : https://www.airbnb.ch/rooms/123456…",
+    "admin.apt.airbnb.error":
+      "L'import a échoué. Airbnb a peut-être modifié ses pages : remplissez le formulaire à la main.",
     "admin.apt.edit": "Modifier",
     "admin.apt.delete": "Supprimer",
     "admin.apt.save": "Enregistrer",
@@ -563,6 +580,22 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.showArchived": "Show archived",
     "admin.requests.hideArchived": "Hide archived",
     "admin.apt.add": "Add rental",
+    "admin.apt.airbnb.title": "Import from Airbnb",
+    "admin.apt.airbnb.hint":
+      "Paste an Airbnb listing link to prefill the form: FR/EN/NL texts, photos, capacity, amenities and location. The price is not imported. Review everything before saving.",
+    "admin.apt.airbnb.warning":
+      "Experimental: this reads the listing's public page and may stop working if Airbnb changes its page structure. The form below can always be filled in by hand.",
+    "admin.apt.airbnb.placeholder": "https://www.airbnb.com/rooms/…",
+    "admin.apt.airbnb.button": "Import",
+    "admin.apt.airbnb.fetching": "Reading the listing…",
+    "admin.apt.airbnb.photos": "Copying photos {done}/{total}…",
+    "admin.apt.airbnb.done": "Listing imported. Check the fields and enter the nightly price.",
+    "admin.apt.airbnb.check": "Please check (not found on Airbnb):",
+    "admin.apt.airbnb.photosFailed": "{n} photo(s) could not be copied.",
+    "admin.apt.airbnb.invalidUrl":
+      "Invalid Airbnb link. Expected format: https://www.airbnb.com/rooms/123456…",
+    "admin.apt.airbnb.error":
+      "Import failed. Airbnb may have changed its pages: please fill in the form by hand.",
     "admin.apt.edit": "Edit",
     "admin.apt.delete": "Delete",
     "admin.apt.save": "Save",
@@ -942,6 +975,23 @@ export const dictionaries: Record<Locale, Dict> = {
     "admin.requests.showArchived": "Gearchiveerde tonen",
     "admin.requests.hideArchived": "Gearchiveerde verbergen",
     "admin.apt.add": "Woning toevoegen",
+    "admin.apt.airbnb.title": "Importeren van Airbnb",
+    "admin.apt.airbnb.hint":
+      "Plak de link van een Airbnb-advertentie om het formulier vooraf in te vullen: FR/EN/NL-teksten, foto's, capaciteit, voorzieningen en locatie. De prijs wordt niet geïmporteerd. Controleer alles vóór het opslaan.",
+    "admin.apt.airbnb.warning":
+      "Experimenteel: dit leest de openbare pagina van de advertentie en kan stoppen met werken als Airbnb de structuur van zijn pagina's wijzigt. Het formulier hieronder kan altijd handmatig worden ingevuld.",
+    "admin.apt.airbnb.placeholder": "https://www.airbnb.nl/rooms/…",
+    "admin.apt.airbnb.button": "Importeren",
+    "admin.apt.airbnb.fetching": "Advertentie wordt gelezen…",
+    "admin.apt.airbnb.photos": "Foto's kopiëren {done}/{total}…",
+    "admin.apt.airbnb.done":
+      "Advertentie geïmporteerd. Controleer de velden en vul de prijs per nacht in.",
+    "admin.apt.airbnb.check": "Te controleren (niet gevonden op Airbnb):",
+    "admin.apt.airbnb.photosFailed": "{n} foto('s) konden niet worden gekopieerd.",
+    "admin.apt.airbnb.invalidUrl":
+      "Ongeldige Airbnb-link. Verwacht formaat: https://www.airbnb.nl/rooms/123456…",
+    "admin.apt.airbnb.error":
+      "Import mislukt. Airbnb heeft mogelijk zijn pagina's gewijzigd: vul het formulier handmatig in.",
     "admin.apt.edit": "Bewerken",
     "admin.apt.delete": "Verwijderen",
     "admin.apt.save": "Opslaan",

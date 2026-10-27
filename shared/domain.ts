@@ -53,3 +53,22 @@ export interface BookingRequest {
   status: BookingStatus;
   createdAt: string;
 }
+
+/** Draft apartment fields scraped from a public Airbnb listing
+ * (POST /api/admin/airbnb-import). Images are still Airbnb URLs: the admin
+ * re-hosts them on Cloudinary before saving. Best-effort — see netlify/lib/airbnb.ts. */
+export interface AirbnbImport {
+  listingId: string;
+  title: LocalizedText;
+  summary: LocalizedText;
+  description: LocalizedText;
+  rules: LocalizedText;
+  images: string[];
+  maxGuests: number;
+  bedrooms: number;
+  bathrooms: number;
+  surfaceM2: number | null; // only when the description mentions it
+  amenities: string[];
+  location: { lat: number; lng: number; address: string };
+  warnings: string[]; // fields that could not be read and need a manual check
+}
