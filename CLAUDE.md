@@ -62,6 +62,13 @@ availability(
   id, apartment_id, date,
   status,          -- available | unavailable | pending | blocked
   expires_at       -- non nul uniquement pour 'pending' (pré-réservation)
+  source           -- NULL (site) | 'airbnb' (miroir de la synchro iCal, lecture seule)
+)
+
+calendar_sync(
+  apartment_id,    -- PK, FK apartments ON DELETE CASCADE
+  import_url,      -- lien d'export iCal Airbnb du logement
+  updated_at
 )
 
 booking_requests(
@@ -102,15 +109,15 @@ Une pré-réservation ne devient `blocked`/`unavailable` que lorsque le proprié
 Derrière le login mot de passe (cookie de session signé). **Vérifier la session côté serveur sur chaque écriture et chaque upload**, jamais seulement masquer côté client.
 
 - **Tableau de bord** : aperçu logements + demandes récentes.
-- **Logements** : CRUD, champs bilingues FR/EN/NL, upload d'images (Cloudinary), réordonnancement de la galerie. Sauvegarde → régénère `apartments.json`.
-- **Disponibilités** : calendrier éditable, sélection de plages (libre / occupé / pré-réservé / bloqué). Écrit Neon → régénère `availability.json`.
+- **Logements** : CRUD, champs bilingues FR/EN/NL, upload d'images (Cloudinary), réordonnancement de la galerie. Sauvegarde → régénère `apartments.json`. **Import depuis une annonce Airbnb** en haut du formulaire de création (`netlify/lib/airbnb.ts`, scraping de la page publique FR/EN/NL, photos ré-hébergées sur Cloudinary) — fragile si Airbnb change sa page, avertissement affiché ; test live : `scripts/test-airbnb-import.mts`.
+- **Disponibilités** : calendrier éditable, sélection de plages (libre / occupé / pré-réservé / bloqué). Écrit Neon → régénère `availability.json`. Encadré « Synchronisation Airbnb » par logement (lien d'import Airbnb, lien d'export du site à copier, dernière synchro, erreurs, conflits, « Synchroniser maintenant ») — voir §5.
 - **Demandes** : liste filtrable par statut (nouvelle / en cours / répondu / archivé), actions Confirmer (passe la plage en `unavailable`) / Décliner (libère la plage) / Archiver.
 
 ---
 
 ## 7. Contenu du brief client (réponses de Bart Goes)
 
-Coordonnées : In-Alpes Chalet Services Sàrl, Haute-Nendaz (Valais). Tél. 077 511 59 09. Email info@in-alpes.ch. Domaine in-alpes.ch.
+Coordonnées : In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, Haute-Nendaz (Valais). Tél. 077 511 59 09. Email info@in-alpes.ch. Domaine in-alpes.ch.
 
 **Présentation** : entreprise de location de vacances et d'entretien des résidences de tourisme à Haute-Nendaz.
 
@@ -234,7 +241,6 @@ Aucun secret côté client. Uniquement les clés publiques nécessaires (ex. clo
 ## 14. Décisions ouvertes (à trancher avec le client)
 
 - Le contenu rédactionnel FR/EN/NL n'existe pas encore ; prévoir des placeholders et un plan de rédaction.
-- L'adresse postale exacte du client est à confirmer (saisie douteuse dans le brief).
 - Confirmer qui, en pratique, ajoute un nouvel appartement (le propriétaire, via l'admin) et à quelle fréquence, pour calibrer l'effort mis dans le CRUD d'ajout.
 
 ---
@@ -258,5 +264,5 @@ Durci suite à une revue de sécurité, testé avec **vitest** (`npm test`). Dé
 
 **Limites connues (acceptées, pré-lancement mono-admin)** : la fenêtre lecture-puis-écriture entre la vérif de dispo publique et l'insert du hold reste théorique (le hold n'est que `prebooked` soft ; la contrainte d'exclusion empêche toujours de confirmer un vrai double booking) — non corrigée car le driver Neon HTTP n'offre pas de transaction interactive `FOR UPDATE`. Le throttling de login est best-effort (Blobs, pas de compteur atomique) : une vraie protection brute-force = règle firewall Netlify. CSP autorise encore `'unsafe-inline'` (hydratation SSR ; nonce = durcissement futur).
 
-Migrations DB appliquées : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`, `db/add-hold-ownership.mjs`. **À appliquer avant déploiement de la synchro Airbnb** : `db/add-calendar-sync.mjs`.
+Migrations DB appliquées en prod : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`, `db/add-hold-ownership.mjs`, `db/add-calendar-sync.mjs` (2026-10-28).
 Gestionnaire de paquets : **npm** (bun retiré). Cartes Google Maps par logement dans `src/content/maps.ts`.
