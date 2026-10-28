@@ -13,11 +13,13 @@
 import apartmentsJson from "./apartments.json";
 import availabilityJson from "./availability.json";
 import type {
+  AirbnbImport,
   Apartment,
   AvailabilityRange,
   AvailabilityStatus,
   BookingRequest,
   BookingStatus,
+  CalendarSyncStatus,
 } from "./types";
 
 import { SITE_IMAGES } from "@/content/media";
@@ -144,6 +146,13 @@ export async function deleteApartment(id: string): Promise<void> {
   apartments = apartments.filter((a) => a.id !== id);
 }
 
+/** Admin: read a public Airbnb listing into a draft for the "new apartment"
+ * form. Best-effort scraping (netlify/lib/airbnb.ts) — LIVE mode only. */
+export async function importFromAirbnb(url: string): Promise<AirbnbImport> {
+  if (!LIVE) throw new Error("airbnb_import_unavailable");
+  return apiSend<AirbnbImport>("POST", "/api/admin/airbnb-import", { url });
+}
+
 // ---------------------------------------------------------------------------
 // Availability
 // ---------------------------------------------------------------------------
@@ -183,6 +192,22 @@ export async function clearAvailability(
   availability = availability.filter(
     (r) => !(r.apartmentId === apartmentId && r.start === start && r.end === end),
   );
+}
+
+/** Admin: Airbnb calendar sync status per apartment (LIVE only). */
+export async function listCalendarSync(): Promise<CalendarSyncStatus[]> {
+  if (!LIVE) return [];
+  return apiGet<CalendarSyncStatus[]>("/api/admin/calendar-sync");
+}
+
+/** Admin: set ("" = turn off) an apartment's Airbnb iCal URL, or sync it now. */
+export async function updateCalendarSync(
+  input:
+    | { action: "save"; apartmentId: string; importUrl: string }
+    | { action: "sync"; apartmentId: string },
+): Promise<CalendarSyncStatus[]> {
+  if (!LIVE) throw new Error("calendar_sync_unavailable");
+  return apiSend<CalendarSyncStatus[]>("POST", "/api/admin/calendar-sync", input);
 }
 
 // ---------------------------------------------------------------------------

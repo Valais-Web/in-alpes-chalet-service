@@ -120,6 +120,24 @@ ALTER TABLE availability
 CREATE INDEX IF NOT EXISTS availability_booking_request_idx
   ON availability (booking_request_id) WHERE booking_request_id IS NOT NULL;
 
+-- Airbnb calendar sync (netlify/lib/calendarSync.ts). Rows mirrored from an
+-- Airbnb iCal feed carry source = 'airbnb'; they are rewritten by the sync and
+-- never exported back to Airbnb. Site rows keep source NULL.
+ALTER TABLE availability ADD COLUMN IF NOT EXISTS source text;
+ALTER TABLE availability DROP CONSTRAINT IF EXISTS availability_source_check;
+ALTER TABLE availability
+  ADD CONSTRAINT availability_source_check CHECK (source IS NULL OR source = 'airbnb');
+CREATE INDEX IF NOT EXISTS availability_source_idx
+  ON availability (apartment_id) WHERE source IS NOT NULL;
+
+-- Per-apartment Airbnb iCal export URL (contains Airbnb's private token: never
+-- published). Mirrored to a private blob for the scheduled sync.
+CREATE TABLE IF NOT EXISTS calendar_sync (
+  apartment_id  text PRIMARY KEY REFERENCES apartments(id) ON DELETE CASCADE,
+  import_url    text NOT NULL,
+  updated_at    timestamptz NOT NULL DEFAULT now()
+);
+
 -- No accounts table: admin auth is a single shared password (ADMIN_PASSWORD)
 -- issued as an HMAC-signed session cookie (SESSION_SECRET). See netlify/lib/auth.ts
 -- and CLAUDE.md §2. (Supersedes the earlier Neon Auth plan.)

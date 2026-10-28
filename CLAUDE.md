@@ -62,6 +62,13 @@ availability(
   id, apartment_id, date,
   status,          -- available | unavailable | pending | blocked
   expires_at       -- non nul uniquement pour 'pending' (pré-réservation)
+  source           -- NULL (site) | 'airbnb' (miroir de la synchro iCal, lecture seule)
+)
+
+calendar_sync(
+  apartment_id,    -- PK, FK apartments ON DELETE CASCADE
+  import_url,      -- lien d'export iCal Airbnb du logement
+  updated_at
 )
 
 booking_requests(
@@ -84,6 +91,10 @@ booking_requests(
 - **Admin édite les disponibilités** → écrit Neon → régénère `availability.json` vers Blobs.
 - **Soumission d'une demande (public)** → Netlify Function `submit-booking` : valide (Zod), insère la demande (`status = nouvelle`), pose une pré-réservation (`status = pending`, `expires_at = now + 48h`), régénère `availability.json`, envoie deux emails via Resend (propriétaire + demandeur), retourne le succès.
 - **Lecture publique** → le site lit `apartments.json` et `availability.json` depuis Blobs. Jamais Neon.
+- **Synchronisation Airbnb (iCal, bidirectionnelle)** — `netlify/lib/calendarSync.ts`. Airbnb n'a pas d'API pour les particuliers : on passe par ses calendriers iCal.
+  - **Airbnb → site** : Scheduled Function `calendar-sync` (toutes les 30 min) lit le lien d'export iCal Airbnb de chaque logement (table `calendar_sync`, recopiée dans un blob privé) et réécrit les lignes `availability.source = 'airbnb'` (`Reserved` → `booked`, sinon `blocked`). Les lignes du site priment toujours (soustraction, la contrainte d'exclusion ne se déclenche jamais). Une réservation Airbnb sur une réservation du site = conflit → email au propriétaire. **Pas un keep-alive** : l'empreinte des dates futures de chaque flux est gardée dans un blob privé ; Neon n'est réveillé que si un calendrier Airbnb a changé.
+  - **Site → Airbnb** : `/api/calendar/<slug>.ics` (public, lit les Blobs, jamais Neon) expose les réservations confirmées et blocages manuels — **jamais** les pré-réservations (anti-gel §5) ni les lignes venues d'Airbnb (pas de boucle). Bart colle ce lien dans Airbnb (« Connecter des calendriers »).
+  - Les lignes `airbnb` sont en lecture seule dans l'admin. Limite : Airbnb ne relit un calendrier importé que toutes les ~2-3 h (non réglable) ; la confirmation d'une demande est refusée si Airbnb a déjà pris les dates.
 
 ### Expiration des pré-réservations (48h)
 
@@ -98,15 +109,15 @@ Une pré-réservation ne devient `blocked`/`unavailable` que lorsque le proprié
 Derrière le login mot de passe (cookie de session signé). **Vérifier la session côté serveur sur chaque écriture et chaque upload**, jamais seulement masquer côté client.
 
 - **Tableau de bord** : aperçu logements + demandes récentes.
-- **Logements** : CRUD, champs bilingues FR/EN/NL, upload d'images (Cloudinary), réordonnancement de la galerie. Sauvegarde → régénère `apartments.json`.
-- **Disponibilités** : calendrier éditable, sélection de plages (libre / occupé / pré-réservé / bloqué). Écrit Neon → régénère `availability.json`.
+- **Logements** : CRUD, champs bilingues FR/EN/NL, upload d'images (Cloudinary), réordonnancement de la galerie. Sauvegarde → régénère `apartments.json`. **Import depuis une annonce Airbnb** en haut du formulaire de création (`netlify/lib/airbnb.ts`, scraping de la page publique FR/EN/NL, photos ré-hébergées sur Cloudinary) — fragile si Airbnb change sa page, avertissement affiché ; test live : `scripts/test-airbnb-import.mts`.
+- **Disponibilités** : calendrier éditable, sélection de plages (libre / occupé / pré-réservé / bloqué). Écrit Neon → régénère `availability.json`. Encadré « Synchronisation Airbnb » par logement (lien d'import Airbnb, lien d'export du site à copier, dernière synchro, erreurs, conflits, « Synchroniser maintenant ») — voir §5.
 - **Demandes** : liste filtrable par statut (nouvelle / en cours / répondu / archivé), actions Confirmer (passe la plage en `unavailable`) / Décliner (libère la plage) / Archiver.
 
 ---
 
 ## 7. Contenu du brief client (réponses de Bart Goes)
 
-Coordonnées : In-Alpes Chalet Services Sàrl, Haute-Nendaz (Valais). Tél. 077 511 59 09. Email info@in-alpes.ch. Domaine in-alpes.ch.
+Coordonnées : In-Alpes Chalet Services Sàrl, Chemin de Sofleu 31, Haute-Nendaz (Valais). Tél. 077 511 59 09. Email info@in-alpes.ch. Domaine in-alpes.ch.
 
 **Présentation** : entreprise de location de vacances et d'entretien des résidences de tourisme à Haute-Nendaz.
 
@@ -230,7 +241,6 @@ Aucun secret côté client. Uniquement les clés publiques nécessaires (ex. clo
 ## 14. Décisions ouvertes (à trancher avec le client)
 
 - Le contenu rédactionnel FR/EN/NL n'existe pas encore ; prévoir des placeholders et un plan de rédaction.
-- L'adresse postale exacte du client est à confirmer (saisie douteuse dans le brief).
 - Confirmer qui, en pratique, ajoute un nouvel appartement (le propriétaire, via l'admin) et à quelle fréquence, pour calibrer l'effort mis dans le CRUD d'ajout.
 
 ---
@@ -254,5 +264,5 @@ Durci suite à une revue de sécurité, testé avec **vitest** (`npm test`). Dé
 
 **Limites connues (acceptées, pré-lancement mono-admin)** : la fenêtre lecture-puis-écriture entre la vérif de dispo publique et l'insert du hold reste théorique (le hold n'est que `prebooked` soft ; la contrainte d'exclusion empêche toujours de confirmer un vrai double booking) — non corrigée car le driver Neon HTTP n'offre pas de transaction interactive `FOR UPDATE`. Le throttling de login est best-effort (Blobs, pas de compteur atomique) : une vraie protection brute-force = règle firewall Netlify. CSP autorise encore `'unsafe-inline'` (hydratation SSR ; nonce = durcissement futur).
 
-Migrations DB appliquées : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`, `db/add-hold-ownership.mjs`.
+Migrations DB appliquées en prod : `db/add-booking-integrity.mjs`, `db/add-domain-constraints.mjs`, `db/set-booking-restrict.mjs`, `db/add-hold-ownership.mjs`, `db/add-calendar-sync.mjs` (2026-10-28).
 Gestionnaire de paquets : **npm** (bun retiré). Cartes Google Maps par logement dans `src/content/maps.ts`.

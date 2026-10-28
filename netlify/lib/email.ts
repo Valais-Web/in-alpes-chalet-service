@@ -284,3 +284,40 @@ export async function sendContactEmail(input: ContactMessage): Promise<void> {
     html,
   });
 }
+
+/** Airbnb calendar sync found an Airbnb reservation overlapping a booking made
+ * on the site — a real double booking the owner must resolve by hand. */
+export async function sendCalendarConflictEmail(
+  apartmentId: string,
+  conflicts: { start: string; end: string }[],
+): Promise<void> {
+  const html = layout(
+    "Double réservation possible (Airbnb)",
+    p(
+      "La synchronisation du calendrier Airbnb a trouvé une réservation Airbnb qui chevauche une réservation faite sur le site. Vérifiez les deux réservations et contactez le voyageur concerné.",
+    ) +
+      detailsTable([
+        ["Logement", esc(apartmentId)],
+        ...conflicts.map((c, i): [string, string] => [
+          `Nuits ${i + 1}`,
+          `${esc(c.start)} → ${esc(c.end)}`,
+        ]),
+      ]),
+  );
+
+  if (!flags.hasResend) {
+    console.info("[email] (dev, not sent) calendar conflict →", ownerRecipients(), {
+      apartmentId,
+      conflicts,
+    });
+    return;
+  }
+
+  const resend = new Resend(env.RESEND_API_KEY);
+  await resend.emails.send({
+    from: env.EMAIL_FROM,
+    to: ownerRecipients(),
+    subject: `Double réservation possible — ${apartmentId}`,
+    html,
+  });
+}

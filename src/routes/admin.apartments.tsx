@@ -1,9 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
-import { deleteApartment, listApartments, resolveImage, upsertApartment } from "@/data/api";
-import { uploadImage, UploadUnavailableError } from "@/admin/uploadImage";
-import type { Apartment, Locale } from "@/data/types";
+import {
+  deleteApartment,
+  importFromAirbnb,
+  listApartments,
+  resolveImage,
+  upsertApartment,
+} from "@/data/api";
+import { uploadImage, uploadImageFromUrl, UploadUnavailableError } from "@/admin/uploadImage";
+import type { AirbnbImport, Apartment, Locale } from "@/data/types";
 import { useI18n } from "@/i18n/I18nProvider";
 import {
   Pencil,
@@ -15,6 +21,8 @@ import {
   X,
   Loader2,
   ImageOff,
+  Download,
+  TriangleAlert,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/apartments")({
@@ -39,6 +47,7 @@ function AdminApartments() {
   const qc = useQueryClient();
   const { data: apartments = [] } = useQuery({ queryKey: ["apartments"], queryFn: listApartments });
   const [editing, setEditing] = useState<Apartment | null>(null);
+  const [isNew, setIsNew] = useState(false);
 
   // Throws on failure so the dialog can surface the error.
   const onSave = async (a: Apartment) => {
@@ -81,7 +90,10 @@ function AdminApartments() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{t("admin.nav.apartments")}</h1>
         <button
-          onClick={() => setEditing(emptyApt())}
+          onClick={() => {
+            setIsNew(true);
+            setEditing(emptyApt());
+          }}
           className="btn-base bg-primary text-primary-foreground"
         >
           <Plus className="h-4 w-4" /> {t("admin.apt.add")}
@@ -109,7 +121,10 @@ function AdminApartments() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setEditing(a)}
+                onClick={() => {
+                  setIsNew(false);
+                  setEditing(a);
+                }}
                 className="border border-border p-2 hover:bg-secondary"
                 aria-label="edit"
               >
@@ -127,7 +142,14 @@ function AdminApartments() {
         ))}
       </ul>
 
-      {editing && <EditDialog initial={editing} onClose={() => setEditing(null)} onSave={onSave} />}
+      {editing && (
+        <EditDialog
+          initial={editing}
+          isNew={isNew}
+          onClose={() => setEditing(null)}
+          onSave={onSave}
+        />
+      )}
     </div>
   );
 }
@@ -137,10 +159,12 @@ const input =
 
 function EditDialog({
   initial,
+  isNew,
   onClose,
   onSave,
 }: {
   initial: Apartment;
+  isNew: boolean;
   onClose: () => void;
   onSave: (a: Apartment) => Promise<void>;
 }) {
@@ -207,6 +231,24 @@ function EditDialog({
     }
   };
 
+  // Prefill from an Airbnb draft. Photos arrive already re-hosted on Cloudinary.
+  const applyAirbnb = (d: AirbnbImport, images: string[]) =>
+    setA((p) => ({
+      ...p,
+      slug: slugify(d.title.fr) || p.slug,
+      title: d.title,
+      summary: d.summary,
+      description: d.description,
+      images,
+      maxGuests: d.maxGuests,
+      bedrooms: d.bedrooms,
+      bathrooms: d.bathrooms,
+      surfaceM2: d.surfaceM2 ?? p.surfaceM2,
+      amenities: d.amenities,
+      location: d.location,
+      practical: { ...p.practical, rules: d.rules },
+    }));
+
   const handleSave = async () => {
     setSaving(true);
     setSaveError(null);
@@ -243,6 +285,8 @@ function EditDialog({
 
         {/* Body (scrolls) */}
         <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
+          {isNew && <AirbnbImportPanel onImported={applyAirbnb} />}
+
           <Section title={t("admin.apt.section.content")}>
             <div className="space-y-4">
               <TextField
@@ -490,6 +534,157 @@ function EditDialog({
         </div>
       </div>
     </div>
+  );
+}
+
+const slugify = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+
+/** Which form field each import warning points at (see netlify/lib/airbnb.ts). */
+const WARNING_LABELS: Record<string, string> = {
+  title: "admin.apt.field.title",
+  description: "admin.apt.field.description",
+  images: "admin.apt.section.photos",
+  maxGuests: "apt.guests",
+  bedrooms: "apt.bedrooms",
+  bathrooms: "apt.bathrooms",
+  surfaceM2: "admin.apt.field.surface",
+  location: "admin.apt.section.location",
+};
+
+/** Re-host Airbnb photos on Cloudinary, a few at a time. Failed photos are
+ * skipped (and counted) rather than aborting the whole import. */
+async function rehostImages(
+  urls: string[],
+  onProgress: (done: number) => void,
+): Promise<{ hosted: string[]; failed: number }> {
+  const hosted: (string | null)[] = new Array(urls.length).fill(null);
+  let next = 0;
+  let done = 0;
+  const worker = async () => {
+    while (next < urls.length) {
+      const i = next++;
+      try {
+        hosted[i] = await uploadImageFromUrl(urls[i]);
+      } catch (err) {
+        if (err instanceof UploadUnavailableError) throw err;
+        console.warn("[airbnb import] photo failed", urls[i], err);
+      }
+      onProgress(++done);
+    }
+  };
+  await Promise.all([worker(), worker(), worker(), worker()]);
+  const ok = hosted.filter((u): u is string => u !== null);
+  return { hosted: ok, failed: urls.length - ok.length };
+}
+
+/** "Import from Airbnb" box at the top of the new-apartment form. */
+function AirbnbImportPanel({
+  onImported,
+}: {
+  onImported: (d: AirbnbImport, images: string[]) => void;
+}) {
+  const { t } = useI18n();
+  const [url, setUrl] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+  const [result, setResult] = useState<{ ok: boolean; lines: string[] } | null>(null);
+
+  const run = async () => {
+    if (!/airbnb\.[a-z.]+\/rooms\/(plus\/)?\d+/i.test(url)) {
+      setResult({ ok: false, lines: [t("admin.apt.airbnb.invalidUrl")] });
+      return;
+    }
+    setResult(null);
+    setBusy(t("admin.apt.airbnb.fetching"));
+    try {
+      const draft = await importFromAirbnb(url.trim());
+      const total = draft.images.length;
+      const progress = (done: number) =>
+        setBusy(
+          t("admin.apt.airbnb.photos")
+            .replace("{done}", String(done))
+            .replace("{total}", String(total)),
+        );
+      progress(0);
+      const { hosted, failed } = await rehostImages(draft.images, progress);
+      onImported(draft, hosted);
+
+      const lines = [t("admin.apt.airbnb.done")];
+      if (failed > 0) lines.push(t("admin.apt.airbnb.photosFailed").replace("{n}", String(failed)));
+      const check = draft.warnings.map((w) => {
+        const missing = w.match(/^locale_missing_(\w+)$/);
+        if (missing) return `${t("admin.apt.field.description")} (${missing[1].toUpperCase()})`;
+        return t(WARNING_LABELS[w] ?? w);
+      });
+      if (check.length > 0) lines.push(`${t("admin.apt.airbnb.check")} ${check.join(", ")}`);
+      setResult({ ok: true, lines });
+    } catch (err) {
+      const msg = (err as Error).message ?? "";
+      setResult({
+        ok: false,
+        lines: [
+          err instanceof UploadUnavailableError
+            ? t("admin.apt.uploadUnavailable")
+            : msg.includes("invalid_airbnb_url")
+              ? t("admin.apt.airbnb.invalidUrl")
+              : t("admin.apt.airbnb.error"),
+        ],
+      });
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  return (
+    <section className="border border-border bg-secondary/50 p-4">
+      <h3 className="mb-1 text-xs font-semibold uppercase tracking-wider text-accent">
+        {t("admin.apt.airbnb.title")}
+      </h3>
+      <p className="text-sm text-muted-foreground">{t("admin.apt.airbnb.hint")}</p>
+      <p className="mt-2 flex gap-2 border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900">
+        <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.8} />
+        {t("admin.apt.airbnb.warning")}
+      </p>
+      <div className="mt-3 flex gap-2">
+        <input
+          className={input}
+          type="url"
+          placeholder={t("admin.apt.airbnb.placeholder")}
+          value={url}
+          disabled={busy !== null}
+          onChange={(e) => setUrl(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              run();
+            }
+          }}
+        />
+        <button
+          type="button"
+          onClick={run}
+          disabled={busy !== null || !url.trim()}
+          className="btn-base inline-flex items-center gap-2 whitespace-nowrap bg-primary text-primary-foreground disabled:opacity-60"
+        >
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {t("admin.apt.airbnb.button")}
+        </button>
+      </div>
+      {busy && <p className="mt-2 text-sm text-muted-foreground">{busy}</p>}
+      {result && (
+        <div className={`mt-2 space-y-1 text-sm ${result.ok ? "text-foreground" : "text-accent"}`}>
+          {result.lines.map((l) => (
+            <p key={l}>{l}</p>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

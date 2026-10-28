@@ -36,6 +36,7 @@ export interface AvailabilityRange {
   end: string; // ISO date YYYY-MM-DD (inclusive)
   status: AvailabilityStatus;
   expiresAt?: string; // ISO datetime, only for `prebooked`
+  source?: "airbnb"; // written by the Airbnb calendar sync — read-only in the admin
 }
 
 export type BookingStatus = "pending" | "accepted" | "declined" | "archived";
@@ -52,4 +53,32 @@ export interface BookingRequest {
   message: string;
   status: BookingStatus;
   createdAt: string;
+}
+
+/** Draft apartment fields scraped from a public Airbnb listing
+ * (POST /api/admin/airbnb-import). Images are still Airbnb URLs: the admin
+ * re-hosts them on Cloudinary before saving. Best-effort — see netlify/lib/airbnb.ts. */
+export interface AirbnbImport {
+  listingId: string;
+  title: LocalizedText;
+  summary: LocalizedText;
+  description: LocalizedText;
+  rules: LocalizedText;
+  images: string[];
+  maxGuests: number;
+  bedrooms: number;
+  bathrooms: number;
+  surfaceM2: number | null; // only when the description mentions it
+  amenities: string[];
+  location: { lat: number; lng: number; address: string };
+  warnings: string[]; // fields that could not be read and need a manual check
+}
+
+/** Admin view of one apartment's Airbnb calendar sync (GET /api/admin/calendar-sync). */
+export interface CalendarSyncStatus {
+  apartmentId: string;
+  importUrl: string; // Airbnb iCal export URL ("" = sync off)
+  lastSyncedAt: string | null; // ISO datetime of the last successful feed check
+  lastError: string | null;
+  conflicts: { start: string; end: string }[]; // Airbnb reservations overlapping a site booking
 }

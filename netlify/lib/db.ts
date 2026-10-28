@@ -53,6 +53,14 @@ export interface NewBooking {
   expiresAt: string;
 }
 
+/** A site-owned availability row (not from Airbnb), as the calendar sync sees it. */
+export interface SyncRow {
+  start: string;
+  end: string;
+  status: AvailabilityStatus;
+  bookingRequestId: string | null; // set ⇔ the row is a guest booking/hold from the site
+}
+
 export interface Repo {
   listApartments(): Promise<Apartment[]>;
   getApartment(idOrSlug: string): Promise<Apartment | null>;
@@ -86,6 +94,19 @@ export interface Repo {
   anonymizeBookingsBefore(cutoffDate: string): Promise<number>;
   /** Delete expired pre-reservation holds. Returns the count removed. */
   purgeExpiredHolds(): Promise<number>;
+
+  // Airbnb calendar sync (calendarSync.ts) -------------------------------------
+  /** Every apartment with its Airbnb iCal URL ("" when sync is off). */
+  listCalendarSync(): Promise<{ apartmentId: string; importUrl: string }[]>;
+  setCalendarSyncUrl(apartmentId: string, importUrl: string): Promise<void>;
+  /** The apartment's own (non-Airbnb) rows, which always take precedence. */
+  listSiteRowsForSync(apartmentId: string): Promise<SyncRow[]>;
+  /** Atomically replace all of the apartment's Airbnb rows. Throws
+   * AvailabilityConflictError if a site booking landed in between. */
+  replaceAirbnbRanges(
+    apartmentId: string,
+    ranges: { start: string; end: string; status: "booked" | "blocked" }[],
+  ): Promise<void>;
 }
 
 /** Do two inclusive `[start,end]` day ranges overlap? */
@@ -146,6 +167,7 @@ function memoryRepo(): Repo {
   let apartments: Apartment[] = seedApartmentList();
   let availability: StoredRange[] = JSON.parse(JSON.stringify(seedAvailability));
   const bookings: BookingRequest[] = [];
+  const syncUrls = new Map<string, string>();
 
   return {
     async listApartments() {
@@ -184,8 +206,11 @@ function memoryRepo(): Repo {
       availability = [...availability, r];
     },
     async clearAvailability(apartmentId, start, end) {
+      // Airbnb rows are owned by the sync and would come straight back.
       availability = availability.filter(
-        (r) => !(r.apartmentId === apartmentId && r.start === start && r.end === end),
+        (r) =>
+          r.source === "airbnb" ||
+          !(r.apartmentId === apartmentId && r.start === start && r.end === end),
       );
     },
 
@@ -294,6 +319,44 @@ function memoryRepo(): Repo {
       );
       return before - availability.length;
     },
+
+    async listCalendarSync() {
+      return [...apartments]
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map((a) => ({ apartmentId: a.id, importUrl: syncUrls.get(a.id) ?? "" }));
+    },
+    async setCalendarSyncUrl(apartmentId, importUrl) {
+      if (importUrl) syncUrls.set(apartmentId, importUrl);
+      else syncUrls.delete(apartmentId);
+    },
+    async listSiteRowsForSync(apartmentId) {
+      return availability
+        .filter((r) => r.apartmentId === apartmentId && r.source !== "airbnb")
+        .map((r) => ({
+          start: r.start,
+          end: r.end,
+          status: r.status,
+          bookingRequestId: r.bookingRequestId ?? null,
+        }));
+    },
+    async replaceAirbnbRanges(apartmentId, ranges) {
+      const kept = availability.filter(
+        (r) => !(r.apartmentId === apartmentId && r.source === "airbnb"),
+      );
+      const clash = ranges.some((n) =>
+        kept.some(
+          (r) =>
+            r.apartmentId === apartmentId &&
+            BLOCKING.includes(r.status) &&
+            rangesOverlap(n.start, n.end, r.start, r.end),
+        ),
+      );
+      if (clash) throw new AvailabilityConflictError();
+      availability = [
+        ...kept,
+        ...ranges.map((n) => ({ apartmentId, ...n, source: "airbnb" as const })),
+      ];
+    },
   };
 }
 
@@ -336,6 +399,7 @@ function rowToRange(r: Row): AvailabilityRange {
     end: toDateStr(r.end_date),
     status: r.status as AvailabilityStatus,
     ...(r.expires_at ? { expiresAt: new Date(r.expires_at).toISOString() } : {}),
+    ...(r.source === "airbnb" ? { source: "airbnb" as const } : {}),
   };
 }
 
@@ -442,7 +506,8 @@ function neonRepo(): Repo {
       }
     },
     async clearAvailability(apartmentId, start, end) {
-      await sql`DELETE FROM availability WHERE apartment_id = ${apartmentId} AND start_date = ${start} AND end_date = ${end}`;
+      // Airbnb rows are owned by the sync and would come straight back.
+      await sql`DELETE FROM availability WHERE apartment_id = ${apartmentId} AND start_date = ${start} AND end_date = ${end} AND source IS NULL`;
     },
 
     async listBookings() {
@@ -539,6 +604,54 @@ function neonRepo(): Repo {
         RETURNING id
       `;
       return rows.length;
+    },
+
+    async listCalendarSync() {
+      const rows = await sql`
+        SELECT a.id, COALESCE(c.import_url, '') AS import_url
+        FROM apartments a LEFT JOIN calendar_sync c ON c.apartment_id = a.id
+        ORDER BY a.sort_order ASC, a.created_at ASC
+      `;
+      return rows.map((r) => ({ apartmentId: r.id as string, importUrl: r.import_url as string }));
+    },
+    async setCalendarSyncUrl(apartmentId, importUrl) {
+      if (!importUrl) {
+        await sql`DELETE FROM calendar_sync WHERE apartment_id = ${apartmentId}`;
+        return;
+      }
+      await sql`
+        INSERT INTO calendar_sync (apartment_id, import_url, updated_at)
+        VALUES (${apartmentId}, ${importUrl}, now())
+        ON CONFLICT (apartment_id) DO UPDATE SET import_url = EXCLUDED.import_url, updated_at = now()
+      `;
+    },
+    async listSiteRowsForSync(apartmentId) {
+      const rows = await sql`
+        SELECT start_date, end_date, status, booking_request_id FROM availability
+        WHERE apartment_id = ${apartmentId} AND source IS NULL
+      `;
+      return rows.map((r) => ({
+        start: toDateStr(r.start_date),
+        end: toDateStr(r.end_date),
+        status: r.status as AvailabilityStatus,
+        bookingRequestId: (r.booking_request_id as string | null) ?? null,
+      }));
+    },
+    async replaceAirbnbRanges(apartmentId, ranges) {
+      try {
+        await sql.transaction([
+          sql`DELETE FROM availability WHERE apartment_id = ${apartmentId} AND source = 'airbnb'`,
+          ...ranges.map(
+            (n) => sql`
+              INSERT INTO availability (id, apartment_id, start_date, end_date, status, source)
+              VALUES (${randomUUID()}, ${apartmentId}, ${n.start}, ${n.end}, ${n.status}, 'airbnb')
+            `,
+          ),
+        ]);
+      } catch (err) {
+        if (isOverlapViolation(err)) throw new AvailabilityConflictError();
+        throw err;
+      }
     },
   };
 }
