@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAdminAuth } from "@/admin/AdminAuth";
 import { listBookings } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
-import { LogOut, LayoutDashboard, Home, CalendarRange, Inbox } from "lucide-react";
+import { LogOut, LayoutDashboard, Home, CalendarRange, Inbox, BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -79,7 +79,7 @@ function Shell() {
   const pendingCount = bookings.filter((b) => b.status === "pending").length;
 
   const items: {
-    to: "/admin" | "/admin/apartments" | "/admin/availability" | "/admin/requests";
+    to: "/admin" | "/admin/apartments" | "/admin/availability" | "/admin/requests" | "/admin/guide";
     exact: boolean;
     label: string;
     Icon: typeof LayoutDashboard;
@@ -93,6 +93,7 @@ function Shell() {
       Icon: CalendarRange,
     },
     { to: "/admin/requests", exact: false, label: t("admin.nav.requests"), Icon: Inbox },
+    { to: "/admin/guide", exact: false, label: t("admin.nav.guide"), Icon: BookOpen },
   ];
 
   return (

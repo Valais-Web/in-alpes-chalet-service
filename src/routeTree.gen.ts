@@ -19,6 +19,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminApartmentsRouteImport } from './routes/admin.apartments'
 import { Route as AdminAvailabilityRouteImport } from './routes/admin.availability'
+import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as ApartmentsIndexRouteImport } from './routes/apartments.index'
 import { Route as ApartmentsSlugRouteImport } from './routes/apartments.$slug'
@@ -73,6 +74,11 @@ const AdminAvailabilityRoute = AdminAvailabilityRouteImport.update({
   path: '/availability',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGuideRoute = AdminGuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminRequestsRoute = AdminRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/apartments': typeof AdminApartmentsRoute
   '/admin/availability': typeof AdminAvailabilityRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/apartments/$slug': typeof ApartmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/apartments': typeof AdminApartmentsRoute
   '/admin/availability': typeof AdminAvailabilityRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/apartments/$slug': typeof ApartmentsSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/apartments': typeof AdminApartmentsRoute
   '/admin/availability': typeof AdminAvailabilityRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/apartments/$slug': typeof ApartmentsSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/apartments'
     | '/admin/availability'
+    | '/admin/guide'
     | '/admin/requests'
     | '/apartments/$slug'
     | '/admin/'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/apartments'
     | '/admin/availability'
+    | '/admin/guide'
     | '/admin/requests'
     | '/apartments/$slug'
     | '/admin'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/apartments'
     | '/admin/availability'
+    | '/admin/guide'
     | '/admin/requests'
     | '/apartments/$slug'
     | '/admin/'
@@ -265,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvailabilityRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide': {
+      id: '/admin/guide'
+      path: '/guide'
+      fullPath: '/admin/guide'
+      preLoaderRoute: typeof AdminGuideRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/requests': {
       id: '/admin/requests'
       path: '/requests'
@@ -292,6 +311,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminApartmentsRoute: typeof AdminApartmentsRoute
   AdminAvailabilityRoute: typeof AdminAvailabilityRoute
+  AdminGuideRoute: typeof AdminGuideRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -299,6 +319,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminApartmentsRoute: AdminApartmentsRoute,
   AdminAvailabilityRoute: AdminAvailabilityRoute,
+  AdminGuideRoute: AdminGuideRoute,
   AdminRequestsRoute: AdminRequestsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
