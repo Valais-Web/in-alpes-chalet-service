@@ -4,8 +4,9 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { submitBookingRequest, effectiveStatus } from "@/data/api";
 import type { Apartment, AvailabilityRange } from "@/data/types";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
+import { todayLocalISO } from "@/lib/dates";
 
-const todayISO = () => new Date().toISOString().slice(0, 10);
+const todayISO = todayLocalISO;
 
 /** Add whole days to a YYYY-MM-DD string, UTC-safe. */
 const addDaysISO = (iso: string, days: number) => {

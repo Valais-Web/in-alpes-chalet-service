@@ -184,6 +184,16 @@ interface Params {
   locale?: Locale;
 }
 
+type EmailPayload = Parameters<Resend["emails"]["send"]>[0];
+
+/** Resend reports API failures (bad key, unverified sender, rate limit…) as a
+ * resolved `{ data: null, error }`, not a rejection — turn that into a throw so
+ * no caller can mistake a failed send for success. */
+async function deliver(payload: EmailPayload): Promise<void> {
+  const { error } = await new Resend(env.RESEND_API_KEY).emails.send(payload);
+  if (error) throw new Error(`resend_failed: ${error.name}: ${error.message}`);
+}
+
 export async function sendBookingEmails({
   booking,
   apartmentName,
@@ -230,16 +240,15 @@ export async function sendBookingEmails({
     return;
   }
 
-  const resend = new Resend(env.RESEND_API_KEY);
   await Promise.all([
-    resend.emails.send({
+    deliver({
       from: env.EMAIL_FROM,
       to: ownerRecipients(),
       replyTo: booking.email,
       subject: `Nouvelle demande — ${apartmentName} (${booking.arrival} → ${booking.departure})`,
       html: ownerHtml,
     }),
-    resend.emails.send({
+    deliver({
       from: env.EMAIL_FROM,
       to: booking.email,
       subject: g.subject,
@@ -275,8 +284,7 @@ export async function sendContactEmail(input: ContactMessage): Promise<void> {
     return;
   }
 
-  const resend = new Resend(env.RESEND_API_KEY);
-  await resend.emails.send({
+  await deliver({
     from: env.EMAIL_FROM,
     to: ownerRecipients(),
     replyTo: input.email,
@@ -313,8 +321,7 @@ export async function sendCalendarConflictEmail(
     return;
   }
 
-  const resend = new Resend(env.RESEND_API_KEY);
-  await resend.emails.send({
+  await deliver({
     from: env.EMAIL_FROM,
     to: ownerRecipients(),
     subject: `Double réservation possible — ${apartmentId}`,

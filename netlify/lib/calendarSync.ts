@@ -15,7 +15,9 @@
  * in that blob, so an unchanged feed is detected without touching the database.
  */
 import { createHash } from "node:crypto";
-import { addDaysISO } from "./dates";
+import { subtractRanges } from "./dates";
+
+export { subtractRanges };
 import { parseIcal, type IcalEvent } from "./ical";
 import { getJson, putJson } from "./blobs";
 import { repo, type SyncRow } from "./db";
@@ -34,6 +36,12 @@ interface ApartmentSyncState {
   lastSyncedAt?: string;
   lastError?: string | null;
   conflicts?: { start: string; end: string }[];
+  /** Conflicts the owner was actually emailed about ("start/end"). A failed
+   * send leaves them out, so the next run retries. */
+  notified?: string[];
+  /** The feed's upcoming events, kept so a site calendar change can re-plan
+   * the Airbnb rows at once, without refetching (see reconcileAirbnb). */
+  events?: IcalEvent[];
 }
 export type SyncState = Record<string, ApartmentSyncState>;
 
@@ -70,27 +78,6 @@ export interface SyncPlan {
 
 const overlaps = (a: { start: string; end: string }, b: { start: string; end: string }) =>
   a.start <= b.end && b.start <= a.end;
-
-/** The parts of `r` not covered by any of `blockers` (all inclusive ranges). */
-export function subtractRanges(
-  r: { start: string; end: string },
-  blockers: { start: string; end: string }[],
-): { start: string; end: string }[] {
-  let pieces = [r];
-  for (const b of blockers) {
-    const next: { start: string; end: string }[] = [];
-    for (const p of pieces) {
-      if (!overlaps(p, b)) {
-        next.push(p);
-        continue;
-      }
-      if (p.start < b.start) next.push({ start: p.start, end: addDaysISO(b.start, -1) });
-      if (p.end > b.end) next.push({ start: addDaysISO(b.end, 1), end: p.end });
-    }
-    pieces = next;
-  }
-  return pieces;
-}
 
 /** Airbnb marks guest stays "Reserved"; owner blocks and dates blocked by an
  * imported calendar (i.e. our own export echoed back) are "Not available". */
@@ -137,6 +124,8 @@ export function fingerprint(events: IcalEvent[], today: string): string {
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
+const conflictKey = (c: { start: string; end: string }) => `${c.start}/${c.end}`;
+
 async function fetchFeed(url: string): Promise<IcalEvent[]> {
   const res = await fetch(url, {
     headers: { accept: "text/calendar" },
@@ -176,27 +165,37 @@ export async function runCalendarSync(
     try {
       const events = await fetchFeed(config[apartmentId]);
       const fp = fingerprint(events, today);
-      if (!opts.force && fp === st.fingerprint) {
-        state[apartmentId] = { ...st, lastSyncedAt: new Date().toISOString(), lastError: null };
-        continue;
+      let conflicts = st.conflicts ?? [];
+      if (opts.force || fp !== st.fingerprint) {
+        const siteRows = await repo.listSiteRowsForSync(apartmentId);
+        const plan = planSync(events, siteRows, today);
+        await repo.replaceAirbnbRanges(apartmentId, plan.ranges);
+        changed.push(apartmentId);
+        conflicts = plan.conflicts;
       }
-      const siteRows = await repo.listSiteRowsForSync(apartmentId);
-      const plan = planSync(events, siteRows, today);
-      await repo.replaceAirbnbRanges(apartmentId, plan.ranges);
-      changed.push(apartmentId);
 
-      const known = new Set((st.conflicts ?? []).map((c) => `${c.start}/${c.end}`));
-      const fresh = plan.conflicts.filter((c) => !known.has(`${c.start}/${c.end}`));
-      if (fresh.length) {
-        await sendCalendarConflictEmail(apartmentId, fresh).catch((err) =>
-          console.error("[calendar-sync] conflict email failed:", err),
-        );
+      // Alert on every conflict not yet successfully emailed — including ones
+      // whose earlier alert failed, even if the feed is unchanged since.
+      // (State saved before `notified` existed: its conflicts were alerted.)
+      const notified = new Set(st.notified ?? (st.conflicts ?? []).map(conflictKey));
+      const unsent = conflicts.filter((c) => !notified.has(conflictKey(c)));
+      let lastError: string | null = null;
+      if (unsent.length) {
+        try {
+          await sendCalendarConflictEmail(apartmentId, unsent);
+          for (const c of unsent) notified.add(conflictKey(c));
+        } catch (err) {
+          console.error("[calendar-sync] conflict email failed, will retry next run:", err);
+          lastError = "conflict_email_failed";
+        }
       }
       state[apartmentId] = {
         fingerprint: fp,
         lastSyncedAt: new Date().toISOString(),
-        lastError: null,
-        conflicts: plan.conflicts,
+        lastError,
+        conflicts,
+        notified: conflicts.map(conflictKey).filter((k) => notified.has(k)),
+        events: events.filter((e) => e.end >= today),
       };
     } catch (err) {
       // Keep the old fingerprint so the next run retries the write.
@@ -207,9 +206,79 @@ export async function runCalendarSync(
 
   // Drop state for apartments whose sync was turned off.
   for (const id of Object.keys(state)) if (!config[id]) delete state[id];
+  // Publish BEFORE saving the fingerprints: if publishing fails, forget them so
+  // the next run rewrites and republishes instead of skipping an "unchanged"
+  // feed while the public calendar stays stale.
+  let publishError: unknown = null;
+  if (changed.length) {
+    try {
+      await publishAvailability();
+    } catch (err) {
+      publishError = err;
+      console.error("[calendar-sync] publish failed, will retry next run:", err);
+      for (const id of changed) {
+        delete state[id].fingerprint;
+        state[id].lastError = "publish_failed";
+      }
+    }
+  }
   await putJson(SYNC_STATE_KEY, state);
-  if (changed.length) await publishAvailability();
+  if (publishError) throw publishError;
   return { changed };
+}
+
+/**
+ * Re-plan an apartment's Airbnb rows against its CURRENT site rows, from the
+ * last fetched feed. Needed right after the site calendar changes: Airbnb
+ * dates hidden under a site range that just went away must be blocked again
+ * immediately, not at the next scheduled run (else the dates read free and
+ * could be booked twice in between). Falls back to fetching the feed when no
+ * copy was kept yet. Also forgets the fingerprint, so a scheduled run that
+ * planned against the old site rows concurrently re-plans next time.
+ */
+export async function reconcileAirbnb(apartmentId: string): Promise<void> {
+  const config = await readSyncConfig();
+  if (!config[apartmentId]) return;
+  const cached = (await readSyncState())[apartmentId]?.events;
+  const events = cached ?? (await fetchFeed(config[apartmentId]));
+  const siteRows = await repo.listSiteRowsForSync(apartmentId);
+  await repo.replaceAirbnbRanges(apartmentId, planSync(events, siteRows, todayISO()).ranges);
+  await invalidateSyncPlan(apartmentId);
+}
+
+/**
+ * After any change to an apartment's site calendar (admin range, booking
+ * decision): put the Airbnb rows back in line, then republish. A failed
+ * reconcile still publishes the saved change, leaves the next scheduled run
+ * to re-plan, and is rethrown so the admin sees the save didn't fully land.
+ */
+export async function afterSiteCalendarChange(apartmentId: string): Promise<void> {
+  let reconcileError: unknown = null;
+  try {
+    await reconcileAirbnb(apartmentId);
+  } catch (err) {
+    reconcileError = err;
+    console.error(`[calendar-sync] reconcile ${apartmentId} failed:`, err);
+    await invalidateSyncPlan(apartmentId);
+  }
+  await publishAvailability();
+  if (reconcileError) throw reconcileError;
+}
+
+/**
+ * Make the next run re-plan this apartment even though its Airbnb feed is
+ * unchanged. Best effort: a failure only delays the re-plan until the feed
+ * next changes, so it is logged, never thrown.
+ */
+export async function invalidateSyncPlan(apartmentId: string): Promise<void> {
+  try {
+    const state = await readSyncState();
+    if (!state[apartmentId]?.fingerprint) return;
+    delete state[apartmentId].fingerprint;
+    await putJson(SYNC_STATE_KEY, state);
+  } catch (err) {
+    console.error(`[calendar-sync] could not invalidate ${apartmentId}:`, err);
+  }
 }
 
 /** Admin view: config (Neon) + last run (state blob). */

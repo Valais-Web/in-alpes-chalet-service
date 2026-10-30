@@ -129,7 +129,7 @@ describe("hold ownership (decisions act only on the request's own range)", () =>
       apartmentId: apt,
       arrival: "2036-01-10",
       lastNight: "2036-01-14",
-      op: "release_hold",
+      op: "unbook",
     });
     holds = (await repo.listAvailability(apt)).filter((r) => r.status === "prebooked");
     expect(holds.length).toBe(1);
@@ -197,6 +197,8 @@ describe("hold ownership (decisions act only on the request's own range)", () =>
     for (const r of ranges) {
       expect(Object.prototype.hasOwnProperty.call(r, "bookingRequestId")).toBe(false);
     }
+    // The admin only learns THAT a request owns it.
+    expect(ranges.every((r) => r.fromRequest === true)).toBe(true);
   });
 });
 
@@ -216,5 +218,85 @@ describe("retention maintenance", () => {
 
     const purged = await repo.purgeExpiredHolds();
     expect(purged).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe("booking-owned ranges and admin edits", () => {
+  const decide = (
+    id: string,
+    apartmentId: string,
+    status: "accepted" | "declined" | "archived",
+    op: "book" | "unbook" | "none",
+  ) =>
+    repo.decideBooking({
+      id,
+      status,
+      apartmentId,
+      arrival: "2037-01-10",
+      lastNight: "2037-01-14",
+      op,
+    });
+  const own = async (apt: string) =>
+    (await repo.listAvailability(apt)).filter((r) => r.fromRequest);
+
+  it("the admin cannot delete a confirmed booking's range by hand", async () => {
+    const apt = "t-protect";
+    const b = await repo.createBooking({
+      input: booking(apt, "2037-01-10", "2037-01-15"),
+      holdEnd: "2037-01-14",
+      expiresAt: future,
+    });
+    await decide(b.id, apt, "accepted", "book");
+    await repo.clearAvailability(apt, "2037-01-10", "2037-01-14");
+    await repo.freeRange(apt, "2037-01-01", "2037-01-31");
+    expect(await own(apt)).toEqual([
+      expect.objectContaining({ start: "2037-01-10", end: "2037-01-14", status: "booked" }),
+    ]);
+  });
+
+  it("accept → archive → accept keeps exactly one booked range", async () => {
+    const apt = "t-rearchive";
+    const b = await repo.createBooking({
+      input: booking(apt, "2037-01-10", "2037-01-15"),
+      holdEnd: "2037-01-14",
+      expiresAt: future,
+    });
+    await decide(b.id, apt, "accepted", "book");
+    await decide(b.id, apt, "archived", "none");
+    await decide(b.id, apt, "accepted", "book"); // used to throw a conflict
+    expect((await own(apt)).map((r) => r.status)).toEqual(["booked"]);
+  });
+
+  it("accept → archive → decline frees the confirmed range", async () => {
+    const apt = "t-archive-decline";
+    const b = await repo.createBooking({
+      input: booking(apt, "2037-01-10", "2037-01-15"),
+      holdEnd: "2037-01-14",
+      expiresAt: future,
+    });
+    await decide(b.id, apt, "accepted", "book");
+    await decide(b.id, apt, "archived", "none");
+    await decide(b.id, apt, "declined", "unbook");
+    expect(await own(apt)).toEqual([]);
+  });
+
+  it("freeRange trims and splits manual ranges, leaving others alone", async () => {
+    const apt = "t-free";
+    await repo.setAvailability({
+      apartmentId: apt,
+      start: "2037-03-01",
+      end: "2037-03-10",
+      status: "blocked",
+    });
+    await repo.setAvailability({
+      apartmentId: apt,
+      start: "2037-03-20",
+      end: "2037-03-22",
+      status: "blocked",
+    });
+    await repo.freeRange(apt, "2037-03-04", "2037-03-06");
+    await repo.freeRange(apt, "2037-03-15", "2037-03-25");
+    const rows = (await repo.listAvailability(apt)).map((r) => `${r.start}/${r.end}/${r.status}`);
+    expect(rows.sort()).toEqual(["2037-03-01/2037-03-03/blocked", "2037-03-07/2037-03-10/blocked"]);
   });
 });

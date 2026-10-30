@@ -21,3 +21,23 @@ export function addDaysISO(iso: string, days: number): string {
 export function lastNightISO(departure: string): string {
   return addDaysISO(departure, -1);
 }
+
+type DayRange = { start: string; end: string };
+
+/** The parts of `r` not covered by any of `blockers` (all inclusive ranges). */
+export function subtractRanges(r: DayRange, blockers: DayRange[]): DayRange[] {
+  let pieces = [r];
+  for (const b of blockers) {
+    const next: DayRange[] = [];
+    for (const p of pieces) {
+      if (!(p.start <= b.end && b.start <= p.end)) {
+        next.push(p);
+        continue;
+      }
+      if (p.start < b.start) next.push({ start: p.start, end: addDaysISO(b.start, -1) });
+      if (p.end > b.end) next.push({ start: addDaysISO(b.end, 1), end: p.end });
+    }
+    pieces = next;
+  }
+  return pieces;
+}

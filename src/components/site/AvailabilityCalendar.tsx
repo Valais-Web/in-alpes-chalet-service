@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { AvailabilityRange, AvailabilityStatus } from "@/data/types";
 import { effectiveStatus } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
+import { localISO } from "@/lib/dates";
 
 interface Props {
   ranges: AvailabilityRange[];
@@ -11,9 +13,7 @@ interface Props {
   onRangeSelect?: (start: string, end: string) => void;
 }
 
-function toISO(d: Date) {
-  return d.toISOString().slice(0, 10);
-}
+const toISO = localISO;
 function addDays(d: Date, n: number) {
   const c = new Date(d);
   c.setDate(c.getDate() + n);
@@ -42,8 +42,12 @@ const STATUS_CLASS: Record<AvailabilityStatus, string> = {
 export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSelect }: Props) {
   const { t, locale } = useI18n();
   const [cursor, setCursor] = useState(() => startOfMonth(new Date()));
+  // Selection works three ways: mouse drag; or tap/click (or Enter/Space) a
+  // first day, then a second day. `dragStart` doubles as that pending anchor.
   const [dragStart, setDragStart] = useState<string | null>(null);
   const [dragEnd, setDragEnd] = useState<string | null>(null);
+  const drag = useRef<{ start: string; end: string } | null>(null);
+  const suppressClick = useRef(false);
 
   const monthList = useMemo(() => {
     return Array.from(
@@ -52,13 +56,58 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
     );
   }, [cursor, months]);
 
-  const commit = () => {
-    if (dragStart && dragEnd) {
-      const [a, b] = [dragStart, dragEnd].sort();
-      onRangeSelect?.(a, b);
-    }
+  const commit = (from: string, to: string) => {
+    const [a, b] = [from, to].sort();
+    onRangeSelect?.(a, b);
     setDragStart(null);
     setDragEnd(null);
+  };
+  const cancel = () => {
+    drag.current = null;
+    setDragStart(null);
+    setDragEnd(null);
+  };
+
+  // Mouse/pen drag. Touch is left to tap-tap so the page still scrolls.
+  const onPointerDown = (iso: string, e: ReactPointerEvent) => {
+    if (e.pointerType === "touch" || e.button !== 0) return;
+    drag.current = { start: iso, end: iso };
+    // Released anywhere (even outside the calendar) ends the drag.
+    window.addEventListener(
+      "pointerup",
+      () => {
+        const d = drag.current;
+        drag.current = null;
+        if (!d || d.end === d.start) return; // a plain click: handled by onPick
+        // Swallow the click this release may fire, then forget about it.
+        suppressClick.current = true;
+        setTimeout(() => (suppressClick.current = false), 0);
+        commit(d.start, d.end);
+      },
+      { once: true },
+    );
+  };
+  const onPointerMove = (e: ReactPointerEvent) => {
+    const d = drag.current;
+    if (!d) return;
+    const cell = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)?.closest(
+      "[data-iso]",
+    ) as HTMLElement | null;
+    const iso = cell?.dataset.iso;
+    if (!iso || iso === d.end) return;
+    d.end = iso;
+    setDragStart(d.start);
+    setDragEnd(iso);
+  };
+  // Tap/click or keyboard: first day = anchor, second day = commit.
+  const onPick = (iso: string) => {
+    if (suppressClick.current) return;
+    if (!dragStart) {
+      setDragStart(iso);
+      setDragEnd(iso);
+    } else {
+      commit(dragStart, iso);
+    }
   };
 
   return (
@@ -98,14 +147,13 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
             editable={editable}
             dragStart={dragStart}
             dragEnd={dragEnd}
-            onDown={(d) => {
-              setDragStart(d);
-              setDragEnd(d);
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPick={onPick}
+            onHover={(d) => {
+              if (dragStart && !drag.current) setDragEnd(d);
             }}
-            onEnter={(d) => {
-              if (dragStart) setDragEnd(d);
-            }}
-            onUp={commit}
+            onCancel={cancel}
           />
         ))}
       </div>
@@ -129,9 +177,11 @@ function MonthView({
   editable,
   dragStart,
   dragEnd,
-  onDown,
-  onEnter,
-  onUp,
+  onPointerDown,
+  onPointerMove,
+  onPick,
+  onHover,
+  onCancel,
 }: {
   month: Date;
   ranges: AvailabilityRange[];
@@ -139,9 +189,11 @@ function MonthView({
   editable?: boolean;
   dragStart: string | null;
   dragEnd: string | null;
-  onDown: (iso: string) => void;
-  onEnter: (iso: string) => void;
-  onUp: () => void;
+  onPointerDown: (iso: string, e: ReactPointerEvent) => void;
+  onPointerMove: (e: ReactPointerEvent) => void;
+  onPick: (iso: string) => void;
+  onHover: (iso: string) => void;
+  onCancel: () => void;
 }) {
   const first = startOfMonth(month);
   const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
@@ -171,7 +223,11 @@ function MonthView({
           <div key={d}>{d}</div>
         ))}
       </div>
-      <div className="mt-1 grid grid-cols-7 gap-1" onMouseUp={onUp} onMouseLeave={onUp}>
+      <div
+        className="mt-1 grid grid-cols-7 gap-1"
+        onPointerMove={editable ? onPointerMove : undefined}
+        onKeyDown={editable ? (e) => e.key === "Escape" && onCancel() : undefined}
+      >
         {cells.map((d, i) => {
           if (!d) return <div key={i} />;
           const iso = toISO(d);
@@ -181,9 +237,13 @@ function MonthView({
             <button
               key={iso}
               type="button"
+              data-iso={iso}
               disabled={!editable && s !== "free"}
-              onMouseDown={editable ? () => onDown(iso) : undefined}
-              onMouseEnter={editable ? () => onEnter(iso) : undefined}
+              aria-pressed={editable ? selected : undefined}
+              onPointerDown={editable ? (e) => onPointerDown(iso, e) : undefined}
+              onPointerEnter={editable ? () => onHover(iso) : undefined}
+              onFocus={editable ? () => onHover(iso) : undefined}
+              onClick={editable ? () => onPick(iso) : undefined}
               className={
                 "aspect-square text-xs transition-colors " +
                 STATUS_CLASS[s] +

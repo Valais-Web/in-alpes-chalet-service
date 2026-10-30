@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/i18n/I18nProvider";
-import { resolveImage } from "@/data/api";
+import { imageAt, imageSrcSet } from "@/data/api";
 import type { Apartment } from "@/data/types";
 import { BedDouble, Bath, Users, Ruler } from "lucide-react";
 
@@ -14,7 +14,9 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
     >
       <div className="aspect-[4/3] overflow-hidden bg-secondary">
         <img
-          src={resolveImage(apartment.images[0])}
+          src={imageAt(apartment.images[0], 800)}
+          srcSet={imageSrcSet(apartment.images[0], [480, 800, 1280])}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt={tx(apartment.title)}
           loading="lazy"
           width={1280}

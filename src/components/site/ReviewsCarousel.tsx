@@ -25,6 +25,8 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
 
   useEffect(() => {
     if (!emblaApi) return;
+    // Mirror the carousel library's state once it exists (external system).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSnaps(emblaApi.scrollSnapList());
     onSelect(emblaApi);
     const handler = () => onSelect(emblaApi);

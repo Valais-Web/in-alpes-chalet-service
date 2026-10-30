@@ -6,19 +6,23 @@
  * browsing or the calendar — visitors keep seeing the last published JSON.
  */
 import { repo } from "./db";
-import { putJson } from "./blobs";
+import { putJsonFresh } from "./blobs";
 
 export const APARTMENTS_KEY = "apartments.json";
 export const AVAILABILITY_KEY = "availability.json";
 
+// Publishes can overlap (admin edits, bookings, the scheduled Airbnb sync);
+// putJsonFresh keeps a slower, older snapshot from overwriting a newer one.
+
 export async function publishApartments(): Promise<void> {
-  const apartments = await repo.listApartments();
-  await putJson(APARTMENTS_KEY, apartments);
+  await putJsonFresh(APARTMENTS_KEY, () => repo.listApartments());
 }
 
 export async function publishAvailability(): Promise<void> {
-  const availability = await repo.listAvailability();
-  await putJson(AVAILABILITY_KEY, availability);
+  // `fromRequest` is admin-only bookkeeping; keep the public JSON minimal.
+  await putJsonFresh(AVAILABILITY_KEY, async () =>
+    (await repo.listAvailability()).map(({ fromRequest: _omit, ...r }) => r),
+  );
 }
 
 export async function publishAll(): Promise<void> {

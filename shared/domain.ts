@@ -37,6 +37,9 @@ export interface AvailabilityRange {
   status: AvailabilityStatus;
   expiresAt?: string; // ISO datetime, only for `prebooked`
   source?: "airbnb"; // written by the Airbnb calendar sync — read-only in the admin
+  /** Admin only (stripped from the public JSON): the range belongs to a booking
+   * request, so it changes only through that request (confirm/decline). */
+  fromRequest?: true;
 }
 
 export type BookingStatus = "pending" | "accepted" | "declined" | "archived";

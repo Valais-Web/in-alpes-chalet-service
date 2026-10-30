@@ -1,10 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   clearAvailability,
   listApartments,
-  listAvailability,
+  listAdminAvailability,
   listCalendarSync,
   setAvailability,
   updateCalendarSync,
@@ -26,26 +26,42 @@ function AdminAvailability() {
   const active = aptId || apartments[0]?.id || "";
 
   const { data: ranges = [] } = useQuery({
-    queryKey: ["availability", active],
-    queryFn: () => listAvailability(active),
+    queryKey: ["admin-availability", active],
+    queryFn: () => listAdminAvailability(active),
     enabled: !!active,
   });
 
   const activeApt = apartments.find((a) => a.id === active);
   const [pending, setPending] = useState<{ start: string; end: string } | null>(null);
   const [status, setStatus] = useState<AvailabilityStatus>("blocked");
+  const [error, setError] = useState<string | null>(null);
 
-  const apply = async () => {
-    if (!pending || !active) return;
-    await setAvailability({ apartmentId: active, start: pending.start, end: pending.end, status });
-    setPending(null);
-    qc.invalidateQueries({ queryKey: ["availability", active] });
+  const mutate = async (fn: () => Promise<unknown>, after?: () => void) => {
+    setError(null);
+    try {
+      await fn();
+      after?.();
+    } catch (err) {
+      const msg = (err as Error).message ?? "";
+      setError(/\b409\b/.test(msg) ? t("admin.avail.conflict") : t("admin.avail.failed"));
+    } finally {
+      qc.invalidateQueries({ queryKey: ["admin-availability", active] });
+    }
   };
 
-  const remove = async (start: string, end: string) => {
+  const apply = () => {
+    if (!pending || !active) return;
+    // "free" trims manual ranges; "prebooked" gets the standard hold expiry (server).
+    return mutate(
+      () =>
+        setAvailability({ apartmentId: active, start: pending.start, end: pending.end, status }),
+      () => setPending(null),
+    );
+  };
+
+  const remove = (start: string, end: string) => {
     if (!active) return;
-    await clearAvailability(active, start, end);
-    qc.invalidateQueries({ queryKey: ["availability", active] });
+    return mutate(() => clearAvailability(active, start, end));
   };
 
   return (
@@ -55,7 +71,11 @@ function AdminAvailability() {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <select
           value={active}
-          onChange={(e) => setAptId(e.target.value)}
+          onChange={(e) => {
+            setAptId(e.target.value);
+            setPending(null);
+            setError(null);
+          }}
           className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
         >
           {apartments.map((a) => (
@@ -67,7 +87,8 @@ function AdminAvailability() {
         <span className="text-xs text-muted-foreground">{t("admin.avail.pick")}</span>
       </div>
 
-      {activeApt && <AirbnbSyncPanel apartment={activeApt} />}
+      {/* Keyed: an unsaved URL must never carry over to another apartment. */}
+      {activeApt && <AirbnbSyncPanel key={activeApt.id} apartment={activeApt} />}
 
       <div className="mt-6">
         <AvailabilityCalendar
@@ -77,6 +98,12 @@ function AdminAvailability() {
           onRangeSelect={(start, end) => setPending({ start, end })}
         />
       </div>
+
+      {error && (
+        <p role="alert" className="mt-4 text-sm text-accent">
+          {error}
+        </p>
+      )}
 
       {pending && (
         <div className="mt-6 card-soft flex flex-wrap items-center justify-between gap-3 p-4">
@@ -135,6 +162,14 @@ function AdminAvailability() {
                       >
                         {t("admin.sync.airbnb")}
                       </span>
+                    ) : r.fromRequest ? (
+                      <Link
+                        to="/admin/requests"
+                        className="border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-secondary"
+                        title={t("admin.avail.fromRequestHint")}
+                      >
+                        {t("admin.avail.fromRequest")}
+                      </Link>
                     ) : (
                       <button
                         onClick={() => remove(r.start, r.end)}
@@ -187,7 +222,7 @@ function AirbnbSyncPanel({ apartment }: { apartment: Apartment }) {
     try {
       const next = await updateCalendarSync(input);
       qc.setQueryData(["calendar-sync"], next);
-      qc.invalidateQueries({ queryKey: ["availability", apartment.id] });
+      qc.invalidateQueries({ queryKey: ["admin-availability", apartment.id] });
       setDraft(null);
     } catch (err) {
       const msg = (err as Error).message ?? "";
