@@ -58,8 +58,8 @@
   --surface-2: oklch(0.965 0.003 100); /* #F5F5F4 */
   --fir: oklch(0.475 0.075 155); /* #2F6B4F — primary accent */
   --fir-700: oklch(0.42 0.07 155); /* #275A43 — pressed / hover */
-  --fir-bright: oklch(0.63 0.11 155); /* #4CA47B — vivid CTA */
-  --fir-bright-700: oklch(0.57 0.1 155); /* #3E8E69 — bright pressed */
+  --fir-bright: var(--fir); /* One green across every action and accent. */
+  --fir-bright-700: var(--fir-700);
   --alpine-tint: oklch(0.945 0.02 155); /* #E7F1EC — soft chip / badge fill */
   --alpine-wash: oklch(0.975 0.01 155); /* #F2F8F5 — faintest wash */
   --grey: oklch(0.52 0 0); /* #6B6B6B */
@@ -117,6 +117,23 @@
   }
   p {
     text-wrap: pretty;
+  }
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 4px;
+  }
+}
+
+/* Reserve room for the detail page's mobile actions, including iPhone insets. */
+.mobile-booking-bar {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+@media (max-width: 1023px) {
+  body:has(.mobile-booking-bar) footer {
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  }
+  body:has(.mobile-booking-bar) {
+    scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
