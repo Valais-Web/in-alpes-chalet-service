@@ -54,7 +54,7 @@ function List() {
           {isPending ? (
             <div className="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="aspect-[4/5] animate-pulse bg-secondary" />
+                <div key={i} className="aspect-[4/3] animate-pulse bg-secondary" />
               ))}
             </div>
           ) : isError ? (

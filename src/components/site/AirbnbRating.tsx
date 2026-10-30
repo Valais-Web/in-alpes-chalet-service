@@ -22,7 +22,7 @@ export function AirbnbRating({
   return (
     <div
       className={
-        "inline-flex w-fit items-center gap-2.5 border px-3.5 py-2 " +
+        "inline-flex w-fit max-w-full flex-wrap items-center gap-x-2.5 gap-y-2 border px-3.5 py-2 " +
         (onDark
           ? "border-white/25 bg-[oklch(0.14_0_0/0.45)] text-white backdrop-blur-sm "
           : "border-border bg-background text-foreground ") +

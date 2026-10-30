@@ -444,7 +444,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.usp.flex": "Arrivée flexible",
     "apt.usp.clean": "Ménage hôtelier",
     "hero.lead":
-      "Des appartements soignés pour vos vacances, et la gérance de votre résidence secondaire, par une équipe installée sur place.",
+      "Des appartements soignés à Haute-Nendaz, un accueil personnel et une équipe sur place tout au long de votre séjour.",
     "hero.link.manage": "Confier mon bien",
     "home.props.lead2":
       "−10 % dès 7 nuits sur tous nos logements. Demande en ligne, réponse personnelle sous 24 h.",
@@ -457,6 +457,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.body2":
       "Haute-Nendaz ouvre sur l'un des plus grands domaines skiables de Suisse, relié à Verbier et Veysonnaz. L'hiver pour le ski, l'été pour la randonnée, le VTT et les lacs d'altitude : la station vit toute l'année, à quelques minutes de nos logements.",
     "nav.book": "Réserver",
+    "apt.viewAvailability": "Voir les disponibilités",
+    "form.title": "Votre demande de séjour",
+    "form.requestNote":
+      "Cette demande ne confirme pas votre réservation. Nous vous répondons personnellement sous 24 h.",
     "hero.entry.stay": "Séjourner",
     "hero.entry.own": "Propriétaires",
     "home.offer.big": "−10 %",
@@ -919,7 +923,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.usp.flex": "Flexible check-in",
     "apt.usp.clean": "Hotel-grade cleaning",
     "hero.lead":
-      "Well-kept apartments for your holidays, and full care of your second home, by a team based right here.",
+      "Well-kept apartments in Haute-Nendaz, a personal welcome and a local team throughout your stay.",
     "hero.link.manage": "Have my home managed",
     "home.props.lead2":
       "−10% from 7 nights on all our apartments. Request online, a personal reply within 24 h.",
@@ -932,6 +936,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.body2":
       "Haute-Nendaz opens onto one of Switzerland's largest ski areas, linked to Verbier and Veysonnaz. Skiing in winter, hiking, mountain biking and alpine lakes in summer: the resort lives all year round, minutes from our apartments.",
     "nav.book": "Book",
+    "apt.viewAvailability": "View availability",
+    "form.title": "Your stay request",
+    "form.requestNote":
+      "This request does not confirm your booking. We reply personally within 24 hours.",
     "hero.entry.stay": "Stay",
     "hero.entry.own": "Owners",
     "home.offer.big": "−10%",
@@ -1402,7 +1410,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.usp.flex": "Flexibele aankomst",
     "apt.usp.clean": "Hotelschoonmaak",
     "hero.lead":
-      "Verzorgde appartementen voor uw vakantie en het beheer van uw tweede woning, door een team ter plaatse.",
+      "Verzorgde appartementen in Haute-Nendaz, een persoonlijk welkom en een lokaal team tijdens uw hele verblijf.",
     "hero.link.manage": "Mijn woning laten beheren",
     "home.props.lead2":
       "−10% vanaf 7 nachten op al onze woningen. Online aanvragen, persoonlijk antwoord binnen 24 u.",
@@ -1415,6 +1423,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.body2":
       "Haute-Nendaz opent naar een van de grootste skigebieden van Zwitserland, verbonden met Verbier en Veysonnaz. Skiën in de winter, wandelen, mountainbiken en bergmeren in de zomer: het resort leeft het hele jaar, op enkele minuten van onze woningen.",
     "nav.book": "Boeken",
+    "apt.viewAvailability": "Beschikbaarheid bekijken",
+    "form.title": "Uw verblijfsaanvraag",
+    "form.requestNote":
+      "Deze aanvraag bevestigt uw boeking niet. Wij antwoorden persoonlijk binnen 24 uur.",
     "hero.entry.stay": "Verblijven",
     "hero.entry.own": "Eigenaars",
     "home.offer.big": "−10%",

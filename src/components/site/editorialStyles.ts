@@ -11,7 +11,7 @@ export const H2 = "text-[clamp(2.3rem,4.2vw,3.6rem)] font-medium leading-[1.02] 
 /** Sub-heading inside a section. */
 export const H3 = "font-[family-name:var(--font-display)] text-xl font-medium tracking-[-0.01em]";
 /** One vertical rhythm for every section. */
-export const SECTION = "py-24 md:py-32";
+export const SECTION = "py-14 md:py-24";
 /** Running text one step above body size. */
 export const LEAD = "text-[17px] leading-relaxed text-foreground/80";
 

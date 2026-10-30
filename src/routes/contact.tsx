@@ -51,7 +51,7 @@ function Contact() {
   };
 
   const input =
-    "w-full border border-foreground/20 bg-background px-4 py-3.5 text-base outline-none ring-ring transition focus:border-accent focus:ring-2";
+    "w-full border border-foreground/20 bg-background min-h-12 px-4 py-3.5 text-base outline-none ring-ring transition focus:border-accent focus:ring-2";
   const label = "mb-2 block text-sm font-medium text-foreground/80";
 
   return (
@@ -142,10 +142,17 @@ function Contact() {
                     className={input}
                   />
                 </label>
-                {error && <p className="text-base text-accent">{t("contact.error")}</p>}
+                {error && (
+                  <p
+                    role="alert"
+                    className="border-l-4 border-foreground bg-secondary px-4 py-3 text-base font-medium text-foreground"
+                  >
+                    {t("contact.error")}
+                  </p>
+                )}
                 <button
                   disabled={submitting}
-                  className="btn-base flex w-full items-center justify-center gap-2 bg-accent-bright px-7 py-4 text-base text-accent-foreground hover:bg-accent-bright-hover disabled:opacity-60"
+                  className="btn-base flex w-full items-center justify-center gap-2 bg-accent px-7 py-4 text-base text-accent-foreground hover:bg-accent-hover disabled:opacity-60"
                 >
                   {submitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

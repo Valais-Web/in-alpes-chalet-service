@@ -1,5 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  House,
+  Sparkles,
+  WashingMachine,
+  Hammer,
+  KeyRound,
+  Sprout,
+  Snowflake,
+} from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
 import {
   Accordion,
@@ -28,7 +37,15 @@ export const Route = createFileRoute("/services")({
   component: Services,
 });
 
-const SERVICES = ["rental", "cleaning", "laundry", "works", "keys", "garden", "snow"];
+const SERVICES = [
+  { key: "rental", icon: House },
+  { key: "cleaning", icon: Sparkles },
+  { key: "laundry", icon: WashingMachine },
+  { key: "works", icon: Hammer },
+  { key: "keys", icon: KeyRound },
+  { key: "garden", icon: Sprout },
+  { key: "snow", icon: Snowflake },
+];
 const BENEFITS = ["1", "2", "3"];
 const FAQ = ["1", "2", "3", "4", "5", "6"];
 
@@ -99,10 +116,15 @@ function Services() {
               {t("services.assort.lead")}
             </p>
           </div>
-          <dl className="mt-12 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((k) => (
-              <div key={k} className="border-t border-foreground/15 py-6">
-                <dt className={H3}>{t(`svc.${k}.title`)}</dt>
+          <dl className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SERVICES.map(({ key: k, icon: Icon }) => (
+              <div key={k} className="border border-border bg-background p-6">
+                <dt>
+                  <span className="mb-5 inline-flex h-12 w-12 items-center justify-center bg-accent-tint text-accent">
+                    <Icon className="h-6 w-6" strokeWidth={1.7} aria-hidden="true" />
+                  </span>
+                  <span className={H3 + " block"}>{t(`svc.${k}.title`)}</span>
+                </dt>
                 <dd className="mt-2 text-base leading-relaxed text-foreground/80">
                   {t(`svc.${k}.body`)}
                 </dd>

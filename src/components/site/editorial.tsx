@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { imageAt, imageSrcSet } from "@/data/api";
 import type { Apartment } from "@/data/types";
 import { useI18n } from "@/i18n/I18nProvider";
+import { NightlyPrice } from "./NightlyPrice";
 import { H1, LEAD, grade } from "./editorialStyles";
 
 /**
@@ -44,7 +45,7 @@ const COVER: Record<string, number> = {
   "studio-la-petite-marmotte": 7,
 };
 
-/** Portrait tile for one apartment: graded cover, name, facts, optional pitch. */
+/** One bounded card keeps each photo, title and tariff visually associated. */
 export function StayTile({
   apartment: a,
   withSummary = false,
@@ -58,34 +59,41 @@ export function StayTile({
   const img = a.images[COVER[a.slug] ?? 0] ?? a.images[0];
   const srcSet = imageSrcSet(img, [480, 800, 1200]);
   return (
-    <Link to="/apartments/$slug" params={{ slug: a.slug }} className={"group block " + className}>
-      <div className="aspect-[4/5] overflow-hidden bg-secondary">
+    <Link
+      to="/apartments/$slug"
+      params={{ slug: a.slug }}
+      className={
+        "group flex flex-col overflow-hidden border border-border bg-background shadow-[var(--shadow-soft)] transition-colors hover:border-accent " +
+        className
+      }
+    >
+      <div className="aspect-[4/3] overflow-hidden bg-secondary">
         <img
           src={grade(imageAt(img, 800))}
           srcSet={srcSet && grade(srcSet)}
-          sizes="(min-width: 768px) 25vw, 80vw"
+          sizes="(min-width: 1200px) 282px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           alt={tx(a.title)}
           loading="lazy"
           width={800}
-          height={1000}
+          height={600}
           className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]"
         />
       </div>
-      <h3 className="mt-5 text-[1.4rem] font-medium leading-[1.15] tracking-[-0.015em] transition-colors group-hover:text-accent">
-        {tx(a.title)}
-      </h3>
-      <p className="mt-2 text-[15px] tabular-nums text-foreground/80">
-        {a.maxGuests} {t("apt.guests")} · {a.surfaceM2} m²
-        {a.pricePerNight > 0 && (
-          <>
-            {" · "}
-            {t("apt.from")} CHF {a.pricePerNight}
-          </>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className=" text-[1.4rem] font-medium leading-[1.15] tracking-[-0.015em] transition-colors group-hover:text-accent">
+          {tx(a.title)}
+        </h3>
+        <p className="mt-2 text-[15px] tabular-nums text-foreground/80">
+          {a.maxGuests} {t("apt.guests")} · {a.bedrooms} {t("apt.bedrooms")} · {a.surfaceM2} m²
+        </p>
+        <NightlyPrice
+          price={a.pricePerNight}
+          className="mt-4 w-full border-t border-border pt-4 text-xl"
+        />
+        {withSummary && (
+          <p className="mt-3 text-[15px] leading-relaxed text-foreground/75">{tx(a.summary)}</p>
         )}
-      </p>
-      {withSummary && (
-        <p className="mt-3 text-[15px] leading-relaxed text-foreground/75">{tx(a.summary)}</p>
-      )}
+      </div>
     </Link>
   );
 }

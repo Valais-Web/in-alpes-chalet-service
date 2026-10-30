@@ -7,6 +7,7 @@ import { googleMapsLink } from "@/content/maps";
 import { AirbnbRating } from "@/components/site/AirbnbRating";
 import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
+import { NightlyPrice } from "@/components/site/NightlyPrice";
 import { BookingForm } from "@/components/site/BookingForm";
 import {
   BedDouble,
@@ -99,13 +100,13 @@ function Detail() {
 
   return (
     <div className="container-page pb-24 pt-8 md:pb-32">
-      {/* Gallery — large hero image + scrollable thumbnail strip */}
+      {/* Gallery — compact desktop panorama + scrollable thumbnails */}
       <div>
         <button
           type="button"
           onClick={() => setLightbox(true)}
           aria-label={t("apt.enlarge")}
-          className="group relative block aspect-[16/9] w-full overflow-hidden bg-secondary"
+          className="group relative block aspect-[16/9] w-full overflow-hidden bg-secondary lg:aspect-auto lg:h-[min(34vh,300px)]"
         >
           <img
             src={imageAt(images[current], 1600)}
@@ -130,7 +131,7 @@ function Detail() {
                 onClick={() => setCurrent(i)}
                 aria-label={`${tx(apartment.title)} · ${t("apt.photo")} ${i + 1}`}
                 aria-current={i === current}
-                className={`h-20 w-28 shrink-0 overflow-hidden bg-secondary transition ${
+                className={`h-20 w-28 shrink-0 lg:h-14 lg:w-20 overflow-hidden bg-secondary transition ${
                   i === current ? "ring-2 ring-accent" : "opacity-70 hover:opacity-100"
                 }`}
               >
@@ -256,7 +257,7 @@ function Detail() {
       )}
 
       {/* Title + facts */}
-      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
           <a
             href={gmapsLink}
@@ -370,7 +371,11 @@ function Detail() {
             </section>
           )}
 
-          <section className="mt-14 border-t border-foreground/15 pt-8">
+          <section
+            id="availability"
+            tabIndex={-1}
+            className="mt-14 scroll-mt-28 border-t border-foreground/15 pt-8"
+          >
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-[-0.015em]">
               {t("apt.availability")}
             </h2>
@@ -427,24 +432,32 @@ function Detail() {
           </section>
         </div>
 
-        <aside className="lg:sticky lg:top-28 lg:self-start">
-          <div className="mb-4 flex items-baseline gap-1">
-            {apartment.pricePerNight > 0 ? (
-              <>
-                <span className="text-xs text-muted-foreground">{t("apt.from")}</span>
-                <span className="font-[family-name:var(--font-display)] text-3xl font-medium">
-                  CHF {apartment.pricePerNight}
-                </span>
-                <span className="text-xs text-muted-foreground">{t("apt.night")}</span>
-              </>
-            ) : (
-              <span className="font-[family-name:var(--font-display)] text-3xl font-medium">
-                {t("apt.priceOnRequest")}
-              </span>
-            )}
+        <aside
+          id="booking"
+          tabIndex={-1}
+          className="scroll-mt-28 lg:sticky lg:top-28 lg:self-start"
+        >
+          <div className="mb-4">
+            <NightlyPrice price={apartment.pricePerNight} className="text-3xl" />
           </div>
           <BookingForm apartment={apartment} ranges={ranges} />
         </aside>
+      </div>
+      <div className="mobile-booking-bar fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background px-5 pt-3 shadow-[0_-4px_20px_oklch(0.16_0_0/0.06)] lg:hidden">
+        <div className="mx-auto grid max-w-3xl grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] items-center gap-3">
+          <a href="#booking" className="min-w-0 py-2" aria-label={t("form.title")}>
+            <NightlyPrice price={apartment.pricePerNight} className="text-xl" />
+            <span className="mt-1 block text-xs font-medium text-accent underline underline-offset-2">
+              {t("form.title")}
+            </span>
+          </a>
+          <a
+            href="#availability"
+            className="btn-base min-h-11 whitespace-normal bg-accent px-3 text-center text-sm leading-snug text-accent-foreground hover:bg-accent-hover"
+          >
+            {t("apt.viewAvailability")}
+          </a>
+        </div>
       </div>
     </div>
   );
