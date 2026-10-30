@@ -184,6 +184,7 @@ Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `
 - **Boutons** : carrés. Primaire = fill vert sapin (hover sapin-700) ; `bright` = vert alpin (CTA réservation) ; secondaire = contour encre ; tertiaire = lien texte vert ; on-dark = blanc. Pas de scale/bounce.
 - **Icônes** : Lucide, trait fin (~1.8), pas d'emoji ni de glyphes unicode.
 - **Interdits** : pas de vidéo embarquée, pas de page interminable, pas de rouge, pas de coins arrondis (sauf contrôles de formulaire circulaires natifs). Mobile-first.
+- **Hero animé (2026-10)** : `DepthPhoto` (WebGL sans dépendance, `src/components/site/gl.ts`) — parallaxe 3D à partir d'une carte de profondeur générée (Codex) depuis la vraie photo, hébergée sur Cloudinary (`in-alpes/site/art`, voir `DEPTH_MAPS` dans `src/content/media.ts`) ; ombres de nuages l'été (rien l'hiver). Dégrade vers l'image simple sans WebGL ou en `prefers-reduced-motion`. Toute nouvelle photo de hero nécessite sa propre carte de profondeur.
 - Le logo In-Alpes (badge alpin noir/blanc) est dans `src/assets/logo-ink.png` (sur clair) et `logo-white.png` (sur foncé).
 
 ---

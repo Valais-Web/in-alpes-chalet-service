@@ -20,7 +20,8 @@ import type { LucideIcon } from "lucide-react";
 import { listApartments } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { GLOBAL_RATING, HOME_REVIEWS, formatRating } from "@/content/reviews";
-import { SITE_IMAGES } from "@/content/media";
+import { DEPTH_MAPS, SITE_IMAGES } from "@/content/media";
+import { DepthPhoto } from "@/components/site/DepthPhoto";
 import { ApartmentCard } from "@/components/site/ApartmentCard";
 import { AirbnbRating } from "@/components/site/AirbnbRating";
 import { Reveal } from "@/components/site/Reveal";
@@ -29,7 +30,12 @@ import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 const audImg = SITE_IMAGES.valleyView;
 const destinationImg = SITE_IMAGES.skiFourValleys;
 
+type Season = "hiver" | "ete";
+
 export const Route = createFileRoute("/")({
+  // ?saison=hiver | ete forces the hero season (preview); anything else is ignored.
+  validateSearch: (search: Record<string, unknown>): { saison?: Season } =>
+    search.saison === "hiver" || search.saison === "ete" ? { saison: search.saison } : {},
   component: Home_,
 });
 
@@ -46,10 +52,15 @@ const LOCAL_ICONS: LucideIcon[] = [CableCar, MountainSnow, CalendarHeart];
 
 function Home_() {
   const { t, locale } = useI18n();
-  // Seasonal hero: summer photo May–October, winter photo November–April.
+  const { saison } = Route.useSearch();
+  // Seasonal hero: summer photo May–October, winter photo November–April,
+  // unless ?saison= forces one.
   const heroMonth = new Date().getMonth() + 1;
-  const heroImg =
-    heroMonth >= 5 && heroMonth <= 10 ? SITE_IMAGES.heroSummer : SITE_IMAGES.heroWinter;
+  // Compare exactly: the root route passes unvalidated params through.
+  const summer =
+    saison === "ete" ? true : saison === "hiver" ? false : heroMonth >= 5 && heroMonth <= 10;
+  const heroImg = summer ? SITE_IMAGES.heroSummer : SITE_IMAGES.heroWinter;
+  const heroDepth = summer ? DEPTH_MAPS.heroSummer : DEPTH_MAPS.heroWinter;
   const { data: apartments = [], isPending } = useQuery({
     queryKey: ["apartments"],
     queryFn: listApartments,
@@ -60,11 +71,14 @@ function Home_() {
       {/* HERO — cinematic full-bleed */}
       <section className="relative -mt-16 w-full overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          {/* Real photo + generated depth map → pointer/scroll parallax and
+              cloud shadows in summer. */}
+          <DepthPhoto
             src={heroImg}
-            alt=""
-            aria-hidden
-            className="h-full w-full animate-kenburns object-cover"
+            depthSrc={heroDepth}
+            weather={summer ? "clouds" : "none"}
+            className="h-full w-full"
+            imgClassName="h-full w-full animate-kenburns object-cover"
           />
           <div className="hero-scrim absolute inset-0" />
         </div>

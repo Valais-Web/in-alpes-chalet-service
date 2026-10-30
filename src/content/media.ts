@@ -26,6 +26,17 @@ export const SITE_IMAGES = {
   brightLiving: `${CLOUD}/v1783681694/in-alpes/apartments/perce-neige-21/qizwst6umdlt8bbjj4k3.jpg`,
 } as const;
 
+/**
+ * Depth maps (white = near) for the hero photos, generated from the photos
+ * themselves (Codex image generation) and hosted in in-alpes/site/art.
+ * Blurred on the CDN so small misalignments don't show as edges.
+ */
+const ART_V = "v1793355472/in-alpes/site/art";
+export const DEPTH_MAPS = {
+  heroSummer: `${CLOUD}/e_blur:250,w_1024/${ART_V}/depth-summer.png`,
+  heroWinter: `${CLOUD}/e_blur:250,w_1024/${ART_V}/depth-winter.png`,
+} as const;
+
 /** Official Airbnb wordmark (coral). Shown beside the aggregate rating so the
  * reviews read as verified Airbnb reviews. The one deliberate red on the site. */
 export const AIRBNB_LOGO = `${CLOUD}/v1783689153/in-alpes/brand/nbronulj0h24bowijj4k.webp`;
