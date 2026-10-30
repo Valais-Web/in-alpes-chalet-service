@@ -1,20 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
-import {
-  ArrowRight,
-  UserRoundCheck,
-  Zap,
-  ShieldCheck,
-  Star,
-  Home,
-  Sparkles,
-  WashingMachine,
-  HardHat,
-  KeyRound,
-  Trees,
-  Snowflake,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -22,9 +8,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { SITE_IMAGES } from "@/content/media";
-
-const servicesHero = SITE_IMAGES.cosyLiving;
-const presentationImg = SITE_IMAGES.valleyView;
+import { PageIntro } from "@/components/site/editorial";
+import { H2, H3, LEAD, SECTION, grade } from "@/components/site/editorialStyles";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -43,22 +28,8 @@ export const Route = createFileRoute("/services")({
   component: Services,
 });
 
-const SERVICES: { key: string; icon: LucideIcon }[] = [
-  { key: "rental", icon: Home },
-  { key: "cleaning", icon: Sparkles },
-  { key: "laundry", icon: WashingMachine },
-  { key: "works", icon: HardHat },
-  { key: "keys", icon: KeyRound },
-  { key: "garden", icon: Trees },
-  { key: "snow", icon: Snowflake },
-];
-
-const BENEFITS: { key: string; icon: LucideIcon }[] = [
-  { key: "1", icon: UserRoundCheck },
-  { key: "2", icon: Zap },
-  { key: "3", icon: ShieldCheck },
-];
-
+const SERVICES = ["rental", "cleaning", "laundry", "works", "keys", "garden", "snow"];
+const BENEFITS = ["1", "2", "3"];
 const FAQ = ["1", "2", "3", "4", "5", "6"];
 
 function Services() {
@@ -66,164 +37,135 @@ function Services() {
 
   return (
     <div>
-      {/* HERO (dark) */}
-      <section className="relative overflow-hidden bg-foreground text-background">
-        <img
-          src={servicesHero}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.14]"
-        />
-        <div className="container-page relative py-20 md:py-24">
-          <div className="eyebrow text-accent-bright">{t("services.hero.eyebrow")}</div>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.06] text-background md:text-5xl">
-            {t("services.hero.title")}
-          </h1>
-          <p className="mt-4 max-w-xl text-lg leading-relaxed text-background/75">
-            {t("services.hero.sub")}
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link
-              to="/contact"
-              className="btn-base bg-accent-bright text-accent-foreground hover:bg-accent-bright-hover"
-            >
-              {t("services.hero.cta1")} <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              to="/apartments"
-              className="btn-base bg-background text-foreground hover:bg-background/90"
-            >
+      <PageIntro title={t("services.hero.title")} lead={t("services.hero.sub")}>
+        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <Link
+            to="/contact"
+            className="btn-base bg-accent-bright px-7 py-4 text-base text-accent-foreground hover:bg-accent-bright-hover"
+          >
+            {t("services.hero.cta1")} <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/apartments"
+            className="group inline-flex items-center gap-2 font-[family-name:var(--font-display)] text-base font-medium"
+          >
+            <span className="border-b border-foreground/30 pb-0.5 group-hover:border-foreground">
               {t("services.hero.cta2")}
-            </Link>
-          </div>
+            </span>
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
-      </section>
+      </PageIntro>
 
-      {/* PRÉSENTATION */}
-      <section className="section-y">
-        <div className="container-page grid items-center gap-10 md:grid-cols-2">
-          <div>
-            <div className="eyebrow">{t("services.intro.eyebrow")}</div>
-            <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
-              {t("services.intro.title")}
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              {t("services.intro.body")}
-            </p>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              {t("services.intro.body2")}
-            </p>
-          </div>
-          <div className="aspect-[4/3] overflow-hidden border border-border bg-secondary">
-            <img
-              src={presentationImg}
-              alt=""
-              className="h-full w-full object-cover"
-              width={1280}
-              height={960}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* BENEFITS / USP */}
-      <section className="section-y">
-        <div className="container-page">
-          <SectionHead
-            center
-            eyebrow={t("services.benefits.eyebrow")}
-            title={t("services.benefits.title")}
-            lead={t("services.benefits.lead")}
+      <div className="container-page">
+        <div className="aspect-[4/3] overflow-hidden bg-secondary md:aspect-[21/8]">
+          <img
+            src={grade(SITE_IMAGES.cosyLiving.replace("q_auto", "q_auto,w_2000"))}
+            alt="Le Combin, Haute-Nendaz"
+            width={2000}
+            height={762}
+            className="h-full w-full object-cover object-[50%_60%]"
           />
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {BENEFITS.map((b) => (
-              <div key={b.key} className="flex flex-col gap-3">
-                <span
-                  className="grid place-items-center bg-accent-tint text-accent"
-                  style={{ width: 52, height: 52 }}
-                >
-                  <b.icon className="h-6 w-6" />
-                </span>
-                <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold">
-                  {t(`benefit.${b.key}.t`)}
-                </h3>
-                <p className="text-[15px] leading-relaxed text-muted-foreground">
-                  {t(`benefit.${b.key}.d`)}
-                </p>
+        </div>
+      </div>
+
+      {/* WHO WE ARE + WHY US */}
+      <section className={SECTION}>
+        <div className="container-page grid gap-12 md:grid-cols-12 md:gap-10">
+          <div className="md:col-span-6">
+            <h2 className={H2}>{t("services.intro.title")}</h2>
+            <p className={LEAD + " mt-6"}>{t("services.intro.body")}</p>
+            <p className={LEAD + " mt-4"}>{t("services.intro.body2")}</p>
+          </div>
+          <dl className="border-t border-foreground/15 md:col-span-5 md:col-start-8">
+            {BENEFITS.map((k) => (
+              <div key={k} className="border-b border-foreground/15 py-6">
+                <dt className={H3}>{t(`benefit.${k}.t`)}</dt>
+                <dd className="mt-2 text-base leading-relaxed text-foreground/80">
+                  {t(`benefit.${k}.d`)}
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         </div>
       </section>
 
       {/* ALL SERVICES */}
-      <section className="section-y bg-secondary">
+      <section className={"bg-secondary " + SECTION}>
         <div className="container-page">
-          <SectionHead
-            center
-            eyebrow={t("services.assort.eyebrow")}
-            title={t("services.assort.title")}
-            lead={t("services.assort.lead")}
-          />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {SERVICES.map((s) => (
-              <article key={s.key} className="card-soft p-6">
-                <div className="grid h-10 w-10 place-items-center bg-accent-tint text-accent">
-                  <s.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold">
-                  {t(`svc.${s.key}.title`)}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {t(`svc.${s.key}.body`)}
-                </p>
-              </article>
-            ))}
+          <div className="grid gap-6 md:grid-cols-12 md:items-end">
+            <h2 className={H2 + " md:col-span-6"}>{t("services.assort.title")}</h2>
+            <p className={LEAD + " max-w-md md:col-span-5 md:col-start-8"}>
+              {t("services.assort.lead")}
+            </p>
           </div>
+          <dl className="mt-12 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+            {SERVICES.map((k) => (
+              <div key={k} className="border-t border-foreground/15 py-6">
+                <dt className={H3}>{t(`svc.${k}.title`)}</dt>
+                <dd className="mt-2 text-base leading-relaxed text-foreground/80">
+                  {t(`svc.${k}.body`)}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
-      {/* HOW IT WORKS (owner onboarding) */}
-      <section className="section-y">
+      {/* HOW TO BECOME A CLIENT */}
+      <section className={SECTION}>
         <div className="container-page">
-          <SectionHead
-            center
-            eyebrow={t("services.ownerhow.eyebrow")}
-            title={t("services.ownerhow.title")}
-            lead={t("services.ownerhow.lead")}
-          />
-          <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 md:grid-cols-12 md:items-end">
+            <h2 className={H2 + " md:col-span-6"}>{t("services.ownerhow.title")}</h2>
+            <p className={LEAD + " max-w-md md:col-span-5 md:col-start-8"}>
+              {t("services.ownerhow.lead")}
+            </p>
+          </div>
+          <ol className="mt-12 grid border-t border-foreground/15 md:grid-cols-4">
             {[1, 2, 3, 4].map((n) => (
-              <li key={n} className="flex flex-col gap-2 border-t-2 border-accent pt-4">
-                <span className="font-[family-name:var(--font-display)] text-sm font-semibold text-accent">
+              <li
+                key={n}
+                className="grid grid-cols-[3.5rem_1fr] gap-x-4 border-b border-foreground/15 py-6 md:block md:border-b-0 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0"
+              >
+                <span className="font-[family-name:var(--font-display)] text-4xl font-light tabular-nums text-accent">
                   {String(n).padStart(2, "0")}
                 </span>
-                <div className="font-[family-name:var(--font-display)] font-semibold">
-                  {t(`owner.step.${n}.t`)}
-                </div>
-                <div className="text-sm leading-relaxed text-muted-foreground">
-                  {t(`owner.step.${n}.d`)}
+                <div className="md:mt-6">
+                  <div className={H3}>{t(`owner.step.${n}.t`)}</div>
+                  <div className="mt-2 text-base leading-relaxed text-foreground/80">
+                    {t(`owner.step.${n}.d`)}
+                  </div>
                 </div>
               </li>
             ))}
           </ol>
+          <Link
+            to="/contact"
+            className="btn-base mt-12 bg-accent-bright px-7 py-4 text-base text-accent-foreground hover:bg-accent-bright-hover"
+          >
+            {t("services.cta.btn")} <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="section-y bg-secondary">
-        <div className="container-page grid gap-10 md:grid-cols-[0.5fr_1fr]">
-          <SectionHead
-            eyebrow={t("services.faq.eyebrow")}
-            title={t("services.faq.title")}
-            lead={t("services.faq.lead")}
-          />
-          <Accordion type="single" collapsible className="w-full">
+      <section className={"bg-secondary " + SECTION}>
+        <div className="container-page grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <h2 className={H2}>{t("services.faq.title")}</h2>
+            <p className={LEAD + " mt-5 max-w-sm"}>{t("services.faq.lead")}</p>
+          </div>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full border-t border-foreground/15 md:col-span-7"
+          >
             {FAQ.map((n) => (
-              <AccordionItem key={n} value={n} className="border-b border-border">
-                <AccordionTrigger className="py-5 text-left font-[family-name:var(--font-display)] text-base font-semibold hover:no-underline">
+              <AccordionItem key={n} value={n} className="border-b border-foreground/15">
+                <AccordionTrigger className="py-6 text-left font-[family-name:var(--font-display)] text-lg font-medium hover:no-underline">
                   {t(`faq.${n}.q`)}
                 </AccordionTrigger>
-                <AccordionContent className="pb-5 text-[15px] leading-relaxed text-muted-foreground">
+                <AccordionContent className="pb-6 text-base leading-relaxed text-foreground/80">
                   {t(`faq.${n}.a`)}
                 </AccordionContent>
               </AccordionItem>
@@ -231,56 +173,6 @@ function Services() {
           </Accordion>
         </div>
       </section>
-
-      {/* CTA (dark) */}
-      <section className="pb-20 pt-4">
-        <div className="container-page">
-          <div className="flex flex-wrap items-center justify-between gap-8 bg-foreground px-8 py-14 text-background md:px-12">
-            <div className="max-w-xl">
-              <h2 className="text-2xl font-semibold leading-tight text-background md:text-3xl">
-                {t("services.cta.title")}
-              </h2>
-              <p className="mt-3 leading-relaxed text-background/75">{t("services.cta.sub")}</p>
-            </div>
-            <div className="flex flex-col items-start gap-4">
-              <div className="inline-flex items-center gap-2.5 border border-background/20 px-3.5 py-2">
-                <div className="flex text-accent-bright">
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-background">{t("hero.proof")}</span>
-              </div>
-              <Link
-                to="/contact"
-                className="btn-base bg-accent-bright text-accent-foreground hover:bg-accent-bright-hover"
-              >
-                {t("services.cta.btn")} <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function SectionHead({
-  eyebrow,
-  title,
-  lead,
-  center,
-}: {
-  eyebrow?: string;
-  title: string;
-  lead?: string;
-  center?: boolean;
-}) {
-  return (
-    <div className={center ? "mx-auto max-w-[640px] text-center" : "max-w-[420px]"}>
-      {eyebrow && <div className="eyebrow">{eyebrow}</div>}
-      <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">{title}</h2>
-      {lead && <p className="mt-3 text-base leading-relaxed text-muted-foreground">{lead}</p>}
     </div>
   );
 }

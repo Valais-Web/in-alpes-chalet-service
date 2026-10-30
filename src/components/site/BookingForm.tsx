@@ -205,7 +205,7 @@ export function BookingForm({
       <button
         type="submit"
         disabled={submitting || hardBlock}
-        className="btn-base flex w-full items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-foreground/90 disabled:opacity-60"
+        className="btn-base flex w-full items-center justify-center gap-2 bg-accent-bright py-4 text-base text-accent-foreground hover:bg-accent-bright-hover disabled:opacity-60"
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
         {submitting ? t("contact.sending") : t("form.submit")}

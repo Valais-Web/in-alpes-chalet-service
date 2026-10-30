@@ -22,6 +22,8 @@ export const SITE_IMAGES = {
   fourValleysHike: `${CLOUD}/v1783691741/in-alpes/site/rctvx95ckp57uz38rder.jpg`,
   /** Le Combin: cosy living room with beams and leather sofa. Services hero. */
   cosyLiving: `${CLOUD}/v1783681662/in-alpes/apartments/le-combin/pva8kdd85vcdzygieuww.jpg`,
+  /** Studio In-Alpes: made bed with folded towels. Home owners section. */
+  madeBed: `${CLOUD}/v1783681691/in-alpes/apartments/studio-in-alpes/krboikzv8kv6pjmfavtx.jpg`,
   /** Perce Neige 21: bright, tastefully furnished living room. Presentation. */
   brightLiving: `${CLOUD}/v1783681694/in-alpes/apartments/perce-neige-21/qizwst6umdlt8bbjj4k3.jpg`,
 } as const;
@@ -35,6 +37,15 @@ const ART_V = "v1793355472/in-alpes/site/art";
 export const DEPTH_MAPS = {
   heroSummer: `${CLOUD}/e_blur:250,w_1024/${ART_V}/depth-summer.png`,
   heroWinter: `${CLOUD}/e_blur:250,w_1024/${ART_V}/depth-winter.png`,
+} as const;
+
+/** Generated ambiance photos (Codex), for service and "on site" moods only:
+ * never presented as one of the apartments. */
+export const AMBIANCE = {
+  /** Hands folding fresh linen in a chalet bedroom. Home owners section. */
+  linen: `${CLOUD}/w_1100/${ART_V}/amb-linen.png`,
+  /** A freshly cleared chalet doorstep at dawn. Home "one contact on site". */
+  doorstep: `${CLOUD}/w_1100/${ART_V}/amb-doorstep.png`,
 } as const;
 
 /** Official Airbnb wordmark (coral). Shown beside the aggregate rating so the

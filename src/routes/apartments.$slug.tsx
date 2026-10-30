@@ -98,7 +98,7 @@ function Detail() {
   }, [mapExpanded]);
 
   return (
-    <div className="container-page py-8">
+    <div className="container-page pb-24 pt-8 md:pb-32">
       {/* Gallery — large hero image + scrollable thumbnail strip */}
       <div>
         <button
@@ -262,17 +262,19 @@ function Detail() {
             href={gmapsLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="eyebrow inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
+            className="inline-flex items-center gap-1.5 text-[15px] text-foreground/70 underline-offset-4 hover:underline"
           >
             <MapPin className="h-3.5 w-3.5" /> {apartment.location.address}
           </a>
-          <h1 className="mt-3 text-3xl font-semibold md:text-4xl">{tx(apartment.title)}</h1>
-          <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          <h1 className="mt-4 text-[clamp(2.4rem,4.6vw,4rem)] font-medium leading-[1] tracking-[-0.03em]">
+            {tx(apartment.title)}
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-foreground/80">
             {tx(apartment.summary)}
           </p>
 
           {/* USP strip */}
-          <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-y border-border py-4 text-sm">
+          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-y border-foreground/15 py-4 text-[15px]">
             {[
               {
                 icon: Star,
@@ -284,13 +286,13 @@ function Detail() {
               { icon: DoorOpen, label: t("apt.usp.flex") },
               { icon: Sparkles, label: t("apt.usp.clean") },
             ].map(({ icon: Icon, label }: { icon: LucideIcon; label: string }) => (
-              <li key={label} className="inline-flex items-center gap-2 text-muted-foreground">
+              <li key={label} className="inline-flex items-center gap-2 text-foreground/80">
                 <Icon className="h-4 w-4 text-accent" /> {label}
               </li>
             ))}
           </ul>
 
-          <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
+          <dl className="mt-8 grid grid-cols-3 gap-y-6 sm:grid-cols-5">
             <Fact
               icon={<Users className="h-4 w-4" />}
               label={t("apt.guests")}
@@ -318,29 +320,35 @@ function Detail() {
             />
           </dl>
 
-          <section className="mt-10">
-            <h2 className="text-lg font-semibold">{t("apt.amenities")}</h2>
+          <section className="mt-14 border-t border-foreground/15 pt-8">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-[-0.015em]">
+              {t("apt.amenities")}
+            </h2>
             <ul className="mt-3 flex flex-wrap gap-2">
               {apartment.amenities.map((a: string) => (
-                <li key={a} className="border border-border bg-secondary px-3 py-1 text-xs">
+                <li key={a} className="border border-foreground/15 px-3 py-1.5 text-sm">
                   {t(`amenity.${a}`)}
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className="mt-10">
-            <h2 className="text-lg font-semibold">{t("apt.description")}</h2>
-            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+          <section className="mt-14 border-t border-foreground/15 pt-8">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-[-0.015em]">
+              {t("apt.description")}
+            </h2>
+            <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-foreground/80">
               {tx(apartment.description)}
             </p>
           </section>
 
           {reviews && (
-            <section className="mt-10">
+            <section className="mt-14 border-t border-foreground/15 pt-8">
               <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-lg font-semibold">{t("apt.reviews.title")}</h2>
+                  <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-[-0.015em]">
+                    {t("apt.reviews.title")}
+                  </h2>
                   <AirbnbRating
                     rating={formatRating(reviews.rating, locale)}
                     count={reviews.count}
@@ -362,17 +370,21 @@ function Detail() {
             </section>
           )}
 
-          <section className="mt-10">
-            <h2 className="text-lg font-semibold">{t("apt.availability")}</h2>
+          <section className="mt-14 border-t border-foreground/15 pt-8">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-[-0.015em]">
+              {t("apt.availability")}
+            </h2>
             <div className="mt-4">
               <AvailabilityCalendar ranges={ranges} months={2} />
             </div>
           </section>
 
-          <section className="mt-10 grid gap-6 sm:grid-cols-2">
-            <div className="card-soft p-5">
-              <h3 className="text-sm font-semibold">{t("apt.practical")}</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+          <section className="mt-14 grid gap-10 border-t border-foreground/15 pt-8 sm:grid-cols-2">
+            <div>
+              <h3 className="font-[family-name:var(--font-display)] text-xl font-medium">
+                {t("apt.practical")}
+              </h3>
+              <ul className="mt-4 space-y-2 text-base text-foreground/80">
                 <li className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-accent" /> {t("apt.checkIn")} :{" "}
                   {apartment.practical.checkIn}
@@ -387,9 +399,11 @@ function Detail() {
                 </li>
               </ul>
             </div>
-            <div className="card-soft p-5">
-              <h3 className="text-sm font-semibold">{t("apt.location")}</h3>
-              <p className="mt-2 flex items-start gap-2 text-sm text-muted-foreground">
+            <div>
+              <h3 className="font-[family-name:var(--font-display)] text-xl font-medium">
+                {t("apt.location")}
+              </h3>
+              <p className="mt-4 flex items-start gap-2 text-base text-foreground/80">
                 <MapPin className="mt-0.5 h-4 w-4 text-accent" /> {apartment.location.address}
               </p>
               <div className="relative mt-3 aspect-video overflow-hidden border border-border">
@@ -413,16 +427,20 @@ function Detail() {
           </section>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-28 lg:self-start">
           <div className="mb-4 flex items-baseline gap-1">
             {apartment.pricePerNight > 0 ? (
               <>
                 <span className="text-xs text-muted-foreground">{t("apt.from")}</span>
-                <span className="text-2xl font-semibold">CHF {apartment.pricePerNight}</span>
+                <span className="font-[family-name:var(--font-display)] text-3xl font-medium">
+                  CHF {apartment.pricePerNight}
+                </span>
                 <span className="text-xs text-muted-foreground">{t("apt.night")}</span>
               </>
             ) : (
-              <span className="text-2xl font-semibold">{t("apt.priceOnRequest")}</span>
+              <span className="font-[family-name:var(--font-display)] text-3xl font-medium">
+                {t("apt.priceOnRequest")}
+              </span>
             )}
           </div>
           <BookingForm apartment={apartment} ranges={ranges} />
@@ -432,22 +450,18 @@ function Detail() {
   );
 }
 
-function Fact({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: React.ReactNode;
-}) {
+function Fact({ label, value }: { icon?: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
-    <div className="card-soft p-3 text-center">
-      <div className="mx-auto grid h-9 w-9 place-items-center bg-accent-tint text-accent">
-        {icon}
+    <div className="border-l border-foreground/15 pl-4 first:border-l-0 first:pl-0">
+      <div
+        className={
+          "font-[family-name:var(--font-display)] font-light tabular-nums " +
+          (typeof value === "number" ? "text-3xl" : "pt-1.5 text-lg leading-tight")
+        }
+      >
+        {value}
       </div>
-      <div className="mt-2 text-lg font-semibold">{value}</div>
-      <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 text-sm text-foreground/70">{label}</div>
     </div>
   );
 }

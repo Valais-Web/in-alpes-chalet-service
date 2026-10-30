@@ -443,6 +443,53 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.usp.promo": "−10% dès 7 nuits",
     "apt.usp.flex": "Arrivée flexible",
     "apt.usp.clean": "Ménage hôtelier",
+    "hero.lead":
+      "Des appartements soignés pour vos vacances, et la gérance de votre résidence secondaire, par une équipe installée sur place.",
+    "hero.link.manage": "Confier mon bien",
+    "home.props.lead2":
+      "−10 % dès 7 nuits sur tous nos logements. Demande en ligne, réponse personnelle sous 24 h.",
+    "home.local.figureLabel": "de pistes accessibles depuis Nendaz",
+    "home.rev.outOf": "sur 5",
+    "home.rev.countLabel": "avis Airbnb",
+    "home.rev.prev": "Avis précédent",
+    "home.rev.next": "Avis suivant",
+    "home.cta.or": "ou écrivez à",
+    "home.local.body2":
+      "Haute-Nendaz ouvre sur l'un des plus grands domaines skiables de Suisse, relié à Verbier et Veysonnaz. L'hiver pour le ski, l'été pour la randonnée, le VTT et les lacs d'altitude : la station vit toute l'année, à quelques minutes de nos logements.",
+    "nav.book": "Réserver",
+    "hero.entry.stay": "Séjourner",
+    "hero.entry.own": "Propriétaires",
+    "home.offer.big": "−10 %",
+    "home.offer.line":
+      "dès 7 nuits, sur tous nos logements. Demande en ligne, réponse personnelle sous 24 h.",
+    "home.owners.title": "Votre résidence secondaire, entre de bonnes mains",
+    "home.founder.text":
+      "In-Alpes est née début 2020 à Haute-Nendaz d'une idée simple : un seul interlocuteur, sur place, pour les voyageurs comme pour les propriétaires. Nous accueillons chaque hôte en personne et restons joignables pendant tout le séjour.",
+    "home.founder.sign": "Bart Goes, In-Alpes Chalet Services",
+    "footer.title": "Une question, une date, un projet ?",
+    "footer.sub": "Bart vous répond rapidement et en personne.",
+    "home.offer.inline":
+      "dès 7 nuits sur tous nos logements · demande en ligne, réponse personnelle sous 24 h",
+    "home.fam.1.t": "Location",
+    "home.fam.1.d":
+      "Annonces, prix ajustés à la saison, réservations et accueil de chaque voyageur en personne.",
+    "home.fam.2.t": "Entretien & linge",
+    "home.fam.2.d":
+      "Nettoyage hôtelier entre chaque séjour, grands nettoyages de saison, draps et serviettes lavés et repassés.",
+    "home.fam.3.t": "Sur place, toute l'année",
+    "home.fam.3.d":
+      "Suivi de chantier, clés et colis, jardin l'été, déneigement l'hiver, matin comme soir.",
+    "home.bart.title": "Un seul interlocuteur, sur place",
+    "home.place.title": "Haute-Nendaz, 4 Vallées",
+    "home.place.1.v": "1 365 m",
+    "home.place.1.l": "d'altitude, en balcon sur la vallée du Rhône",
+    "home.place.2.v": "412 km",
+    "home.place.2.l": "de pistes sur le domaine des 4 Vallées",
+    "home.place.3.v": "Été",
+    "home.place.3.l": "randonnée le long des bisses, VTT, lacs d'altitude",
+    "home.place.4.v": "Hiver",
+    "home.place.4.l": "ski, raquettes et l'agenda de la station",
+    "home.offer.tag": "−10 % dès 7 nuits",
   },
   en: {
     brand: "In-Alpes Chalet Services",
@@ -871,6 +918,52 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.usp.promo": "−10% from 7 nights",
     "apt.usp.flex": "Flexible check-in",
     "apt.usp.clean": "Hotel-grade cleaning",
+    "hero.lead":
+      "Well-kept apartments for your holidays, and full care of your second home, by a team based right here.",
+    "hero.link.manage": "Have my home managed",
+    "home.props.lead2":
+      "−10% from 7 nights on all our apartments. Request online, a personal reply within 24 h.",
+    "home.local.figureLabel": "of slopes reachable from Nendaz",
+    "home.rev.outOf": "out of 5",
+    "home.rev.countLabel": "Airbnb reviews",
+    "home.rev.prev": "Previous review",
+    "home.rev.next": "Next review",
+    "home.cta.or": "or write to",
+    "home.local.body2":
+      "Haute-Nendaz opens onto one of Switzerland's largest ski areas, linked to Verbier and Veysonnaz. Skiing in winter, hiking, mountain biking and alpine lakes in summer: the resort lives all year round, minutes from our apartments.",
+    "nav.book": "Book",
+    "hero.entry.stay": "Stay",
+    "hero.entry.own": "Owners",
+    "home.offer.big": "−10%",
+    "home.offer.line":
+      "from 7 nights, on all our apartments. Request online, a personal reply within 24 h.",
+    "home.owners.title": "Your second home, in good hands",
+    "home.founder.text":
+      "In-Alpes was founded in early 2020 in Haute-Nendaz on a simple idea: one contact, right here, for guests and owners alike. We welcome every guest in person and stay reachable throughout the stay.",
+    "home.founder.sign": "Bart Goes, In-Alpes Chalet Services",
+    "footer.title": "A question, a date, a project?",
+    "footer.sub": "Bart replies quickly and in person.",
+    "home.offer.inline":
+      "from 7 nights on all our apartments · request online, a personal reply within 24 h",
+    "home.fam.1.t": "Rentals",
+    "home.fam.1.d": "Listings, seasonal pricing, bookings, and every guest welcomed in person.",
+    "home.fam.2.t": "Cleaning & linen",
+    "home.fam.2.d":
+      "Hotel-standard cleaning between stays, seasonal deep cleans, sheets and towels washed and pressed.",
+    "home.fam.3.t": "On site, all year",
+    "home.fam.3.d":
+      "Works follow-up, keys and parcels, the garden in summer, snow clearing in winter, morning and evening.",
+    "home.bart.title": "One contact, right here",
+    "home.place.title": "Haute-Nendaz, 4 Vallées",
+    "home.place.1.v": "1,365 m",
+    "home.place.1.l": "above sea level, a balcony over the Rhône valley",
+    "home.place.2.v": "412 km",
+    "home.place.2.l": "of slopes across the 4 Vallées ski area",
+    "home.place.3.v": "Summer",
+    "home.place.3.l": "hikes along the bisses, mountain biking, alpine lakes",
+    "home.place.4.v": "Winter",
+    "home.place.4.l": "skiing, snowshoeing and the resort's events",
+    "home.offer.tag": "−10% from 7 nights",
   },
   nl: {
     brand: "In-Alpes Chalet Services",
@@ -1308,5 +1401,51 @@ export const dictionaries: Record<Locale, Dict> = {
     "apt.usp.promo": "−10% vanaf 7 nachten",
     "apt.usp.flex": "Flexibele aankomst",
     "apt.usp.clean": "Hotelschoonmaak",
+    "hero.lead":
+      "Verzorgde appartementen voor uw vakantie en het beheer van uw tweede woning, door een team ter plaatse.",
+    "hero.link.manage": "Mijn woning laten beheren",
+    "home.props.lead2":
+      "−10% vanaf 7 nachten op al onze woningen. Online aanvragen, persoonlijk antwoord binnen 24 u.",
+    "home.local.figureLabel": "pistes bereikbaar vanuit Nendaz",
+    "home.rev.outOf": "op 5",
+    "home.rev.countLabel": "Airbnb-beoordelingen",
+    "home.rev.prev": "Vorige beoordeling",
+    "home.rev.next": "Volgende beoordeling",
+    "home.cta.or": "of mail naar",
+    "home.local.body2":
+      "Haute-Nendaz opent naar een van de grootste skigebieden van Zwitserland, verbonden met Verbier en Veysonnaz. Skiën in de winter, wandelen, mountainbiken en bergmeren in de zomer: het resort leeft het hele jaar, op enkele minuten van onze woningen.",
+    "nav.book": "Boeken",
+    "hero.entry.stay": "Verblijven",
+    "hero.entry.own": "Eigenaars",
+    "home.offer.big": "−10%",
+    "home.offer.line":
+      "vanaf 7 nachten, op al onze woningen. Online aanvragen, persoonlijk antwoord binnen 24 u.",
+    "home.owners.title": "Uw tweede woning in goede handen",
+    "home.founder.text":
+      "In-Alpes ontstond begin 2020 in Haute-Nendaz vanuit een eenvoudig idee: één aanspreekpunt, ter plaatse, voor gasten én eigenaars. Wij ontvangen elke gast persoonlijk en blijven bereikbaar tijdens het hele verblijf.",
+    "home.founder.sign": "Bart Goes, In-Alpes Chalet Services",
+    "footer.title": "Een vraag, een datum, een project?",
+    "footer.sub": "Bart antwoordt snel en persoonlijk.",
+    "home.offer.inline":
+      "vanaf 7 nachten op al onze woningen · online aanvragen, persoonlijk antwoord binnen 24 u",
+    "home.fam.1.t": "Verhuur",
+    "home.fam.1.d": "Advertenties, seizoensprijzen, boekingen en elke gast persoonlijk ontvangen.",
+    "home.fam.2.t": "Onderhoud & linnen",
+    "home.fam.2.d":
+      "Hotelschoonmaak tussen elk verblijf, grote seizoensschoonmaak, lakens en handdoeken gewassen en gestreken.",
+    "home.fam.3.t": "Ter plaatse, het hele jaar",
+    "home.fam.3.d":
+      "Opvolging van werken, sleutels en pakjes, de tuin in de zomer, sneeuwruimen in de winter, 's ochtends en 's avonds.",
+    "home.bart.title": "Eén aanspreekpunt, ter plaatse",
+    "home.place.title": "Haute-Nendaz, 4 Vallées",
+    "home.place.1.v": "1 365 m",
+    "home.place.1.l": "hoogte, als een balkon boven het Rhônedal",
+    "home.place.2.v": "412 km",
+    "home.place.2.l": "pistes in het skigebied 4 Vallées",
+    "home.place.3.v": "Zomer",
+    "home.place.3.l": "wandelen langs de bisses, mountainbiken, bergmeren",
+    "home.place.4.v": "Winter",
+    "home.place.4.l": "skiën, sneeuwschoenwandelen en de agenda van het resort",
+    "home.offer.tag": "−10% vanaf 7 nachten",
   },
 };
