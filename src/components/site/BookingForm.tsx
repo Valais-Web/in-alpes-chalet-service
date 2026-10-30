@@ -97,11 +97,11 @@ export function BookingForm({
   }
 
   const input =
-    "w-full border border-border bg-background px-3 py-2.5 text-sm outline-none ring-ring transition focus:border-accent focus:ring-2";
-  const label = "text-xs font-medium text-muted-foreground";
+    "w-full border border-foreground/20 bg-background min-h-12 px-4 py-3.5 text-base outline-none ring-ring transition focus:border-accent focus:ring-2";
+  const label = "text-sm font-medium text-foreground/80";
 
   return (
-    <form onSubmit={onSubmit} className="card-soft space-y-4 p-6">
+    <form onSubmit={onSubmit} className="card-soft space-y-5 p-5 sm:p-6">
       {/* Honeypot: hidden from real users, tempting to bots. */}
       <div aria-hidden className="pointer-events-none absolute left-[-9999px] top-[-9999px]">
         <label>
@@ -115,8 +115,14 @@ export function BookingForm({
           />
         </label>
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        <label className="space-y-1">
+      <div>
+        <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium">
+          {t("form.title")}
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-foreground/75">{t("form.requestNote")}</p>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <label className="block space-y-2">
           <span className={label}>{t("form.arrival")}</span>
           <input
             type="date"
@@ -127,7 +133,7 @@ export function BookingForm({
             onChange={onChange("arrival")}
           />
         </label>
-        <label className="space-y-1">
+        <label className="block space-y-2">
           <span className={label}>{t("form.departure")}</span>
           <input
             type="date"
@@ -141,19 +147,25 @@ export function BookingForm({
       </div>
 
       {hardBlock && (
-        <p className="flex items-center gap-2 border border-border bg-secondary px-3 py-2 text-sm text-foreground">
+        <p
+          role="alert"
+          className="flex items-center gap-2 border border-border bg-secondary px-3 py-2 text-sm text-foreground"
+        >
           <AlertTriangle className="h-4 w-4 shrink-0 text-accent" />
           {t("form.datesUnavailable")}
         </p>
       )}
       {preWarn && (
-        <p className="flex items-center gap-2 border border-accent bg-accent-tint px-3 py-2 text-sm">
+        <p
+          role="alert"
+          className="flex items-center gap-2 border border-accent bg-accent-tint px-3 py-2 text-sm"
+        >
           <AlertTriangle className="h-4 w-4 shrink-0 text-accent" />
           {t("form.datesPrebookedWarn")}
         </p>
       )}
 
-      <label className="block space-y-1">
+      <label className="block space-y-2">
         <span className={label}>{t("form.guests")}</span>
         <input
           type="number"
@@ -165,7 +177,7 @@ export function BookingForm({
           onChange={onChange("guests")}
         />
       </label>
-      <label className="block space-y-1">
+      <label className="block space-y-2">
         <span className={label}>{t("form.name")}</span>
         <input
           type="text"
@@ -175,8 +187,8 @@ export function BookingForm({
           onChange={onChange("name")}
         />
       </label>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label className="space-y-1">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <label className="block space-y-2">
           <span className={label}>{t("form.email")}</span>
           <input
             type="email"
@@ -186,7 +198,7 @@ export function BookingForm({
             onChange={onChange("email")}
           />
         </label>
-        <label className="space-y-1">
+        <label className="block space-y-2">
           <span className={label}>{t("form.phone")}</span>
           <input
             type="tel"
@@ -197,15 +209,22 @@ export function BookingForm({
           />
         </label>
       </div>
-      <label className="block space-y-1">
+      <label className="block space-y-2">
         <span className={label}>{t("form.message")}</span>
         <textarea rows={4} className={input} value={form.message} onChange={onChange("message")} />
       </label>
-      {error && <p className="text-sm text-accent">{t("contact.error")}</p>}
+      {error && (
+        <p
+          role="alert"
+          className="border-l-4 border-foreground bg-secondary px-4 py-3 text-base font-medium text-foreground"
+        >
+          {t("contact.error")}
+        </p>
+      )}
       <button
         type="submit"
         disabled={submitting || hardBlock}
-        className="btn-base flex w-full items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-foreground/90 disabled:opacity-60"
+        className="btn-base flex w-full items-center justify-center gap-2 bg-accent py-4 text-base text-accent-foreground hover:bg-accent-hover disabled:opacity-60"
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
         {submitting ? t("contact.sending") : t("form.submit")}

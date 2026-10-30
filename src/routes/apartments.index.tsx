@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { listApartments } from "@/data/api";
-import { ApartmentCard } from "@/components/site/ApartmentCard";
 import { useI18n } from "@/i18n/I18nProvider";
 import {
   Accordion,
@@ -9,9 +8,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { SITE_IMAGES } from "@/content/media";
-
-const bannerImg = SITE_IMAGES.valleyView;
+import { PageIntro, StayTile } from "@/components/site/editorial";
+import { H2, LEAD, SECTION } from "@/components/site/editorialStyles";
 
 const FAQ = ["1", "2", "3", "4", "5", "6"];
 
@@ -41,68 +39,56 @@ function List() {
 
   return (
     <div>
-      {/* BANNER (dark, image) */}
-      <section className="relative overflow-hidden bg-foreground text-background">
-        <img
-          src={bannerImg}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.18]"
-        />
-        <div className="hero-scrim absolute inset-0" />
-        <div className="container-page relative py-16 md:py-20">
-          <div className="eyebrow text-accent-bright">{t("apt.banner.eyebrow")}</div>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.06] text-background md:text-5xl">
-            {t("apt.banner.title")}
-          </h1>
-          <p className="mt-4 max-w-xl text-lg leading-relaxed text-background/80">
-            {t("apt.banner.sub")}
-          </p>
+      <PageIntro title={t("apt.banner.title")} lead={t("apt.banner.sub")}>
+        <p className="mt-4 text-[17px] leading-relaxed text-foreground">
+          <span className="font-[family-name:var(--font-display)] font-medium text-accent">
+            {t("home.offer.big")}
+          </span>{" "}
+          {t("home.offer.inline")}
+        </p>
+      </PageIntro>
+
+      {/* GRID */}
+      <section className="pb-24 md:pb-32">
+        <div className="container-page">
+          {isPending ? (
+            <div className="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="aspect-[4/3] animate-pulse bg-secondary" />
+              ))}
+            </div>
+          ) : isError ? (
+            <p className={LEAD}>{t("state.error")}</p>
+          ) : apartments.length === 0 ? (
+            <p className={LEAD}>{t("apt.empty")}</p>
+          ) : (
+            <div className="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+              {apartments.map((a) => (
+                <StayTile key={a.id} apartment={a} withSummary />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* GRID */}
-      <section className="container-page py-14">
-        {isPending ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-[4/3] animate-pulse border border-border bg-secondary"
-              />
-            ))}
-          </div>
-        ) : isError ? (
-          <p className="text-sm text-muted-foreground">{t("state.error")}</p>
-        ) : apartments.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("apt.empty")}</p>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {apartments.map((a) => (
-              <ApartmentCard key={a.id} apartment={a} />
-            ))}
-          </div>
-        )}
-      </section>
-
       {/* FAQ */}
-      <section className="section-y bg-secondary">
-        <div className="container-page grid gap-10 md:grid-cols-[0.5fr_1fr]">
-          <div className="max-w-[420px]">
-            <div className="eyebrow">{t("apt.faq.eyebrow")}</div>
-            <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
-              {t("apt.faq.title")}
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              {t("apt.faq.lead")}
-            </p>
+      <section className={"bg-secondary " + SECTION}>
+        <div className="container-page grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <h2 className={H2}>{t("apt.faq.title")}</h2>
+            <p className={LEAD + " mt-5 max-w-sm"}>{t("apt.faq.lead")}</p>
           </div>
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full border-t border-foreground/15 md:col-span-7"
+          >
             {FAQ.map((n) => (
-              <AccordionItem key={n} value={n} className="border-b border-border">
-                <AccordionTrigger className="py-5 text-left font-[family-name:var(--font-display)] text-base font-semibold hover:no-underline">
+              <AccordionItem key={n} value={n} className="border-b border-foreground/15">
+                <AccordionTrigger className="py-6 text-left font-[family-name:var(--font-display)] text-lg font-medium hover:no-underline">
                   {t(`apt.faq.${n}.q`)}
                 </AccordionTrigger>
-                <AccordionContent className="pb-5 text-[15px] leading-relaxed text-muted-foreground">
+                <AccordionContent className="pb-6 text-base leading-relaxed text-foreground/80">
                   {t(`apt.faq.${n}.a`)}
                 </AccordionContent>
               </AccordionItem>

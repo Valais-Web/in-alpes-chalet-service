@@ -1,67 +1,89 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
-import logoInk from "@/assets/logo-ink.png";
+import logoWhite from "@/assets/logo-white.png";
 
+/** The site's one closing block: a question, a phone number, the address. */
 export function Footer() {
   const { t } = useI18n();
+  const links = [
+    { to: "/apartments", label: t("nav.apartments") },
+    { to: "/services", label: t("nav.services") },
+    { to: "/contact", label: t("nav.contact") },
+  ] as const;
   return (
-    <footer className="border-t border-border bg-secondary/40">
-      <div className="container-page grid gap-8 py-12 md:grid-cols-4">
-        <div>
-          <img
-            src={logoInk}
-            alt=""
-            width={48}
-            height={48}
-            className="mb-3 h-12 w-12 object-contain"
-          />
-          <div className="font-[family-name:var(--font-display)] text-sm font-semibold uppercase tracking-[0.14em]">
-            {t("brand")}
-          </div>
-          <div className="mt-1 text-xs text-muted-foreground">{t("brand.tagline")}</div>
+    <footer className="bg-foreground text-background">
+      <div className="container-page grid gap-12 pb-16 pt-24 md:grid-cols-12 md:gap-10 md:pt-28">
+        <div className="md:col-span-5">
+          <h2 className="text-[clamp(1.7rem,2.4vw,2.2rem)] font-medium leading-[1.1] tracking-[-0.02em] text-background">
+            {t("footer.title")}
+          </h2>
+          <p className="mt-5 max-w-md text-lg leading-relaxed text-background/70">
+            {t("footer.sub")}
+          </p>
+          <Link
+            to="/contact"
+            className="btn-base mt-10 bg-background px-7 py-4 text-base text-foreground hover:bg-background/90"
+          >
+            {t("home.cta.btn")} <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
-        <div className="text-sm">
-          <div className="mb-2 font-medium">{t("nav.apartments")}</div>
-          <ul className="space-y-1 text-muted-foreground">
-            <li>
-              <Link to="/apartments" className="hover:text-foreground">
-                {t("cta.viewAll")}
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="text-sm">
-          <div className="mb-2 font-medium">{t("nav.services")}</div>
-          <ul className="space-y-1 text-muted-foreground">
-            <li>
-              <Link to="/services" className="hover:text-foreground">
-                {t("services.title")}
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="text-sm">
-          <div className="mb-2 font-medium">{t("nav.contact")}</div>
-          <ul className="space-y-1 text-muted-foreground">
-            <li>{t("contact.address")}</li>
-            <li>{t("contact.phone")}</li>
-            <li>{t("contact.email")}</li>
-          </ul>
-        </div>
+        <address className="not-italic md:col-span-7 md:pl-10">
+          <a
+            href={`tel:${t("contact.phone").replace(/\s/g, "")}`}
+            className="block font-[family-name:var(--font-display)] text-[clamp(2.6rem,5.4vw,4.8rem)] font-light leading-none tracking-[-0.03em] tabular-nums hover:text-accent-bright"
+          >
+            {t("contact.phone")}
+          </a>
+          <a
+            href={`mailto:${t("contact.email")}`}
+            className="mt-5 block font-[family-name:var(--font-display)] text-2xl hover:text-accent-bright"
+          >
+            {t("contact.email")}
+          </a>
+          <p className="mt-6 text-base leading-relaxed text-background/65">
+            {t("contact.address")}
+          </p>
+        </address>
       </div>
-      <div className="border-t border-border">
-        <div className="container-page flex flex-col items-start justify-between gap-2 py-4 text-xs text-muted-foreground md:flex-row md:items-center">
+      <div className="container-page">
+        <div className="flex flex-col gap-6 border-t border-background/15 py-8 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-4">
+            <img
+              src={logoWhite}
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 object-contain"
+            />
+            <span className="font-[family-name:var(--font-display)] text-sm font-medium uppercase tracking-[0.16em]">
+              {t("brand")}
+            </span>
+          </div>
+          <nav className="flex flex-wrap gap-x-6 gap-y-2">
+            {links.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="font-[family-name:var(--font-display)] text-[15px] text-background/80 hover:text-background"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+        <div className="flex flex-col gap-2 pb-8 text-sm text-background/45 md:flex-row md:items-center md:justify-between">
           <div>
             © {new Date().getFullYear()} {t("brand")}. {t("footer.rights")}.
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <Link to="/mentions-legales" className="hover:text-foreground">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <Link to="/mentions-legales" className="hover:text-background">
               {t("footer.legal")}
             </Link>
-            <Link to="/confidentialite" className="hover:text-foreground">
+            <Link to="/confidentialite" className="hover:text-background">
               {t("footer.privacy")}
             </Link>
-            <Link to="/admin" className="hover:text-foreground">
+            <Link to="/admin" className="text-background/25 hover:text-background">
               {t("nav.admin")}
             </Link>
           </div>

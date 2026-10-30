@@ -1,3 +1,4 @@
+import { NightlyPrice } from "./NightlyPrice";
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/i18n/I18nProvider";
 import { imageAt, imageSrcSet } from "@/data/api";
@@ -46,17 +47,7 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
           </span>
         </div>
         <div className="mt-4 flex items-baseline justify-between">
-          <div className="text-sm">
-            {apartment.pricePerNight > 0 ? (
-              <>
-                <span className="text-muted-foreground">{t("apt.from")} </span>
-                <span className="font-semibold">CHF {apartment.pricePerNight}</span>
-                <span className="text-muted-foreground"> {t("apt.night")}</span>
-              </>
-            ) : (
-              <span className="font-semibold">{t("apt.priceOnRequest")}</span>
-            )}
-          </div>
+          <NightlyPrice price={apartment.pricePerNight} className="text-lg" />
           <span className="text-xs font-medium text-accent">{t("cta.discover")} →</span>
         </div>
       </div>

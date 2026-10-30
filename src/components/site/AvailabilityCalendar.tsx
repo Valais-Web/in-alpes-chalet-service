@@ -112,16 +112,16 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-center gap-3">
         <button
           type="button"
           onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
-          className="border border-border p-2 hover:bg-secondary"
+          className="grid h-11 w-11 place-items-center border border-border hover:bg-secondary"
           aria-label="previous month"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
-        <div className="flex gap-4 text-xs">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-xs">
           <Legend swatch="bg-background border" label={t("status.free")} />
           <Legend swatch="bg-foreground" label={t("status.booked")} />
           <Legend swatch="bg-accent/30 border border-accent" label={t("status.prebooked")} />
@@ -130,7 +130,7 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
         <button
           type="button"
           onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
-          className="border border-border p-2 hover:bg-secondary"
+          className="grid h-11 w-11 place-items-center border border-border hover:bg-secondary"
           aria-label="next month"
         >
           <ChevronRight className="h-4 w-4" />

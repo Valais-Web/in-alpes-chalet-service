@@ -26,7 +26,6 @@ export function Header() {
   const dark = overHero && !scrolled; // white-on-photo mode
 
   const links = [
-    { to: "/", label: t("nav.home") },
     { to: "/apartments", label: t("nav.apartments") },
     { to: "/services", label: t("nav.services") },
     { to: "/contact", label: t("nav.contact") },
@@ -41,46 +40,45 @@ export function Header() {
           : "border-b border-border bg-background/85 backdrop-blur")
       }
     >
-      <div className="container-page flex h-16 items-center justify-between gap-4">
-        <Link to="/" className="group flex items-center gap-3" onClick={() => setOpen(false)}>
+      <div className="container-page flex h-20 items-center justify-between gap-2 lg:gap-4">
+        <Link
+          to="/"
+          className="group flex min-w-0 items-center gap-2 sm:gap-3"
+          onClick={() => setOpen(false)}
+        >
           <img
             src={dark ? logoWhite : logoInk}
             alt=""
             width={56}
             height={56}
-            className="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-105"
+            className="h-9 w-9 shrink-0 object-contain sm:h-14 sm:w-14"
           />
-          <div className="leading-tight">
-            <div
-              className={
-                "font-[family-name:var(--font-display)] text-[0.95rem] font-semibold uppercase tracking-[0.16em] " +
-                (dark ? "text-white" : "text-foreground")
-              }
-            >
-              {t("brand")}
-            </div>
-            <div className={"text-[11px] " + (dark ? "text-white/70" : "text-muted-foreground")}>
-              {t("brand.tagline")}
-            </div>
-          </div>
+          <span
+            className={
+              "font-[family-name:var(--font-display)] max-w-[8rem] text-[0.68rem] font-medium uppercase leading-snug tracking-[0.08em] sm:max-w-none sm:whitespace-nowrap sm:text-[1.05rem] sm:tracking-[0.16em] " +
+              (dark ? "text-white" : "text-foreground")
+            }
+          >
+            {t("brand")}
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="ml-auto hidden items-center gap-1 lg:flex">
           {links.map((l) => {
-            const active = l.to === "/" ? pathname === "/" : pathname.startsWith(l.to);
+            const active = pathname.startsWith(l.to);
             return (
               <Link
                 key={l.to}
                 to={l.to}
                 className={
-                  "px-3 py-2 text-sm font-[family-name:var(--font-display)] transition-colors " +
+                  "px-3.5 py-2 text-[17px] font-[family-name:var(--font-display)] transition-colors " +
                   (dark
                     ? active
                       ? "text-white"
-                      : "text-white/75 hover:text-white"
+                      : "text-white/80 hover:text-white"
                     : active
                       ? "text-accent"
-                      : "text-muted-foreground hover:text-foreground")
+                      : "text-foreground/65 hover:text-foreground")
                 }
               >
                 {l.label}
@@ -89,55 +87,55 @@ export function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <LanguageSwitcher />
+        <div className="hidden items-center gap-6 lg:flex">
+          <span className={"h-4 w-px " + (dark ? "bg-white/30" : "bg-border")} aria-hidden />
+          <LanguageSwitcher onDark={dark} />
           <Link
-            to="/admin"
+            to="/apartments"
             className={
-              "text-xs transition-colors " +
-              (dark
-                ? "text-white/70 hover:text-white"
-                : "text-muted-foreground hover:text-foreground")
+              "btn-base bg-accent px-5 py-3 text-base text-accent-foreground hover:bg-accent-hover"
             }
           >
-            {t("nav.admin")}
+            {t("nav.book")}
           </Link>
         </div>
 
+        <Link
+          to="/apartments"
+          onClick={() => setOpen(false)}
+          className="btn-base ml-auto min-h-11 shrink-0 bg-accent px-3 text-sm text-accent-foreground hover:bg-accent-hover lg:hidden"
+        >
+          {t("nav.book")}
+        </Link>
         <button
           type="button"
           className={
-            "border p-2 transition-colors md:hidden " +
-            (dark ? "border-white/40 text-white" : "border-border text-foreground")
+            "-mr-2 grid h-11 w-11 shrink-0 place-items-center transition-colors lg:hidden " +
+            (dark ? "text-white" : "text-foreground")
           }
           onClick={() => setOpen((v) => !v)}
           aria-label="menu"
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
-          {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-border bg-background md:hidden">
+        <div id="mobile-navigation" className="border-t border-border bg-background lg:hidden">
           <div className="container-page flex flex-col gap-2 py-4">
             {links.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
                 onClick={() => setOpen(false)}
-                className="px-3 py-2 text-sm hover:bg-secondary"
+                className="flex min-h-11 items-center px-3 py-2 text-base hover:bg-secondary"
               >
                 {l.label}
               </Link>
             ))}
-            <Link
-              to="/admin"
-              onClick={() => setOpen(false)}
-              className="px-3 py-2 text-sm hover:bg-secondary"
-            >
-              {t("nav.admin")}
-            </Link>
-            <div className="pt-2">
+            <div className="px-2 pt-2">
               <LanguageSwitcher />
             </div>
           </div>
