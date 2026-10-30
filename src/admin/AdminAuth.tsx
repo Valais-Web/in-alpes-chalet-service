@@ -19,6 +19,8 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // Read browser storage only after hydration, so the SSR markup matches.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAuthed(window.sessionStorage.getItem(KEY) === "1");
   }, []);
 

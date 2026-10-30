@@ -23,6 +23,7 @@ import type {
 } from "./types";
 
 import { SITE_IMAGES } from "@/content/media";
+import { apiOrigin } from "./origin";
 
 const LIVE = import.meta.env.VITE_API_MODE === "live";
 
@@ -31,6 +32,21 @@ const LIVE = import.meta.env.VITE_API_MODE === "live";
 export function resolveImage(key: string): string {
   if (/^https?:\/\//.test(key)) return key;
   return SITE_IMAGES.heroChalet;
+}
+
+const CLOUDINARY_UPLOAD = /^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)/;
+
+/** The image at most `width` px wide. Cloudinary URLs get a resize step
+ * (never upscaled); anything else is returned as resolveImage() gives it. */
+export function imageAt(key: string, width: number): string {
+  const url = resolveImage(key);
+  return url.replace(CLOUDINARY_UPLOAD, `$1c_limit,w_${width}/`);
+}
+
+/** `srcSet` for a responsive <img>, or undefined for non-Cloudinary images. */
+export function imageSrcSet(key: string, widths: number[]): string | undefined {
+  if (!CLOUDINARY_UPLOAD.test(resolveImage(key))) return undefined;
+  return widths.map((w) => `${imageAt(key, w)} ${w}w`).join(", ");
 }
 
 /** Expired pre-reservations read as free (computed client-side, CLAUDE.md §5). */
@@ -57,7 +73,8 @@ export function setUnauthorizedHandler(fn: (() => void) | null) {
 }
 
 async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(path, { credentials: "same-origin" });
+  // Absolute during SSR: route loaders (e.g. /apartments/$slug) run on the server.
+  const res = await fetch(`${apiOrigin()}${path}`, { credentials: "same-origin" });
   if (res.status === 401) onUnauthorized?.();
   if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
   return res.json() as Promise<T>;
@@ -170,13 +187,41 @@ export async function listAvailability(apartmentId: string): Promise<Availabilit
     .map((r) => ({ ...r, status: effectiveStatus(r) }));
 }
 
+/** Admin: the full ranges, read from Neon behind the session. Unlike the
+ * public JSON it keeps `fromRequest`, which marks booking-owned ranges. */
+export async function listAdminAvailability(apartmentId: string): Promise<AvailabilityRange[]> {
+  if (!LIVE) return listAvailability(apartmentId);
+  const all = await apiGet<AvailabilityRange[]>(
+    `/api/admin/availability?apartmentId=${encodeURIComponent(apartmentId)}`,
+  );
+  return all.map((r) => ({ ...r, status: effectiveStatus(r) }));
+}
+
 export async function setAvailability(range: AvailabilityRange): Promise<void> {
   if (LIVE) {
     await apiSend("POST", "/api/admin/availability", range);
     return;
   }
   await delay();
-  availability = [...availability, range];
+  if (range.status !== "free") {
+    availability = [...availability, range];
+    return;
+  }
+  // Mirror the server: "free" trims the overlapping parts of other ranges.
+  const shift = (iso: string, days: number) => {
+    const d = new Date(`${iso}T00:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + days);
+    return d.toISOString().slice(0, 10);
+  };
+  availability = availability.flatMap((r) => {
+    if (r.apartmentId !== range.apartmentId || r.end < range.start || r.start > range.end) {
+      return [r];
+    }
+    const pieces: AvailabilityRange[] = [];
+    if (r.start < range.start) pieces.push({ ...r, end: shift(range.start, -1) });
+    if (r.end > range.end) pieces.push({ ...r, start: shift(range.end, 1) });
+    return pieces;
+  });
 }
 
 export async function clearAvailability(

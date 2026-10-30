@@ -17,3 +17,12 @@ describe("dates", () => {
     expect(lastNightISO("2030-01-15")).toBe("2030-01-14");
   });
 });
+
+describe("localISO (calendar cells)", () => {
+  it("formats the LOCAL calendar day, never shifting through UTC", async () => {
+    const { localISO } = await import("../src/lib/dates");
+    expect(localISO(new Date(2026, 9, 28))).toBe("2026-10-28"); // local midnight
+    expect(localISO(new Date(2026, 0, 1, 0, 30))).toBe("2026-01-01");
+    expect(localISO(new Date(2026, 11, 31, 23, 59))).toBe("2026-12-31");
+  });
+});

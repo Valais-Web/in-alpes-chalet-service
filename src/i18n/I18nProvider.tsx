@@ -27,6 +27,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return;
     const saved = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
     if (saved && (saved === "fr" || saved === "en" || saved === "nl")) {
+      // Read browser storage only after hydration, so the SSR markup matches.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocaleState(saved);
     }
   }, []);

@@ -32,7 +32,14 @@ export default tseslint.config(
           ],
         },
       ],
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": [
+        "warn",
+        // TanStack route files export `Route = createFileRoute(...)(...)`.
+        {
+          allowConstantExport: true,
+          extraHOCs: ["createFileRoute", "createRootRouteWithContext"],
+        },
+      ],
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
@@ -48,6 +55,15 @@ export default tseslint.config(
     rules: {
       "react-refresh/only-export-components": "off",
       "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
+    // Vendored shadcn/ui templates (largely unused): not held to the React
+    // Compiler rules added in eslint-plugin-react-hooks 7.
+    files: ["src/components/ui/**/*.tsx", "src/hooks/**/*.tsx"],
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/purity": "off",
     },
   },
   eslintPluginPrettier,

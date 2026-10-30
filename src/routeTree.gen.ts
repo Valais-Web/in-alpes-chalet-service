@@ -9,43 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ServicesRouteImport } from './routes/services'
-import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApartmentsIndexRouteImport } from './routes/apartments.index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as ApartmentsSlugRouteImport } from './routes/apartments.$slug'
-import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
-import { Route as AdminAvailabilityRouteImport } from './routes/admin.availability'
 import { Route as AdminApartmentsRouteImport } from './routes/admin.apartments'
+import { Route as AdminAvailabilityRouteImport } from './routes/admin.availability'
+import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
+import { Route as ApartmentsIndexRouteImport } from './routes/apartments.index'
+import { Route as ApartmentsSlugRouteImport } from './routes/apartments.$slug'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
-  id: '/mentions-legales',
-  path: '/mentions-legales',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
-  id: '/confidentialite',
-  path: '/confidentialite',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -53,14 +33,29 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApartmentsIndexRoute = ApartmentsIndexRouteImport.update({
-  id: '/apartments/',
-  path: '/apartments/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -68,14 +63,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApartmentsSlugRoute = ApartmentsSlugRouteImport.update({
-  id: '/apartments/$slug',
-  path: '/apartments/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRequestsRoute = AdminRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
+const AdminApartmentsRoute = AdminApartmentsRouteImport.update({
+  id: '/apartments',
+  path: '/apartments',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAvailabilityRoute = AdminAvailabilityRouteImport.update({
@@ -83,10 +73,20 @@ const AdminAvailabilityRoute = AdminAvailabilityRouteImport.update({
   path: '/availability',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminApartmentsRoute = AdminApartmentsRouteImport.update({
-  id: '/apartments',
-  path: '/apartments',
+const AdminRequestsRoute = AdminRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApartmentsIndexRoute = ApartmentsIndexRouteImport.update({
+  id: '/apartments/',
+  path: '/apartments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApartmentsSlugRoute = ApartmentsSlugRouteImport.update({
+  id: '/apartments/$slug',
+  path: '/apartments/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -195,39 +195,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentions-legales': {
-      id: '/mentions-legales'
-      path: '/mentions-legales'
-      fullPath: '/mentions-legales'
-      preLoaderRoute: typeof MentionsLegalesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/confidentialite': {
-      id: '/confidentialite'
-      path: '/confidentialite'
-      fullPath: '/confidentialite'
-      preLoaderRoute: typeof ConfidentialiteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -237,18 +209,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/apartments/': {
-      id: '/apartments/'
-      path: '/apartments'
-      fullPath: '/apartments/'
-      preLoaderRoute: typeof ApartmentsIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -258,18 +251,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/apartments/$slug': {
-      id: '/apartments/$slug'
-      path: '/apartments/$slug'
-      fullPath: '/apartments/$slug'
-      preLoaderRoute: typeof ApartmentsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/requests': {
-      id: '/admin/requests'
-      path: '/requests'
-      fullPath: '/admin/requests'
-      preLoaderRoute: typeof AdminRequestsRouteImport
+    '/admin/apartments': {
+      id: '/admin/apartments'
+      path: '/apartments'
+      fullPath: '/admin/apartments'
+      preLoaderRoute: typeof AdminApartmentsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/availability': {
@@ -279,12 +265,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvailabilityRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/apartments': {
-      id: '/admin/apartments'
-      path: '/apartments'
-      fullPath: '/admin/apartments'
-      preLoaderRoute: typeof AdminApartmentsRouteImport
+    '/admin/requests': {
+      id: '/admin/requests'
+      path: '/requests'
+      fullPath: '/admin/requests'
+      preLoaderRoute: typeof AdminRequestsRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/apartments/': {
+      id: '/apartments/'
+      path: '/apartments'
+      fullPath: '/apartments/'
+      preLoaderRoute: typeof ApartmentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apartments/$slug': {
+      id: '/apartments/$slug'
+      path: '/apartments/$slug'
+      fullPath: '/apartments/$slug'
+      preLoaderRoute: typeof ApartmentsSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }

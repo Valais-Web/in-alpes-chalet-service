@@ -42,6 +42,40 @@ export async function putJson(key: string, data: unknown): Promise<void> {
   }
 }
 
+/**
+ * Publish a snapshot computed by `produce` without ever letting an OLDER
+ * snapshot overwrite a newer one. Two publishes can overlap (an admin edit and
+ * the scheduled sync, say); a plain set would let the slower one — read from
+ * the database first — land last. Compare-and-swap instead: note the
+ * document's ETag, THEN read the data, and write only if the ETag is still
+ * the same. If another writer got in between, re-read and try again. Each
+ * successful write therefore read the database after the previous one did,
+ * so the last write always carries the newest data.
+ */
+export async function putJsonFresh(key: string, produce: () => Promise<unknown>): Promise<void> {
+  try {
+    const s = store();
+    for (let attempt = 0; attempt < 6; attempt++) {
+      // Strong reads see the latest ETag; a stale (eventual) one can only make
+      // the conditional write fail and retry, never overwrite newer data.
+      const current = await s
+        .getMetadata(key, { consistency: "strong" })
+        .catch(() => s.getMetadata(key));
+      const data = await produce();
+      const { modified } = current?.etag
+        ? await s.setJSON(key, data, { onlyIfMatch: current.etag })
+        : await s.setJSON(key, data, { onlyIfNew: true });
+      if (modified) return;
+      await new Promise((r) => setTimeout(r, 100 * (attempt + 1)));
+    }
+    throw new Error(`blobs_write_contended: ${key}`);
+  } catch (err) {
+    if (isProduction) throw err;
+    console.warn(`[blobs] putJsonFresh(${key}) fell back to memory (dev):`, (err as Error).message);
+    memory.set(key, await produce());
+  }
+}
+
 export async function getJson<T>(key: string): Promise<T | null> {
   try {
     const value = await store().get(key, { type: "json" });

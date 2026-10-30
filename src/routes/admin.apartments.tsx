@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import {
   deleteApartment,
+  imageAt,
   importFromAirbnb,
   listApartments,
   resolveImage,
@@ -106,7 +107,7 @@ function AdminApartments() {
             <div className="flex items-center gap-3">
               <div className="h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-secondary">
                 <img
-                  src={resolveImage(a.images[0])}
+                  src={imageAt(a.images[0], 160)}
                   alt=""
                   className="h-full w-full object-cover"
                 />

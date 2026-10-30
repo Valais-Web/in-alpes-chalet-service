@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { listBookings, updateBookingStatus } from "@/data/api";
+import { Fragment, useState } from "react";
+import { listApartments, listBookings, updateBookingStatus } from "@/data/api";
 import type { BookingStatus } from "@/data/types";
 import { useI18n } from "@/i18n/I18nProvider";
 import { StatusBadge } from "@/admin/StatusBadge";
-import { RefreshCw, Archive, ArchiveRestore } from "lucide-react";
+import { RefreshCw, Archive, ArchiveRestore, ChevronDown, ChevronUp } from "lucide-react";
 
 export const Route = createFileRoute("/admin/requests")({
   component: AdminRequests,
@@ -14,8 +14,14 @@ export const Route = createFileRoute("/admin/requests")({
 const STATUSES: (BookingStatus | "all")[] = ["all", "pending", "accepted", "declined", "archived"];
 
 function AdminRequests() {
-  const { t } = useI18n();
+  const { t, tx, locale } = useI18n();
   const qc = useQueryClient();
+  const { data: apartments = [] } = useQuery({ queryKey: ["apartments"], queryFn: listApartments });
+  const apartmentName = (id: string) => {
+    const apt = apartments.find((a) => a.id === id);
+    return apt ? tx(apt.title) : id;
+  };
+  const [openId, setOpenId] = useState<string | null>(null);
   const {
     data: bookings = [],
     isError,
@@ -49,6 +55,7 @@ function AdminRequests() {
     try {
       await updateBookingStatus(id, status, action);
       await qc.invalidateQueries({ queryKey: ["bookings"] });
+      qc.invalidateQueries({ queryKey: ["admin-availability"] });
       qc.invalidateQueries({ queryKey: ["availability"] });
     } catch {
       setActionError(true);
@@ -115,11 +122,12 @@ function AdminRequests() {
         </p>
       )}
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-border">
+      <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
         <table className="w-full text-sm">
           <thead className="bg-secondary text-left text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-4 py-3">{t("form.name")}</th>
+              <th className="px-4 py-3">{t("admin.requests.apartment")}</th>
               <th className="px-4 py-3">Dates</th>
               <th className="px-4 py-3">{t("form.guests")}</th>
               <th className="px-4 py-3">Status</th>
@@ -127,49 +135,99 @@ function AdminRequests() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filtered.map((b) => (
-              <tr key={b.id}>
-                <td className="px-4 py-3">
-                  <div className="font-medium">{b.name}</div>
-                  <div className="text-xs text-muted-foreground">{b.email}</div>
-                </td>
-                <td className="px-4 py-3">
-                  {b.arrival} → {b.departure}
-                </td>
-                <td className="px-4 py-3">{b.guests}</td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={b.status} />
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <div className="inline-flex gap-1">
-                    <button
-                      onClick={() => update(b.id, "accepted", "confirm")}
-                      disabled={busyId === b.id}
-                      className="bg-accent px-2.5 py-1 text-xs text-accent-foreground disabled:opacity-50"
-                    >
-                      {t("admin.requests.confirm")}
-                    </button>
-                    <button
-                      onClick={() => update(b.id, "declined", "decline")}
-                      disabled={busyId === b.id}
-                      className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
-                    >
-                      {t("admin.requests.decline")}
-                    </button>
-                    <button
-                      onClick={() => update(b.id, "archived")}
-                      disabled={busyId === b.id}
-                      className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
-                    >
-                      {t("admin.requests.archive")}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {filtered.map((b) => {
+              const open = openId === b.id;
+              return (
+                <Fragment key={b.id}>
+                  <tr>
+                    <td className="px-4 py-3">
+                      <button
+                        type="button"
+                        onClick={() => setOpenId(open ? null : b.id)}
+                        aria-expanded={open}
+                        className="inline-flex items-start gap-1.5 text-left"
+                      >
+                        {open ? (
+                          <ChevronUp className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.8} />
+                        ) : (
+                          <ChevronDown className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.8} />
+                        )}
+                        <span>
+                          <span className="block font-medium">{b.name}</span>
+                          <span className="block text-xs text-muted-foreground">{b.email}</span>
+                        </span>
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 font-medium">{apartmentName(b.apartmentId)}</td>
+                    <td className="px-4 py-3">
+                      {b.arrival} → {b.departure}
+                    </td>
+                    <td className="px-4 py-3">{b.guests}</td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={b.status} />
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="inline-flex gap-1">
+                        <button
+                          onClick={() => update(b.id, "accepted", "confirm")}
+                          disabled={busyId === b.id}
+                          className="bg-accent px-2.5 py-1 text-xs text-accent-foreground disabled:opacity-50"
+                        >
+                          {t("admin.requests.confirm")}
+                        </button>
+                        <button
+                          onClick={() => update(b.id, "declined", "decline")}
+                          disabled={busyId === b.id}
+                          className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
+                        >
+                          {t("admin.requests.decline")}
+                        </button>
+                        <button
+                          onClick={() => update(b.id, "archived")}
+                          disabled={busyId === b.id}
+                          className="border border-border px-2.5 py-1 text-xs disabled:opacity-50"
+                        >
+                          {t("admin.requests.archive")}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  {open && (
+                    <tr className="bg-secondary/50">
+                      <td colSpan={6} className="px-4 py-4">
+                        <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-[max-content_1fr]">
+                          <dt className="text-muted-foreground">{t("form.phone")}</dt>
+                          <dd>
+                            {b.phone ? (
+                              <a href={`tel:${b.phone}`} className="text-accent hover:underline">
+                                {b.phone}
+                              </a>
+                            ) : (
+                              "—"
+                            )}
+                          </dd>
+                          <dt className="text-muted-foreground">{t("form.email")}</dt>
+                          <dd>
+                            <a href={`mailto:${b.email}`} className="text-accent hover:underline">
+                              {b.email}
+                            </a>
+                          </dd>
+                          <dt className="text-muted-foreground">{t("admin.requests.received")}</dt>
+                          <dd>{new Date(b.createdAt).toLocaleString(locale)}</dd>
+                          <dt className="text-muted-foreground">{t("form.message")}</dt>
+                          <dd className="whitespace-pre-wrap">
+                            {b.message || t("admin.requests.noMessage")}
+                          </dd>
+                        </dl>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
                   Aucune demande
                 </td>
               </tr>

@@ -16,6 +16,7 @@ import { neon } from "@neondatabase/serverless";
 import { randomUUID } from "node:crypto";
 import { env, flags, assertProductionSecrets } from "./env";
 import type { CalendarOp } from "./bookingTransitions";
+import { subtractRanges } from "./dates";
 import type {
   Apartment,
   AvailabilityRange,
@@ -69,7 +70,12 @@ export interface Repo {
 
   listAvailability(apartmentId?: string): Promise<AvailabilityRange[]>;
   setAvailability(r: AvailabilityRange): Promise<void>;
+  /** Delete one manual range (exact match). Airbnb rows and booking-owned rows
+   * are never deleted here: they change only through the sync or the request. */
   clearAvailability(apartmentId: string, start: string, end: string): Promise<void>;
+  /** Make `[start,end]` free: delete or trim every manual (site, non-booking)
+   * range overlapping it. Booking-owned and Airbnb rows are left alone. */
+  freeRange(apartmentId: string, start: string, end: string): Promise<void>;
 
   listBookings(): Promise<BookingRequest[]>;
   /**
@@ -81,7 +87,7 @@ export interface Repo {
   createBooking(b: NewBooking): Promise<BookingRequest>;
   /**
    * Apply an owner decision atomically: set the request status and run the
-   * resolved calendar op (book / unbook / release_hold / none) in the same
+   * resolved calendar op (book / unbook / none) in the same
    * transaction, always scoped to THIS request's own availability rows. `book`
    * throws AvailabilityConflictError if the firm range would overlap another
    * confirmed range. See bookingTransitions.ts for how the op is derived.
@@ -151,9 +157,10 @@ const BLOCKING: readonly string[] = ["booked", "blocked"];
  * public availability.json. */
 type StoredRange = AvailabilityRange & { bookingRequestId?: string };
 
-/** Drop the internal owner id before a range crosses the repo boundary. */
-function toPublicRange({ bookingRequestId: _omit, ...pub }: StoredRange): AvailabilityRange {
-  return pub;
+/** Drop the internal owner id before a range crosses the repo boundary (the
+ * admin only learns THAT a request owns it; publish strips even that). */
+function toPublicRange({ bookingRequestId, ...pub }: StoredRange): AvailabilityRange {
+  return bookingRequestId ? { ...pub, fromRequest: true } : pub;
 }
 
 function seedApartmentList(): Apartment[] {
@@ -206,11 +213,24 @@ function memoryRepo(): Repo {
       availability = [...availability, r];
     },
     async clearAvailability(apartmentId, start, end) {
-      // Airbnb rows are owned by the sync and would come straight back.
+      // Airbnb rows are owned by the sync and would come straight back;
+      // booking-owned rows must go through the request (decline).
       availability = availability.filter(
         (r) =>
           r.source === "airbnb" ||
+          Boolean(r.bookingRequestId) ||
           !(r.apartmentId === apartmentId && r.start === start && r.end === end),
+      );
+    },
+    async freeRange(apartmentId, start, end) {
+      const free = { start, end };
+      availability = availability.flatMap((r) =>
+        r.apartmentId !== apartmentId ||
+        r.source === "airbnb" ||
+        r.bookingRequestId ||
+        !rangesOverlap(r.start, r.end, start, end)
+          ? [r]
+          : subtractRanges(r, [free]).map((p) => ({ ...r, ...p })),
       );
     },
 
@@ -267,13 +287,16 @@ function memoryRepo(): Repo {
         const clash = availability.some(
           (r) =>
             r.apartmentId === apartmentId &&
+            r.bookingRequestId !== id &&
             BLOCKING.includes(r.status) &&
             rangesOverlap(arrival, lastNight, r.start, r.end),
         );
         if (clash) throw new AvailabilityConflictError();
-        // Drop this request's own soft hold, then lay its firm booked range.
+        // Replace this request's own hold and/or earlier booked range with one
+        // firm range (idempotent: re-confirming never duplicates).
         availability = availability.filter(
-          (r) => !(r.bookingRequestId === id && r.status === "prebooked"),
+          (r) =>
+            !(r.bookingRequestId === id && (r.status === "prebooked" || r.status === "booked")),
         );
         availability.push({
           apartmentId,
@@ -288,10 +311,6 @@ function memoryRepo(): Repo {
         availability = availability.filter(
           (r) =>
             !(r.bookingRequestId === id && (r.status === "booked" || r.status === "prebooked")),
-        );
-      } else if (op === "release_hold") {
-        availability = availability.filter(
-          (r) => !(r.bookingRequestId === id && r.status === "prebooked"),
         );
       }
       const b = bookings.find((x) => x.id === id);
@@ -400,6 +419,7 @@ function rowToRange(r: Row): AvailabilityRange {
     status: r.status as AvailabilityStatus,
     ...(r.expires_at ? { expiresAt: new Date(r.expires_at).toISOString() } : {}),
     ...(r.source === "airbnb" ? { source: "airbnb" as const } : {}),
+    ...(r.booking_request_id ? { fromRequest: true as const } : {}),
   };
 }
 
@@ -506,8 +526,30 @@ function neonRepo(): Repo {
       }
     },
     async clearAvailability(apartmentId, start, end) {
-      // Airbnb rows are owned by the sync and would come straight back.
-      await sql`DELETE FROM availability WHERE apartment_id = ${apartmentId} AND start_date = ${start} AND end_date = ${end} AND source IS NULL`;
+      // Airbnb rows are owned by the sync and would come straight back;
+      // booking-owned rows must go through the request (decline).
+      await sql`DELETE FROM availability WHERE apartment_id = ${apartmentId} AND start_date = ${start} AND end_date = ${end} AND source IS NULL AND booking_request_id IS NULL`;
+    },
+    async freeRange(apartmentId, start, end) {
+      const rows = await sql`
+        SELECT * FROM availability
+        WHERE apartment_id = ${apartmentId} AND source IS NULL AND booking_request_id IS NULL
+          AND daterange(start_date, end_date, '[]') && daterange(${start}, ${end}, '[]')
+      `;
+      if (!rows.length) return;
+      // Delete the overlapping rows and re-insert what lies outside [start,end],
+      // in one transaction. Only shrinking, so the exclusion constraint can't fire.
+      const stmts = rows.map((r) => sql`DELETE FROM availability WHERE id = ${r.id}`);
+      for (const r of rows) {
+        const range = rowToRange(r);
+        for (const p of subtractRanges(range, [{ start, end }])) {
+          stmts.push(sql`
+            INSERT INTO availability (id, apartment_id, start_date, end_date, status, expires_at)
+            VALUES (${randomUUID()}, ${apartmentId}, ${p.start}, ${p.end}, ${range.status}, ${r.expires_at ?? null})
+          `);
+        }
+      }
+      await sql.transaction(stmts);
     },
 
     async listBookings() {
@@ -560,11 +602,12 @@ function neonRepo(): Repo {
       // (booking_request_id), so acting on one request never frees or removes
       // another guest's overlapping soft hold (CLAUDE.md §5).
       if (op === "book") {
-        // Drop this request's soft hold, then lay its firm booked range; the
-        // exclusion constraint rejects an overlap with another confirmed range,
-        // rolling back the whole decision.
+        // Replace this request's hold and/or earlier booked range with one firm
+        // range (idempotent: re-confirming never duplicates); the exclusion
+        // constraint rejects an overlap with another confirmed range, rolling
+        // back the whole decision.
         stmts.push(
-          sql`DELETE FROM availability WHERE booking_request_id = ${id} AND status = 'prebooked'`,
+          sql`DELETE FROM availability WHERE booking_request_id = ${id} AND status IN ('prebooked','booked')`,
         );
         stmts.push(sql`
           INSERT INTO availability (id, apartment_id, start_date, end_date, status, booking_request_id)
@@ -574,10 +617,6 @@ function neonRepo(): Repo {
         // Reverse this request's confirmed booking + any hold it still owns.
         stmts.push(
           sql`DELETE FROM availability WHERE booking_request_id = ${id} AND status IN ('booked','prebooked')`,
-        );
-      } else if (op === "release_hold") {
-        stmts.push(
-          sql`DELETE FROM availability WHERE booking_request_id = ${id} AND status = 'prebooked'`,
         );
       }
       try {

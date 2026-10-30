@@ -11,11 +11,11 @@
  */
 import { repo, AvailabilityConflictError } from "../lib/db";
 import { requireOwner } from "../lib/auth";
-import { publishAvailability } from "../lib/publish";
 import { requestUpdateSchema } from "../lib/validation";
 import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 import { lastNightISO } from "../lib/dates";
 import { resolveDecision } from "../lib/bookingTransitions";
+import { afterSiteCalendarChange } from "../lib/calendarSync";
 
 export default async (req: Request): Promise<Response> => {
   try {
@@ -37,11 +37,10 @@ export default async (req: Request): Promise<Response> => {
     const booking = (await repo.listBookings()).find((b) => b.id === id);
     if (!booking) throw new HttpError(404, "booking_not_found");
 
-    // The calendar op is derived server-side from the request's CURRENT status
-    // + the target status — the client's `action` is only a consistency hint.
-    // This rejects illegal moves (e.g. archived → pending) and makes a reversal
-    // (accepted → declined) actually remove the confirmed range, rather than
-    // leaving the calendar disagreeing with the request status.
+    // The calendar op is derived server-side (bookingTransitions.ts) — the
+    // client's `action` is only a consistency hint. This rejects illegal moves
+    // (e.g. archived → pending), and declining always removes whatever range the
+    // request still owns, even after it was archived.
     const decision = resolveDecision(booking.status, status);
     if (!decision) throw new HttpError(400, "invalid_status_transition");
 
@@ -62,7 +61,9 @@ export default async (req: Request): Promise<Response> => {
       throw err;
     }
 
-    if (decision.op !== "none") await publishAvailability();
+    if (decision.op !== "none") {
+      await afterSiteCalendarChange(booking.apartmentId);
+    }
 
     return json({ ok: true }, 200, NO_STORE);
   } catch (err) {

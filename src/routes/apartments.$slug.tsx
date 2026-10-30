@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getApartmentBySlug, listAvailability, resolveImage } from "@/data/api";
+import { getApartmentBySlug, imageAt, imageSrcSet, listAvailability } from "@/data/api";
 import { useI18n } from "@/i18n/I18nProvider";
 import { APARTMENT_REVIEWS, formatRating } from "@/content/reviews";
 import { googleMapsLink } from "@/content/maps";
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/apartments/$slug")({
   head: ({ loaderData, params }) => {
     const title = loaderData?.apartment.title.fr ?? params.slug;
     const desc = loaderData?.apartment.summary.fr ?? "";
-    const img = loaderData ? resolveImage(loaderData.apartment.images[0]) : undefined;
+    const img = loaderData ? imageAt(loaderData.apartment.images[0], 1200) : undefined;
     return {
       meta: [
         { title: `${title} · In-Alpes` },
@@ -108,7 +108,9 @@ function Detail() {
           className="group relative block aspect-[16/9] w-full overflow-hidden bg-secondary"
         >
           <img
-            src={resolveImage(images[current])}
+            src={imageAt(images[current], 1600)}
+            srcSet={imageSrcSet(images[current], [800, 1200, 1600, 2000])}
+            sizes="(min-width: 1280px) 1200px, 100vw"
             alt={tx(apartment.title)}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             width={1600}
@@ -133,7 +135,7 @@ function Detail() {
                 }`}
               >
                 <img
-                  src={resolveImage(img)}
+                  src={imageAt(img, 240)}
                   alt={`${tx(apartment.title)} ${i + 1}`}
                   className="h-full w-full object-cover"
                   loading="lazy"
@@ -174,7 +176,9 @@ function Detail() {
             </button>
           )}
           <img
-            src={resolveImage(images[current])}
+            src={imageAt(images[current], 2000)}
+            srcSet={imageSrcSet(images[current], [1200, 2000, 2800])}
+            sizes="92vw"
             alt={tx(apartment.title)}
             className="max-h-[88vh] max-w-[92vw] object-contain"
             onClick={(e) => e.stopPropagation()}
