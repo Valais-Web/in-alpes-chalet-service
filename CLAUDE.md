@@ -6,7 +6,7 @@ Fichier de contexte pour Claude Code. Lis-le en entier avant toute action sur ce
 
 ## 1. Résumé du projet
 
-Site de **location de vacances** et de **services de gérance** pour **In-Alpes Chalet Services Sàrl**, à **Haute-Nendaz (Valais, Suisse)**. Trois appartements. Deux audiences distinctes à adresser :
+Site de **location de vacances** et de **services de gérance** pour **In-Alpes Chalet Services Sàrl**, à **Haute-Nendaz (Valais, Suisse)**. Quatre appartements (importés depuis leurs annonces Airbnb). Deux audiences distinctes à adresser :
 
 - **Locataires** : réservent un logement.
 - **Propriétaires** : confient la gestion de leur résidence secondaire.
@@ -184,8 +184,10 @@ Le branding suit le **design system In-Alpes** (importé depuis Claude Design, `
 - **Boutons** : carrés. Primaire = fill vert sapin (hover sapin-700) ; `bright` = vert alpin (CTA réservation) ; secondaire = contour encre ; tertiaire = lien texte vert ; on-dark = blanc. Pas de scale/bounce.
 - **Icônes** : Lucide, trait fin (~1.8), pas d'emoji ni de glyphes unicode.
 - **Interdits** : pas de vidéo embarquée, pas de page interminable, pas de rouge, pas de coins arrondis (sauf contrôles de formulaire circulaires natifs). Mobile-first.
-- **Hero animé (2026-10)** : `DepthPhoto` (WebGL sans dépendance, `src/components/site/gl.ts`) — parallaxe 3D à partir d'une carte de profondeur générée (Codex) depuis la vraie photo, hébergée sur Cloudinary (`in-alpes/site/art`, voir `DEPTH_MAPS` dans `src/content/media.ts`) ; ombres de nuages l'été (rien l'hiver). Dégrade vers l'image simple sans WebGL ou en `prefers-reduced-motion`. Toute nouvelle photo de hero nécessite sa propre carte de profondeur.
-- Le logo In-Alpes (badge alpin noir/blanc) est dans `src/assets/logo-ink.png` (sur clair) et `logo-white.png` (sur foncé).
+- **Hero animé (2026-10)** : `DepthPhoto` (WebGL sans dépendance, `src/components/site/gl.ts`) — parallaxe 3D à partir d'une carte de profondeur générée (Codex) depuis la vraie photo, hébergée sur Cloudinary (`in-alpes/site/art`, voir `DEPTH_MAPS` dans `src/content/media.ts`) ; ombres de nuages l'été (rien l'hiver). Dégrade vers l'image simple sans WebGL ou en `prefers-reduced-motion`. Toute nouvelle photo de hero nécessite sa propre carte de profondeur. Aperçu d'une saison précise : `/?saison=hiver` ou `/?saison=ete`.
+- **Mise en page éditoriale (2026-10)** : grands titres, sections à filets, pas d'eyebrow ni de cartes à icônes sur les pages publiques. Classes partagées dans `src/components/site/editorialStyles.ts` (`H1`, `H2`, `SECTION`, `LEAD`, `grade()`), composants `PageIntro` et `StayTile` dans `editorial.tsx`. Les CTA principaux sont en vert vif (`bg-accent-bright`). Un prix à 0 n'est pas affiché.
+- **Images générées (décision propriétaire, 2026-10)** : l'IA (Codex) seulement pour des images d'ambiance (`AMBIANCE` dans `src/content/media.ts`), **jamais pour représenter un logement**. Pas de portrait de Bart.
+- Le logo In-Alpes (badge alpin noir/blanc) est dans `src/assets/logo-ink.png` (sur clair) et `logo-white.png` (sur foncé). **Affiché en grand** à la demande de Bart (2026-11) : 72 px mobile, 84 px tablette, 100 px desktop ; la barre fait `h-20` / `lg:h-28` et le hero d'accueil compense avec `-mt-20 lg:-mt-28`.
 
 ---
 
@@ -236,6 +238,8 @@ Aucun secret côté client. Uniquement les clés publiques nécessaires (ex. clo
 - **Valider les entrées** (Zod) dans toute function qui écrit.
 - **Demander avant d'ajouter une dépendance** ou un service tiers non listé ici.
 - Le formulaire de réservation crée une **demande**, jamais une confirmation. Toujours l'indiquer clairement à l'utilisateur.
+- **Commits et PR au seul nom du propriétaire du dépôt** (pepitob) : pas de ligne `Co-Authored-By` Claude, pas de « Generated with Claude Code » dans les messages ou les descriptions de PR.
+- **`overrides` npm pour nitro** (`package.json`) : `@lovable.dev/vite-tanstack-config` exige `nitro >=3.0.260603-beta`, que la version bêta épinglée ne satisfait pas au sens semver ; sans l'override, `npm install` échoue (ERESOLVE) et le build Netlify casse. Le garder tant que nitro est épinglé.
 
 ---
 
