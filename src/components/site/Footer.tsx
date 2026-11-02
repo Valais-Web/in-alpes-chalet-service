@@ -52,9 +52,9 @@ export function Footer() {
             <img
               src={logoWhite}
               alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 object-contain"
+              width={72}
+              height={72}
+              className="h-[72px] w-[72px] object-contain"
             />
             <span className="font-[family-name:var(--font-display)] text-sm font-medium uppercase tracking-[0.16em]">
               {t("brand")}

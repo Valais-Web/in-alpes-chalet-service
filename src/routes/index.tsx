@@ -35,7 +35,11 @@ function Home_() {
     saison === "ete" ? true : saison === "hiver" ? false : heroMonth >= 5 && heroMonth <= 10;
   const heroImg = summer ? SITE_IMAGES.heroSummer : SITE_IMAGES.heroWinter;
   const heroDepth = summer ? DEPTH_MAPS.heroSummer : DEPTH_MAPS.heroWinter;
-  const { data: apartments = [], isPending } = useQuery({
+  const {
+    data: apartments = [],
+    isPending,
+    isError,
+  } = useQuery({
     queryKey: ["apartments"],
     queryFn: listApartments,
   });
@@ -44,7 +48,7 @@ function Home_() {
   return (
     <>
       {/* HERO — one photo, the slogan, two doors (the stay door in green) */}
-      <section className="relative -mt-20 w-full overflow-hidden bg-foreground">
+      <section className="relative -mt-20 w-full lg:-mt-28 overflow-hidden bg-foreground">
         <div className="absolute inset-0">
           {/* Real photo + generated depth map → pointer/scroll parallax and
               cloud shadows in summer. */}
@@ -119,22 +123,30 @@ function Home_() {
             </p>
           </div>
           <div className="-mx-5 mt-12 flex snap-x snap-mandatory scroll-pl-5 gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-4 md:overflow-visible md:px-0">
-            {isPending
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-[4/3] w-[80vw] flex-none animate-pulse bg-secondary md:w-auto"
+            {isPending ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-[4/3] w-[80vw] flex-none animate-pulse bg-secondary md:w-auto"
+                />
+              ))
+            ) : isError ? (
+              <p role="alert" className={LEAD + " md:col-span-full"}>
+                {t("state.error")}
+              </p>
+            ) : apartments.length === 0 ? (
+              <p className={LEAD + " md:col-span-full"}>{t("apt.empty")}</p>
+            ) : (
+              apartments
+                .slice(0, 4)
+                .map((a) => (
+                  <StayTile
+                    key={a.id}
+                    apartment={a}
+                    className="w-[80vw] flex-none snap-start md:w-auto"
                   />
                 ))
-              : apartments
-                  .slice(0, 4)
-                  .map((a) => (
-                    <StayTile
-                      key={a.id}
-                      apartment={a}
-                      className="w-[80vw] flex-none snap-start md:w-auto"
-                    />
-                  ))}
+            )}
           </div>
         </div>
       </section>
@@ -195,7 +207,7 @@ function Home_() {
                 key={n}
                 className="grid grid-cols-[3.5rem_1fr] gap-x-4 border-b border-background/20 py-5 sm:block sm:px-5 sm:py-6"
               >
-                <span className="font-[family-name:var(--font-display)] text-3xl font-light tabular-nums text-accent-bright md:text-4xl">
+                <span className="font-[family-name:var(--font-display)] text-3xl font-light tabular-nums text-background md:text-4xl">
                   {String(n).padStart(2, "0")}
                 </span>
                 <div className="sm:mt-4">

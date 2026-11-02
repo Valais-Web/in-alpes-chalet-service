@@ -8,6 +8,7 @@ import { AirbnbRating } from "@/components/site/AirbnbRating";
 import { ReviewsCarousel } from "@/components/site/ReviewsCarousel";
 import { AvailabilityCalendar } from "@/components/site/AvailabilityCalendar";
 import { NightlyPrice } from "@/components/site/NightlyPrice";
+import { FullscreenDialog } from "@/components/site/FullscreenDialog";
 import { BookingForm } from "@/components/site/BookingForm";
 import {
   BedDouble,
@@ -80,23 +81,13 @@ function Detail() {
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightbox(false);
-      else if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowLeft") prev();
       else if (e.key === "ArrowRight") next();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightbox, images.length]);
-
-  useEffect(() => {
-    if (!mapExpanded) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMapExpanded(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [mapExpanded]);
 
   return (
     <div className="container-page pb-24 pt-8 md:pb-32">
@@ -149,11 +140,10 @@ function Detail() {
 
       {/* Lightbox */}
       {lightbox && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/90 p-4"
-          onClick={() => setLightbox(false)}
-          role="dialog"
-          aria-modal="true"
+        <FullscreenDialog
+          label={`${tx(apartment.title)} · ${t("apt.photo")}`}
+          className="flex items-center justify-center bg-foreground/90 p-4"
+          onClose={() => setLightbox(false)}
         >
           <button
             type="button"
@@ -170,7 +160,7 @@ function Detail() {
                 e.stopPropagation();
                 prev();
               }}
-              aria-label="Précédent"
+              aria-label={t("gallery.previous")}
               className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center text-background hover:bg-background/10 sm:left-4"
             >
               <ChevronLeft className="h-7 w-7" />
@@ -191,7 +181,7 @@ function Detail() {
                 e.stopPropagation();
                 next();
               }}
-              aria-label="Suivant"
+              aria-label={t("gallery.next")}
               className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center text-background hover:bg-background/10 sm:right-4"
             >
               <ChevronRight className="h-7 w-7" />
@@ -200,16 +190,15 @@ function Detail() {
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-background/80">
             {current + 1} / {images.length}
           </div>
-        </div>
+        </FullscreenDialog>
       )}
 
       {/* Expanded map */}
       {mapExpanded && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col gap-3 bg-foreground/90 p-4"
-          onClick={() => setMapExpanded(false)}
-          role="dialog"
-          aria-modal="true"
+        <FullscreenDialog
+          label={t("apt.location")}
+          className="flex flex-col gap-3 bg-foreground/90 p-4"
+          onClose={() => setMapExpanded(false)}
         >
           <div
             className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 text-background"
@@ -247,13 +236,13 @@ function Detail() {
             onClick={(e) => e.stopPropagation()}
           >
             <iframe
-              title="map-large"
+              title={t("apt.location")}
               className="h-full w-full"
               referrerPolicy="no-referrer"
               src={osmEmbed}
             />
           </div>
-        </div>
+        </FullscreenDialog>
       )}
 
       {/* Title + facts */}
@@ -374,7 +363,7 @@ function Detail() {
           <section
             id="availability"
             tabIndex={-1}
-            className="mt-14 scroll-mt-28 border-t border-foreground/15 pt-8"
+            className="mt-14 scroll-mt-32 border-t border-foreground/15 pt-8"
           >
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-[-0.015em]">
               {t("apt.availability")}
@@ -413,7 +402,7 @@ function Detail() {
               </p>
               <div className="relative mt-3 aspect-video overflow-hidden border border-border">
                 <iframe
-                  title="map"
+                  title={t("apt.location")}
                   className="h-full w-full"
                   loading="lazy"
                   referrerPolicy="no-referrer"
@@ -435,7 +424,7 @@ function Detail() {
         <aside
           id="booking"
           tabIndex={-1}
-          className="scroll-mt-28 lg:sticky lg:top-28 lg:self-start"
+          className="scroll-mt-32 lg:sticky lg:top-32 lg:self-start"
         >
           <div className="mb-4">
             <NightlyPrice price={apartment.pricePerNight} className="text-3xl" />

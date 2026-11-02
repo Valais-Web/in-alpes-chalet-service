@@ -40,7 +40,7 @@ export function Header() {
           : "border-b border-border bg-background/85 backdrop-blur")
       }
     >
-      <div className="container-page flex h-20 items-center justify-between gap-2 lg:gap-4">
+      <div className="container-page flex h-20 items-center lg:h-28 justify-between gap-2 lg:gap-4">
         <Link
           to="/"
           className="group flex min-w-0 items-center gap-2 sm:gap-3"
@@ -49,9 +49,12 @@ export function Header() {
           <img
             src={dark ? logoWhite : logoInk}
             alt=""
-            width={56}
-            height={56}
-            className="h-9 w-9 shrink-0 object-contain sm:h-14 sm:w-14"
+            width={100}
+            height={100}
+            className={
+              "h-[72px] w-[72px] shrink-0 object-contain sm:h-[84px] sm:w-[84px] lg:h-[100px] lg:w-[100px] " +
+              (dark ? "drop-shadow-[0_1px_4px_rgb(0_0_0/0.45)]" : "")
+            }
           />
           <span
             className={
