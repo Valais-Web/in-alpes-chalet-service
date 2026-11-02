@@ -10,6 +10,9 @@
  *
  * Components never know which is active — they just call these functions.
  */
+import { effectiveStatus } from "../lib/calendarStatus";
+export { effectiveStatus } from "../lib/calendarStatus";
+
 import apartmentsJson from "./apartments.json";
 import availabilityJson from "./availability.json";
 import type {
@@ -47,14 +50,6 @@ export function imageAt(key: string, width: number): string {
 export function imageSrcSet(key: string, widths: number[]): string | undefined {
   if (!CLOUDINARY_UPLOAD.test(resolveImage(key))) return undefined;
   return widths.map((w) => `${imageAt(key, w)} ${w}w`).join(", ");
-}
-
-/** Expired pre-reservations read as free (computed client-side, CLAUDE.md §5). */
-export function effectiveStatus(r: AvailabilityRange): AvailabilityStatus {
-  if (r.status === "prebooked" && r.expiresAt && new Date(r.expiresAt) < new Date()) {
-    return "free";
-  }
-  return r.status;
 }
 
 // ---------------------------------------------------------------------------

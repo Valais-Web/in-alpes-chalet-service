@@ -21,8 +21,8 @@ export function LanguageSwitcher({ onDark = false }: { onDark?: boolean }) {
                 ? "text-white"
                 : "text-foreground"
               : onDark
-                ? "text-white/50 hover:text-white"
-                : "text-foreground/40 hover:text-foreground")
+                ? "text-white/80 hover:text-white"
+                : "text-foreground/70 hover:text-foreground")
           }
         >
           {l}

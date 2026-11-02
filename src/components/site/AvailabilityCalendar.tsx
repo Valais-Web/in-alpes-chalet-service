@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { AvailabilityRange, AvailabilityStatus } from "@/data/types";
-import { effectiveStatus } from "@/data/api";
+import { statusForDate } from "@/lib/calendarStatus";
 import { useI18n } from "@/i18n/I18nProvider";
 import { localISO } from "@/lib/dates";
 
@@ -23,19 +23,10 @@ function startOfMonth(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), 1);
 }
 
-function statusForDate(iso: string, ranges: AvailabilityRange[]): AvailabilityStatus {
-  for (const r of ranges) {
-    const s = effectiveStatus(r);
-    if (s === "free") continue;
-    if (iso >= r.start && iso <= r.end) return s;
-  }
-  return "free";
-}
-
 const STATUS_CLASS: Record<AvailabilityStatus, string> = {
   free: "bg-background text-foreground hover:bg-secondary",
   booked: "bg-foreground text-background",
-  prebooked: "bg-accent/20 text-accent-foreground border border-accent",
+  prebooked: "bg-accent-tint text-foreground border border-accent",
   blocked: "bg-muted text-muted-foreground line-through",
 };
 
@@ -117,7 +108,7 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
           type="button"
           onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
           className="grid h-11 w-11 place-items-center border border-border hover:bg-secondary"
-          aria-label="previous month"
+          aria-label={t("calendar.previous")}
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -131,7 +122,7 @@ export function AvailabilityCalendar({ ranges, months = 2, editable, onRangeSele
           type="button"
           onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
           className="grid h-11 w-11 place-items-center border border-border hover:bg-secondary"
-          aria-label="next month"
+          aria-label={t("calendar.next")}
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -195,6 +186,7 @@ function MonthView({
   onHover: (iso: string) => void;
   onCancel: () => void;
 }) {
+  const { t } = useI18n();
   const first = startOfMonth(month);
   const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
   const startOffset = (first.getDay() + 6) % 7; // Monday-first
@@ -249,7 +241,7 @@ function MonthView({
                 STATUS_CLASS[s] +
                 (selected ? " ring-2 ring-accent" : "")
               }
-              aria-label={`${iso} ${s}`}
+              aria-label={`${iso} ${t(`status.${s}`)}`}
             >
               {d.getDate()}
             </button>

@@ -60,7 +60,7 @@ export function BookingForm({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hardBlock) return;
+    if (hardBlock || !datesChosen) return;
     setSubmitting(true);
     setError(false);
     try {
@@ -138,7 +138,7 @@ export function BookingForm({
           <input
             type="date"
             required
-            min={form.arrival || todayISO()}
+            min={addDaysISO(form.arrival || todayISO(), 1)}
             className={input}
             value={form.departure}
             onChange={onChange("departure")}

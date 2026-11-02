@@ -10,7 +10,7 @@ import type { Review } from "@/content/reviews";
  * scrollable list before hydration.
  */
 export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
-  const { tx } = useI18n();
+  const { t, tx } = useI18n();
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps" });
   const [snaps, setSnaps] = useState<number[]>([]);
   const [selected, setSelected] = useState(0);
@@ -73,7 +73,7 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
             <button
               key={i}
               type="button"
-              aria-label={`Avis ${i + 1}`}
+              aria-label={`${t("reviews.word")} ${i + 1}`}
               aria-current={i === selected}
               onClick={() => emblaApi?.scrollTo(i)}
               className={
@@ -88,7 +88,7 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
             type="button"
             onClick={() => emblaApi?.scrollPrev()}
             disabled={!canPrev}
-            aria-label="Précédent"
+            aria-label={t("home.rev.prev")}
             className="flex h-10 w-10 items-center justify-center border border-border text-foreground transition-colors hover:bg-foreground hover:text-background disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -97,7 +97,7 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
             type="button"
             onClick={() => emblaApi?.scrollNext()}
             disabled={!canNext}
-            aria-label="Suivant"
+            aria-label={t("home.rev.next")}
             className="flex h-10 w-10 items-center justify-center border border-border text-foreground transition-colors hover:bg-foreground hover:text-background disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-4 w-4" />

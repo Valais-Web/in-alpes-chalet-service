@@ -457,6 +457,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.body2":
       "Haute-Nendaz ouvre sur l'un des plus grands domaines skiables de Suisse, relié à Verbier et Veysonnaz. L'hiver pour le ski, l'été pour la randonnée, le VTT et les lacs d'altitude : la station vit toute l'année, à quelques minutes de nos logements.",
     "nav.book": "Réserver",
+    "gallery.previous": "Photo précédente",
+    "gallery.next": "Photo suivante",
+    "calendar.previous": "Mois précédent",
+    "calendar.next": "Mois suivant",
     "apt.viewAvailability": "Voir les disponibilités",
     "form.title": "Votre demande de séjour",
     "form.requestNote":
@@ -936,6 +940,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.body2":
       "Haute-Nendaz opens onto one of Switzerland's largest ski areas, linked to Verbier and Veysonnaz. Skiing in winter, hiking, mountain biking and alpine lakes in summer: the resort lives all year round, minutes from our apartments.",
     "nav.book": "Book",
+    "gallery.previous": "Previous photo",
+    "gallery.next": "Next photo",
+    "calendar.previous": "Previous month",
+    "calendar.next": "Next month",
     "apt.viewAvailability": "View availability",
     "form.title": "Your stay request",
     "form.requestNote":
@@ -1423,6 +1431,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "home.local.body2":
       "Haute-Nendaz opent naar een van de grootste skigebieden van Zwitserland, verbonden met Verbier en Veysonnaz. Skiën in de winter, wandelen, mountainbiken en bergmeren in de zomer: het resort leeft het hele jaar, op enkele minuten van onze woningen.",
     "nav.book": "Boeken",
+    "gallery.previous": "Vorige foto",
+    "gallery.next": "Volgende foto",
+    "calendar.previous": "Vorige maand",
+    "calendar.next": "Volgende maand",
     "apt.viewAvailability": "Beschikbaarheid bekijken",
     "form.title": "Uw verblijfsaanvraag",
     "form.requestNote":
