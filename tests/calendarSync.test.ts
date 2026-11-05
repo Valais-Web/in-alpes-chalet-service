@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import {
   fingerprint,
   isAirbnbIcalUrl,
+  normalizeAirbnbIcalUrl,
   planSync,
   readSyncState,
   runCalendarSync,
@@ -45,6 +46,24 @@ describe("isAirbnbIcalUrl", () => {
     expect(isAirbnbIcalUrl("https://www.airbnb.com/rooms/38210578")).toBe(false);
     expect(isAirbnbIcalUrl("https://user@169.254.169.254/calendar/ical/1.ics")).toBe(false);
     expect(isAirbnbIcalUrl("not a url")).toBe(false);
+    expect(isAirbnbIcalUrl("https://a.b.airbnb.ch/calendar/ical/38210578.ics")).toBe(false);
+    expect(isAirbnbIcalUrl("https://www.airbnb.ch:8443/calendar/ical/38210578.ics")).toBe(false);
+  });
+  it("accepts language subdomains and rewrites them to www.", () => {
+    expect(
+      normalizeAirbnbIcalUrl(
+        "https://fr.airbnb.ch/calendar/ical/1577629186881048894.ics?t=5687febb8b8c4ff5a83578b8c6caa1a7",
+      ),
+    ).toBe(
+      "https://www.airbnb.ch/calendar/ical/1577629186881048894.ics?t=5687febb8b8c4ff5a83578b8c6caa1a7",
+    );
+    expect(normalizeAirbnbIcalUrl("https://NL.Airbnb.BE/calendar/ical/38210578.ics?s=x")).toBe(
+      "https://www.airbnb.be/calendar/ical/38210578.ics?s=x",
+    );
+    expect(normalizeAirbnbIcalUrl("https://airbnb.co.uk/calendar/ical/38210578.ics")).toBe(
+      "https://www.airbnb.co.uk/calendar/ical/38210578.ics",
+    );
+    expect(normalizeAirbnbIcalUrl("https://evil.com/calendar/ical/38210578.ics")).toBeNull();
   });
 });
 
