@@ -48,19 +48,36 @@ export type SyncState = Record<string, ApartmentSyncState>;
 // --- URL --------------------------------------------------------------------
 
 /** Only Airbnb's own calendar export endpoint may be fetched (SSRF guard):
- * https://www.airbnb.<tld>/calendar/ical/<listing id>.ics?s=<token> */
-export function isAirbnbIcalUrl(input: string): boolean {
+ * https://<www|language>.airbnb.<tld>/calendar/ical/<listing id>.ics?<token>
+ * Airbnb hands out the link on whatever subdomain the host browses on
+ * (www., fr., de., nl. …) — all accepted, then rewritten to www. */
+export function normalizeAirbnbIcalUrl(input: string): string | null {
   let url: URL;
   try {
     url = new URL(input.trim());
   } catch {
-    return false;
+    return null;
   }
-  return (
-    url.protocol === "https:" &&
-    /^(www\.)?airbnb\.[a-z]{2,3}(\.[a-z]{2})?$/i.test(url.hostname) &&
-    /^\/calendar\/ical\/\d{5,25}\.ics$/.test(url.pathname)
+  const host = /^(?:[a-z]{2,3}(?:-[a-z]{2,4})?\.|www\.)?(airbnb\.[a-z]{2,3}(?:\.[a-z]{2})?)$/i.exec(
+    url.hostname,
   );
+  if (
+    url.protocol !== "https:" ||
+    url.username ||
+    url.password ||
+    url.port ||
+    !host ||
+    !/^\/calendar\/ical\/\d{5,25}\.ics$/.test(url.pathname)
+  ) {
+    return null;
+  }
+  url.hostname = `www.${host[1].toLowerCase()}`;
+  url.hash = "";
+  return url.toString();
+}
+
+export function isAirbnbIcalUrl(input: string): boolean {
+  return normalizeAirbnbIcalUrl(input) !== null;
 }
 
 // --- pure planning ------------------------------------------------------------

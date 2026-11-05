@@ -7,7 +7,7 @@
  * See netlify/lib/calendarSync.ts.
  */
 import { requireOwner } from "../lib/auth";
-import { isAirbnbIcalUrl, listSyncStatus, runCalendarSync, saveSyncUrl } from "../lib/calendarSync";
+import { listSyncStatus, normalizeAirbnbIcalUrl, runCalendarSync, saveSyncUrl } from "../lib/calendarSync";
 import { calendarSyncInputSchema } from "../lib/validation";
 import { json, readJson, requireMethod, toErrorResponse, HttpError, NO_STORE } from "../lib/http";
 
@@ -26,11 +26,11 @@ export default async (req: Request): Promise<Response> => {
       }
       const input = parsed.data;
       if (input.action === "save") {
-        if (input.importUrl && !isAirbnbIcalUrl(input.importUrl)) {
-          throw new HttpError(400, "invalid_airbnb_ical_url");
-        }
-        await saveSyncUrl(input.apartmentId, input.importUrl);
-        if (input.importUrl) await runCalendarSync({ only: [input.apartmentId], force: true });
+        // Empty = clear the link; otherwise store the canonical www. form.
+        const importUrl = input.importUrl ? normalizeAirbnbIcalUrl(input.importUrl) : "";
+        if (importUrl === null) throw new HttpError(400, "invalid_airbnb_ical_url");
+        await saveSyncUrl(input.apartmentId, importUrl);
+        if (importUrl) await runCalendarSync({ only: [input.apartmentId], force: true });
       } else {
         await runCalendarSync({ only: [input.apartmentId], force: true });
       }
